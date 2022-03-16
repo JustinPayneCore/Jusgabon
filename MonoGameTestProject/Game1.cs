@@ -3,12 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>
-/// Project prototype to test game creation and player creation using MonoGame Framework
+/// Top down 2D Zelda-like RPG game built using the MonoGame framework
 /// Authors: Team 4 - Jason Cheung, Gabriel Baluyut, Justin Payne
-/// Date: Mar 3, 2022
+/// Date: Mar 14, 2022
 /// Source: https://docs.monogame.net/articles/getting_started/0_getting_started.html
 /// </summary>
-namespace MonoGameTestProject
+namespace Jusgabon
 {
     /// <summary>
     /// Game Class definition - main class program of the MonoGame project.
@@ -31,8 +31,7 @@ namespace MonoGameTestProject
         private SpriteBatch _spriteBatch;
 
         /// <summary>
-        /// Game Constructor.
-        /// includes bits to tell the project how to start.
+        /// Game Constructor - Includes bits to tell the project how to start.
         /// </summary>
         public Game1()
         {
@@ -42,7 +41,9 @@ namespace MonoGameTestProject
         }
 
         /// <summary>
-        /// Initialize method - Initialize the game upon its startup.
+        /// Initialize method - Initialize the game upon startup.
+        /// This method is called after the constructor but before the main game loop.
+        /// Method is used to query any required services and load any non-graphic related content.
         /// </summary>
         protected override void Initialize()
         {
@@ -56,14 +57,15 @@ namespace MonoGameTestProject
 
         /// <summary>
         /// LoadContent Method - Add assets from the running game from the Content project.
-        /// note: there is also an UnloadContent() method which is currently unused.
+        /// This method is called only once per game within the Initialize method.
+        /// note: there is also an UnloadContent() method (currently unused).
         /// </summary>
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            ballTexture = Content.Load<Texture2D>("ball");
+            ballTexture = Content.Load<Texture2D>("prototype_ball");
         }
 
         /// <summary>
@@ -106,8 +108,7 @@ namespace MonoGameTestProject
         }
 
         /// <summary>
-        /// Draw Method - Called on a regular interval to take the current 
-        /// game state and draw the game entities to the screen.
+        /// Draw Method - Called on a regular interval to draw the game entities to the screen.
         /// This method is called multiple times per second.
         /// </summary>
         /// <param name="gameTime"></param>
