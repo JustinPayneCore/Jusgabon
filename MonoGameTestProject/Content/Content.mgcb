@@ -6493,6 +6493,18 @@
 /processorParam:TextureFormat=Color
 /build:ball.png;prototype_ball.png
 
+#begin ball.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ball.png
+
 #begin FX/AllPreview.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -9168,4 +9180,16 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/Menu/Menu9.wav
+
+#begin Test_Background.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Test_Background.png
 
