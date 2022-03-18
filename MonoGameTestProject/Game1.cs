@@ -1,6 +1,19 @@
-﻿using Microsoft.Xna.Framework;
+﻿#region Includes
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
+using System.Xml.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+#endregion
 
 /// <summary>
 /// Top down 2D Zelda-like RPG game built using the MonoGame framework
@@ -21,21 +34,25 @@ namespace Jusgabon
     /// </summary>
     public class Game1 : Game
     {
-        // Simple ball assset to use as a player object
-        Texture2D ballTexture;
-        // Adding position and speed for ball (player) asset
-        Vector2 ballPosition;
-        float ballSpeed;
 
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        GraphicsDeviceManager graphics;
+
+        private Camera _camera;
+
+        private List<Component> _components;
+
+        private Player _player;
+
+        public static int screenHeight;
+
+        public static int screenWidth;
 
         /// <summary>
         /// Game Constructor - Includes bits to tell the project how to start.
         /// </summary>
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -48,9 +65,8 @@ namespace Jusgabon
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            ballPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2,
-                _graphics.PreferredBackBufferHeight / 2);
-            ballSpeed = 400f;
+            screenHeight = graphics.PreferredBackBufferHeight;
+            screenWidth = graphics.PreferredBackBufferWidth;
 
             base.Initialize();
         }
@@ -58,14 +74,40 @@ namespace Jusgabon
         /// <summary>
         /// LoadContent Method - Add assets from the running game from the Content project.
         /// This method is called only once per game within the Initialize method.
-        /// note: there is also an UnloadContent() method (currently unused).
         /// </summary>
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            // Create a new content and spriteBatch, which can be used to load and draw textures.
+            Globals.content = this.Content;
+            Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
-            ballTexture = Content.Load<Texture2D>("prototype_ball");
+            // TODO: use Globals.Content to load your game content here
+
+            _camera = new Camera();
+
+            _player = new Player(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Idle"));
+
+            _components = new List<Component>()
+            {
+                new Sprite(Globals.content.Load<Texture2D>("Test_Background")),
+                _player,
+                new Sprite(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle")),
+            };
+
+        }
+
+        /// <summary>
+        /// UnloadContent method - Unload game-specific content from the Content project.
+        /// This method is only called one per game.
+        /// </summary>
+        protected override void UnloadContent()
+        {
+            // TODO: Unload any non-ContentManager content here
+
+
+
+
+            base.UnloadContent();
         }
 
         /// <summary>
@@ -80,29 +122,14 @@ namespace Jusgabon
                 Exit();
 
             // TODO: Add your update logic here
-            var kstate = Keyboard.GetState();
 
-            if (kstate.IsKeyDown(Keys.Up))
-                ballPosition.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            foreach (var component in _components)
+                component.Update(gameTime);
 
-            if (kstate.IsKeyDown(Keys.Down))
-                ballPosition.Y += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _camera.Follow(_player);
 
-            if (kstate.IsKeyDown(Keys.Left))
-                ballPosition.X -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (kstate.IsKeyDown(Keys.Right))
-                ballPosition.X += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (ballPosition.X > _graphics.PreferredBackBufferWidth - ballTexture.Width / 2)
-                ballPosition.X = _graphics.PreferredBackBufferWidth - ballTexture.Width / 2;
-            else if (ballPosition.X < ballTexture.Width / 2)
-                ballPosition.X = ballTexture.Width / 2;
-
-            if (ballPosition.Y > _graphics.PreferredBackBufferHeight - ballTexture.Height / 2)
-                ballPosition.Y = _graphics.PreferredBackBufferHeight - ballTexture.Height / 2;
-            else if (ballPosition.Y < ballTexture.Height / 2)
-                ballPosition.Y = ballTexture.Height / 2;
 
             base.Update(gameTime);
         }
@@ -110,6 +137,7 @@ namespace Jusgabon
         /// <summary>
         /// Draw Method - Called on a regular interval to draw the game entities to the screen.
         /// This method is called multiple times per second.
+        /// (!) Warning (!): Do not include update logic in Draw method; Use the Update method instead.
         /// </summary>
         /// <param name="gameTime"></param>
         protected override void Draw(GameTime gameTime)
@@ -117,19 +145,12 @@ namespace Jusgabon
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(
-                ballTexture,
-                ballPosition,
-                null,
-                Color.White,
-                0f,
-                new Vector2(ballTexture.Width / 2, ballTexture.Height / 2),
-                Vector2.One,
-                SpriteEffects.None,
-                0f
-            );
-            _spriteBatch.End();
+            Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
+
+            foreach (var component in _components)
+                component.Draw(gameTime, Globals.spriteBatch);
+
+            Globals.spriteBatch.End();
 
             base.Draw(gameTime);
         }
