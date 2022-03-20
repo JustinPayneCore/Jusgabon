@@ -36,22 +36,6 @@ namespace Jusgabon
             Speed = 3f;
         }
 
-        public Player(Texture2D texture, Vector2 spawnPosition) : base(texture)
-        {
-            Position = spawnPosition;
-
-            Input = new Input()
-            {
-                Up = Keys.Up,
-                Down = Keys.Down,
-                Left = Keys.Left,
-                Right = Keys.Right
-            };
-
-            // make player faster than base sprites
-            Speed = 3f;
-        }
-
         protected void Move()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.None))
