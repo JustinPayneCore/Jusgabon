@@ -34,6 +34,7 @@ namespace Jusgabon
     /// </summary>
     public class Game1 : Game
     {
+        #region Fields
 
         GraphicsDeviceManager graphics;
 
@@ -46,6 +47,11 @@ namespace Jusgabon
         public static int screenHeight;
 
         public static int screenWidth;
+
+        #endregion
+
+
+        #region Methods
 
         /// <summary>
         /// Game Constructor - Includes bits to tell the project how to start.
@@ -64,7 +70,7 @@ namespace Jusgabon
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            // TODO: Add your initialization logic
             screenHeight = graphics.PreferredBackBufferHeight;
             screenWidth = graphics.PreferredBackBufferWidth;
 
@@ -77,40 +83,36 @@ namespace Jusgabon
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new content and spriteBatch, which can be used to load and draw textures.
+            // Create a new content and spriteBatch, which is used to load and draw textures.
             Globals.content = this.Content;
             Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use Globals.Content to load your game content here
+            // TODO: use Globals.Content to load your game content
 
             // Instantiate camera
             _camera = new Camera();
 
-            // Player animations
-            var playerAnimations = new Dictionary<string, Animation>()
+            LoadPlayer();
+
+            // NPC Villager animations
+            var npcVillagerAnimations = new Dictionary<string, Animation>()
             {
-                {"WalkDown", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4) 
-                {
-                    FrameCol = 0
-                } },
-                {"WalkUp", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4) {FrameCol = 16} },
-                {"WalkLeft", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4) {FrameCol = 32} },
-                {"WalkRight", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4) {FrameCol = 48} },
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1, 4, 48) },
             };
 
-            // Set up player
-            _player = new Player(
-                animations: playerAnimations,
-                spawnPosition: new Vector2(100, 100)
-                );
-
-            // NPC animations
-            var npcAnimations = new Dictionary<string, Animation>()
+            // Load NPC Cat animations
+            var npcCatAnimations = new Dictionary<string, Animation>()
             {
-                {"WalkDown", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1) {FrameCol = 0} },
-                {"WalkUp", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1) {FrameCol = 16} },
-                {"WalkLeft", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1) {FrameCol = 32} },
-                {"WalkRight", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1) {FrameCol = 48} },
+                {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Animals/Cat/SpriteSheet"), 2, false) },
+            };
+
+            // Load Boss Demon Cyclops animations
+            var bossDemonCyclopAnimations = new Dictionary<string, Animation>()
+            {
+                {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6, false) },
             };
 
             // Instantiate list of components which wil be updated/drawn
@@ -118,9 +120,43 @@ namespace Jusgabon
             {
                 new Sprite(Globals.content.Load<Texture2D>("Test_Background")),
                 _player,
-                new Sprite(npcAnimations),
+                new Sprite(npcVillagerAnimations) { Position = new Vector2(100, 200) },
+                new Sprite(npcCatAnimations) { Position = new Vector2(200, 100) },
+                new Sprite(bossDemonCyclopAnimations) { Position = new Vector2(200, 200) },
             };
 
+        }
+
+        /// <summary>
+        /// Load Player-specific Content.
+        /// Includes player animations and ...
+        /// </summary>
+        private void LoadPlayer()
+        {
+            // Player animations
+            var playerAnimations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4, 4, 48) },
+            };
+
+            // test - boss animations
+            var bossDemonCyclopAnimations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6, false)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6, false)  },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6, false)  },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6, false)  },
+            };
+
+            // Set up player
+            _player = new Player(
+                animations: playerAnimations,
+                //animations: bossDemonCyclopAnimations,
+                spawnPosition: new Vector2(100, 100)
+                );
         }
 
         /// <summary>
@@ -129,7 +165,7 @@ namespace Jusgabon
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non-ContentManager content here
+            // TODO: Unload any non-ContentManager content
 
 
 
@@ -148,13 +184,14 @@ namespace Jusgabon
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            // TODO: Add your update logic
+
 
             foreach (var component in _components)
                 component.Update(gameTime);
 
-            _camera.Follow(_player);
 
+            _camera.Follow(_player);
 
 
 
@@ -171,7 +208,7 @@ namespace Jusgabon
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            // TODO: Add your drawing code
             Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
 
             foreach (var component in _components)
@@ -181,5 +218,7 @@ namespace Jusgabon
 
             base.Draw(gameTime);
         }
+
+        #endregion 
     }
 }
