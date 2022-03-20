@@ -17,6 +17,9 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// Input class for Keyboard input bindings.
+    /// </summary>
     public class Input
     {
         public Keys Down { get; set; }

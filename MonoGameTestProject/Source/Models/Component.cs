@@ -17,6 +17,10 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// Component class.
+    /// Is an Abstract class (contract) to make sure all components include Draw and Update Methods.
+    /// </summary>
     public abstract class Component
     {
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);

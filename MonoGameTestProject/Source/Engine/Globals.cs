@@ -17,10 +17,16 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// Global class for global fields.
+    /// </summary>
     class Globals
     {
-        public static ContentManager content;   // load in sprites
-        public static SpriteBatch spriteBatch;  // draw sprites
+        // load in sprites
+        public static ContentManager content;
+
+        // draw sprites
+        public static SpriteBatch spriteBatch;
 
     }
 }

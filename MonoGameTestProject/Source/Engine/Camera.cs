@@ -17,10 +17,20 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// Camera class engine.
+    /// Camera is used to move the game screen around; depends on player position.
+    /// </summary>
     public class Camera
     {
+        // Transform matrix to determine position of Camera
         public Matrix Transform { get; private set; }
 
+        /// <summary>
+        /// Follow method to make camera follow target sprite.
+        /// Target sprite should be player.
+        /// </summary>
+        /// <param name="target"></param>
         public void Follow(Sprite target)
         {
             var position = Matrix.CreateTranslation(
