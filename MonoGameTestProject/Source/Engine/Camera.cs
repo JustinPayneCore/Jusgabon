@@ -23,6 +23,9 @@ namespace Jusgabon
     /// </summary>
     public class Camera
     {
+        // Zoom level of game screen
+        private float _zoom = 3f;
+                
         // Transform matrix to determine position of Camera
         public Matrix Transform { get; private set; }
 
@@ -43,7 +46,9 @@ namespace Jusgabon
                     Game1.screenHeight / 2,
                     0);
 
-            Transform = position * offset;
+            var zoom = Matrix.CreateScale(new Vector3(_zoom, _zoom, 1));
+
+            Transform = position * zoom * offset;
         }
 
 

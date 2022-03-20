@@ -70,6 +70,11 @@ namespace Jusgabon
         /// </summary>
         protected override void Initialize()
         {
+            // Set Game Window size
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.ApplyChanges();
+
             // TODO: Add your initialization logic
             screenHeight = graphics.PreferredBackBufferHeight;
             screenWidth = graphics.PreferredBackBufferWidth;
