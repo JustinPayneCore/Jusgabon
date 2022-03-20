@@ -19,28 +19,67 @@ namespace Jusgabon
 {
     public class Player : Sprite
     {
-        public Player(Texture2D texture) : base(texture)
-        {
 
+        public Player(Dictionary<string, Animation> animations, Vector2 spawnPosition) : base(animations)
+        {
+            Position = spawnPosition;
+
+            Input = new Input()
+            {
+                Up = Keys.Up,
+                Down = Keys.Down,
+                Left = Keys.Left,
+                Right = Keys.Right
+            };
+
+            // make player faster than base sprites
+            Speed = 3f;
+        }
+
+        public Player(Texture2D texture, Vector2 spawnPosition) : base(texture)
+        {
+            Position = spawnPosition;
+
+            Input = new Input()
+            {
+                Up = Keys.Up,
+                Down = Keys.Down,
+                Left = Keys.Left,
+                Right = Keys.Right
+            };
+
+            // make player faster than base sprites
+            Speed = 3f;
+        }
+
+        protected void Move()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.None))
+                return;
+
+            {
+                if (Keyboard.GetState().IsKeyDown(Input.Up))
+                    Velocity.Y = -Speed;
+                else if (Keyboard.GetState().IsKeyDown(Input.Down))
+                    Velocity.Y = Speed;
+
+                if (Keyboard.GetState().IsKeyDown(Input.Left))
+                    Velocity.X = -Speed;
+                else if (Keyboard.GetState().IsKeyDown(Input.Right))
+                    Velocity.X = Speed;
+            }
         }
 
         public override void Update(GameTime gameTime)
         {
-            var velocity = new Vector2();
+            Move();
 
-            var speed = 3f;
+            SetAnimations();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
-                velocity.Y = -speed;
-            else if (Keyboard.GetState().IsKeyDown(Keys.Down))
-                velocity.Y = speed;
+            _animationManager.Update(gameTime);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                velocity.X = -speed;
-            else if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                velocity.X = speed;
-
-            Position += velocity;
+            Position += Velocity;
+            Velocity = Vector2.Zero;
         }
     }
 }

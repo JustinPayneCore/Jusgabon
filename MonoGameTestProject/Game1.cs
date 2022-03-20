@@ -83,15 +83,42 @@ namespace Jusgabon
 
             // TODO: use Globals.Content to load your game content here
 
+            // Instantiate camera
             _camera = new Camera();
 
-            _player = new Player(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Idle"));
+            // Player animations
+            var playerAnimations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4) 
+                {
+                    FrameCol = 0
+                } },
+                {"WalkUp", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4) {FrameCol = 16} },
+                {"WalkLeft", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4) {FrameCol = 32} },
+                {"WalkRight", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4) {FrameCol = 48} },
+            };
 
+            // Set up player
+            _player = new Player(
+                animations: playerAnimations,
+                spawnPosition: new Vector2(100, 100)
+                );
+
+            // NPC animations
+            var npcAnimations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1) {FrameCol = 0} },
+                {"WalkUp", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1) {FrameCol = 16} },
+                {"WalkLeft", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1) {FrameCol = 32} },
+                {"WalkRight", new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1) {FrameCol = 48} },
+            };
+
+            // Instantiate list of components which wil be updated/drawn
             _components = new List<Component>()
             {
                 new Sprite(Globals.content.Load<Texture2D>("Test_Background")),
                 _player,
-                new Sprite(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle")),
+                new Sprite(npcAnimations),
             };
 
         }

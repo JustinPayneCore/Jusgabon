@@ -19,30 +19,119 @@ namespace Jusgabon
 {
     public class Sprite : Component
     {
+        #region Fields
+
+        protected AnimationManager _animationManager;
+
+        protected Dictionary<string, Animation> _animations;
+
+        protected Vector2 _position;
+
         protected Texture2D _texture;
 
-        public Vector2 Position { get; set; }
+        #endregion
 
+        #region Properties
 
+        public Input Input;
 
-        public Rectangle Rectangle 
-        { 
-            get { return new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height); } 
+        public Vector2 Position 
+        {
+            get { return _position; }
+            set
+            {
+                // for a static image
+                _position = value;
+
+                // for an animation
+                if (_animationManager != null)
+                    _animationManager.Position = _position;
+            }
         }
 
+        public float Speed = 2f;
+
+        public Vector2 Velocity;
+
+        public Rectangle Rectangle
+        {
+            get 
+            {
+                if (_texture != null)
+                    return new Rectangle(
+                        (int)Position.X,
+                        (int)Position.Y,
+                        _texture.Width,
+                        _texture.Height);
+                else // _animationManager != null
+                    return new Rectangle(
+                        (int)Position.X,
+                        (int)Position.Y,
+                        _animationManager.Animation.FrameWidth,
+                        _animationManager.Animation.FrameHeight);
+            }
+        }
+
+        #endregion
+
+
+        #region Methods
+
+        /// <summary>
+        /// Sprite Constructor for a sprite with a dictionary(ex. spritesheet) of animations
+        /// </summary>
+        /// <param name="animations"></param>
+        public Sprite(Dictionary<string, Animation> animations)
+        {
+            _animations = animations;
+            _animationManager = new AnimationManager(_animations.First().Value);
+        }
+        
+        /// <summary>
+        /// Sprite Constructor for a sprite with a static texture i.e. an idle texture.
+        /// </summary>
+        /// <param name="texture"></param>
         public Sprite(Texture2D texture)
         {
             _texture = texture;
         }
-        
+
+        protected virtual void SetAnimations()
+        {
+            if (Velocity.X > 0)
+                _animationManager.Play(_animations["WalkRight"]);
+            else if (Velocity.X < 0)
+                _animationManager.Play(_animations["WalkLeft"]);
+            else if (Velocity.Y > 0)
+                _animationManager.Play(_animations["WalkDown"]);
+            else if (Velocity.Y < 0)
+                _animationManager.Play(_animations["WalkUp"]);
+            else
+                _animationManager.Stop();
+        }
+
         public override void Update(GameTime gameTime)
         {
-            
+
+            if (_animationManager != null)
+            {
+                SetAnimations();
+
+                _animationManager.Update(gameTime);
+            }
+
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Globals.spriteBatch.Draw(_texture, Position, Color.White);
+            if (_texture != null)
+                spriteBatch.Draw(_texture, Position, Color.White);
+            //spriteBatch.Draw(_texture, Position, new Rectangle(0, 0, 16, 16), Color.White);
+            else if (_animationManager != null)
+                _animationManager.Draw(spriteBatch);
+            else throw new Exception("Error: No texture/animations found for Sprite.");
         }
+
+        #endregion
     }
 }
