@@ -96,6 +96,10 @@ namespace Jusgabon
             _texture = texture;
         }
 
+        /// <summary>
+        /// SetAnimations Method.
+        /// If sprite has animations, then set logic on which animation to use here.
+        /// </summary>
         protected virtual void SetAnimations()
         {
             if (Velocity.X > 0)
@@ -110,6 +114,12 @@ namespace Jusgabon
                 _animationManager.Stop();
         }
 
+        /// <summary>
+        /// Update method.
+        /// Only constantly update if sprite has animations.
+        /// If sprite only has a texture, then no update needed, or override this method in child class.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
 
@@ -122,6 +132,12 @@ namespace Jusgabon
 
         }
 
+        /// <summary>
+        /// Draw method.
+        /// Draw texture (as a static image) or draw animation (moving sprite).
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (_texture != null)
