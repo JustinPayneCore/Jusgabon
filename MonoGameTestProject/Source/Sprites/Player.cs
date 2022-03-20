@@ -33,7 +33,7 @@ namespace Jusgabon
             };
 
             // make player faster than base sprites
-            Speed = 2.5f;
+            Speed = 2f;
         }
 
         protected void Move()

@@ -24,7 +24,7 @@ namespace Jusgabon
     public class Camera
     {
         // Zoom level of game screen
-        private float _zoom = 3f;
+        private float _zoom = 4f;
                 
         // Transform matrix to determine position of Camera
         public Matrix Transform { get; private set; }

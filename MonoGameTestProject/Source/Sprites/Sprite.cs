@@ -49,7 +49,7 @@ namespace Jusgabon
             }
         }
 
-        public float Speed = 2f;
+        public float Speed = 1.5f;
 
         public Vector2 Velocity;
 
