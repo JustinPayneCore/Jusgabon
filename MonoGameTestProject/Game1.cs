@@ -165,18 +165,18 @@ namespace Jusgabon
             };
 
             // TESTING - boss animations
-            var bossDemonCyclopAnimations = new Dictionary<string, Animation>()
+            var bossAnimations = new Dictionary<string, Animation>()
             {
-                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6, false)  },
-                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6, false)  },
-                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6, false)  },
-                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6, false)  },
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Attack"), 3, false)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Charge"), 7, false)  },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Hit"), 3, false)  },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Jump"), 6, false)  },
             };
 
             // Set up player
             Globals.player = new Player(
-                animations: playerAnimations,
-                //animations: bossDemonCyclopAnimations, // TESTING
+                //animations: playerAnimations,
+                animations: bossAnimations, // TESTING
                 spawnPosition: new Vector2(100, 100)
                 );
             _player = Globals.player;
