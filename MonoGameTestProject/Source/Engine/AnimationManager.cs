@@ -117,10 +117,10 @@ namespace Jusgabon
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
-                Animation.Texture,
-                Position,
-                _sourceRectangle,
-                Color.White);
+                texture: Animation.Texture,
+                position: Position,
+                sourceRectangle: _sourceRectangle,
+                color: Color.White);
         }
 
         #endregion

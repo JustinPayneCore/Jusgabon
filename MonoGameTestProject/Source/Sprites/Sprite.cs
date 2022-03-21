@@ -141,8 +141,10 @@ namespace Jusgabon
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (_texture != null)
-                spriteBatch.Draw(_texture, Position, Color.White);
-            //spriteBatch.Draw(_texture, Position, new Rectangle(0, 0, 16, 16), Color.White);
+                spriteBatch.Draw(
+                    texture:_texture, 
+                    position: Position, 
+                    color: Color.White);
             else if (_animationManager != null)
                 _animationManager.Draw(spriteBatch);
             else throw new Exception("Error: No texture/animations found for Sprite.");
