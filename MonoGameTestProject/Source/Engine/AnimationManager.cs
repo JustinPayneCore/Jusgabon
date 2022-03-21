@@ -18,23 +18,33 @@ using Microsoft.Xna.Framework.Media;
 namespace Jusgabon
 {
     /// <summary>
-    /// AnimationManager Constructor - always keeps track of 1 animation at a time.
+    /// AnimationManager Constructor - always keeps track of 1 animation frame at a time.
+    /// The Animation Frame is a splice of a Texture from a SpriteSheet.
     /// Source (tutorial): https://www.youtube.com/watch?v=OLsiWxgONeM
     /// </summary>
     public class AnimationManager
     {
         #region Fields and Properties
 
-        // Timer to know when to increment the currentFrame of the animation
+        // Timer for incrementing Animation's CurrentFrame
         private float _timer;
 
-        // The Animation model to manage
+        // The Animation model & Frame to manage
         public Animation Animation;
 
-        // Position of where to draw texture
+        // Colour of Animation Frame
+        public Color Colour { get; set; }
+        
+        // The default origin (centre) of the Animation Frame
+        public Vector2 Origin { get; set; }
+
+        // Game-Position of where to draw Animation
         public Vector2 Position { get; set; }
 
-        // Source Rectangle to locate animation frame.
+        // Rotation of Animation Frame
+        public float Rotation { get; set; }
+
+        // Source Rectangle to locate Animation Frame.
         public Rectangle SourceRectangle
         {
             get
@@ -118,13 +128,18 @@ namespace Jusgabon
         /// Draw method.
         /// </summary>
         /// <param name="spriteBatch"></param>
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
                 texture: Animation.Texture,
                 position: Position,
                 sourceRectangle: SourceRectangle,
-                color: Color.White);
+                color: Colour,
+                rotation: Rotation,
+                origin: Origin,
+                scale: 1,
+                effects: SpriteEffects.None,
+                layerDepth: 0);
         }
 
         #endregion

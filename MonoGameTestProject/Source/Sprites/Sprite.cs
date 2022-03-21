@@ -19,28 +19,58 @@ namespace Jusgabon
 {
     public class Sprite : Component
     {
-        #region Fields
+        #region Fields & Properties
 
-        protected AnimationManager _animationManager;
-
-        protected Dictionary<string, Animation> _animations;
-
-        protected Vector2 _position;
-
+        // Texture of sprite
+        // All sprites either have a Texture or Animation Manager
         protected Texture2D _texture;
 
-        #endregion
+        // Animation Manager of sprite
+        // All sprites either have an Animation Manager or Texture
+        protected AnimationManager _animationManager;
 
-        #region Properties
+        // Dictionary of Animations to manage
+        protected Dictionary<string, Animation> _animations;
 
+        // Input object for Keyboard/Mouse input
         public Input Input;
 
+        // Current key input
+        protected KeyboardState _currentKey;
+
+        // Previous key input
+        protected KeyboardState _previousKey;
+
+        // List of Child sprites
+        public List<Sprite> Children { get; set; }
+
+        // The Parent Sprite if this sprite is a Child
+        public Sprite Parent;
+
+        // Speed of Sprite
+        public float Speed = 1.5f;
+
+        // Velocity of Sprite
+        public Vector2 Velocity;
+
+        // Direction of Sprite
+        public Vector2 Direction;
+
+        // The Alive boolean for Sprite
+        public bool IsRemoved = false;
+
+        // The Lifespan of a Sprite
+        // (ex. A spell has a lifespan before the spell reaches max range and fizzles out)
+        public float LifeSpan = 0f;
+
+        // Game-Position of where to draw Sprite
+        protected Vector2 _position;
         public Vector2 Position 
         {
             get { return _position; }
             set
             {
-                // for a static image
+                // for a texture
                 _position = value;
 
                 // for an animation
@@ -49,26 +79,104 @@ namespace Jusgabon
             }
         }
 
-        public float Speed = 1.5f;
-
-        public Vector2 Velocity;
-
+        // Rectangle hit-box of Sprite
         public Rectangle Rectangle
         {
-            get 
+            get
             {
-                if (_texture != null)
+                if (_texture != null) // for a texture
                     return new Rectangle(
                         (int)Position.X,
                         (int)Position.Y,
                         _texture.Width,
                         _texture.Height);
-                else // _animationManager != null
+                else // for an animation
                     return new Rectangle(
                         (int)Position.X,
                         (int)Position.Y,
                         _animationManager.Animation.FrameWidth,
                         _animationManager.Animation.FrameHeight);
+            }
+        }
+
+        // Colour field & property of Sprite
+        protected Color _color;
+        public Color Colour
+        {
+            get { return _color; }
+            set
+            {
+                // for a texture
+                _color = value;
+
+                // for an animation
+                if (_animationManager != null)
+                    _animationManager.Colour = _color;
+            }
+        }
+
+        // Rotation field & property of Sprite
+        protected float _rotation;
+        public float Rotation
+        {
+            get { return _rotation; }
+            set
+            {
+                // for a texture
+                _rotation = value;
+
+                // for an animation
+                if (_animationManager != null)
+                    _animationManager.Rotation = _rotation;
+            }
+        }
+
+        // Default origin (centre) of Sprite
+        public Vector2 Origin
+        {
+            get
+            {
+                if (_texture != null) // for a texture
+                    return new Vector2(_texture.Width / 2, _texture.Height / 2);
+                else // for an animation
+                    return new Vector2(
+                        _animationManager.Animation.FrameWidth / 2,
+                        _animationManager.Animation.FrameHeight / 2);
+            }
+        }
+
+        // Color TextureData of Sprite
+        // (DEPRECATED) only used for per-pixel collision detection
+        public Color[] TextureData
+        {
+            get
+            {
+                if (_texture != null) // for a texture
+                {
+                    var _textureData = new Color[_texture.Width * _texture.Height];
+                    _texture.GetData(_textureData);
+                    return _textureData;
+                }
+                else // for an animation
+                {
+                    var _textureData = new Color[
+                        _animationManager.Animation.FrameWidth *
+                        _animationManager.Animation.FrameHeight];
+                    _animationManager.Animation.Texture.GetData(0, _animationManager.SourceRectangle, _textureData, 0, _textureData.Length);
+                    return _textureData;
+                }
+            }
+        }
+        
+        // Transform Matrix of Sprite
+        // (DEPRECATED) only used for per-pixel collision detection
+        public Matrix Transform
+        {
+            get
+            {
+                return Matrix.CreateTranslation(new Vector3(-Origin, 0)) *
+                  Matrix.CreateRotationZ(Rotation) *
+                  Matrix.CreateTranslation(new Vector3(Position, 0));
             }
         }
 
@@ -85,6 +193,11 @@ namespace Jusgabon
         {
             _animations = animations;
             _animationManager = new AnimationManager(_animations.First().Value);
+
+            Children = new List<Sprite>();
+
+            Colour = Color.White;
+
         }
         
         /// <summary>
@@ -94,9 +207,23 @@ namespace Jusgabon
         public Sprite(Texture2D texture)
         {
             _texture = texture;
+
+            Children = new List<Sprite>();
+
+            Colour = Color.White;
+
         }
 
         #region Methods - Collision Detection
+
+        public bool IsTouching(Sprite sprite)
+        {
+            return this.IsTouchingLeft(sprite) ||
+                this.IsTouchingRight(sprite) ||
+                this.IsTouchingTop(sprite) ||
+                this.IsTouchingBottom(sprite);
+        }
+
         /// <summary>
         /// Collision method to detect if this sprite is touching the left side of another sprite.
         /// Sources (tutorial): https://www.youtube.com/watch?v=CV8P9aq2gQo
@@ -150,6 +277,79 @@ namespace Jusgabon
                 this.Rectangle.Left < sprite.Rectangle.Right;
         }
 
+        /// <summary>
+        /// OnCollide method.
+        /// Virtual method to decide what to do if an event happens between two sprites colliding.
+        /// </summary>
+        /// <param name="sprite"></param>
+        public virtual void OnCollide(Sprite sprite)
+        {
+
+        }
+
+        #region Per-pixel collision detection (OBSOLETE)
+        /// <summary>
+        /// Intersects method.
+        /// Detects for per-pixel collision between the two sprites.
+        /// Source (tutorial): https://www.youtube.com/watch?v=5R3qY68fKm0
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <returns></returns>
+        [Obsolete("Intersects is deprecated, please use normal rect-rect collision methods instead.")]
+        public bool Intersects(Sprite sprite)
+        {
+            // Calculate a matrix which transforms from A's local space into
+            // world space and then into B's local space
+            var transformAToB = this.Transform * Matrix.Invert(sprite.Transform);
+
+            // When a point moves in A's local space, it moves in B's local space with a
+            // fixed direction and distance proportional to the movement in A.
+            // This algorithm steps through A one pixel at a time along A's X and Y axes
+            // Calculate the analogous steps in B:
+            var stepX = Vector2.TransformNormal(Vector2.UnitX, transformAToB);
+            var stepY = Vector2.TransformNormal(Vector2.UnitY, transformAToB);
+
+            // Calculate the top left corner of A in B's local space
+            // This variable will be reused to keep track of the start of each row
+            var yPosInB = Vector2.Transform(Vector2.Zero, transformAToB);
+
+            for (int yA = 0; yA < this.Rectangle.Height; yA++)
+            {
+                // Start at the beginning of the row
+                var posInB = yPosInB;
+
+                for (int xA = 0; xA < this.Rectangle.Width; xA++)
+                {
+                    // Round to the nearest pixel
+                    var xB = (int)Math.Round(posInB.X);
+                    var yB = (int)Math.Round(posInB.Y);
+
+                    if (0 <= xB && xB < sprite.Rectangle.Width &&
+                        0 <= yB && yB < sprite.Rectangle.Height)
+                    {
+                        // Get the colors of the overlapping pixels
+                        var colourA = this.TextureData[xA + yA * this.Rectangle.Width];
+                        var colourB = sprite.TextureData[xB + yB * sprite.Rectangle.Width];
+
+                        // If both pixel are not completely transparent
+                        if (colourA.A != 0 && colourB.A != 0)
+                            return true;
+                    }
+
+                    // Move to the next pixel in the row
+                    posInB += stepX;
+                }
+
+                // Move to the next row
+                yPosInB += stepY;
+            }
+
+            // No intersection found
+            return false;
+        }
+
+        #endregion
+
         #endregion
 
         /// <summary>
@@ -198,11 +398,17 @@ namespace Jusgabon
         {
             if (_texture != null)
                 spriteBatch.Draw(
-                    texture:_texture, 
-                    position: Position, 
-                    color: Color.White);
+                    texture: _texture, 
+                    position: Position,
+                    sourceRectangle: null,
+                    color: Colour,
+                    rotation: Rotation,
+                    origin: Origin,
+                    scale: 1,
+                    effects: SpriteEffects.None,
+                    layerDepth: 0);
             else if (_animationManager != null)
-                _animationManager.Draw(spriteBatch);
+                _animationManager.Draw(gameTime, spriteBatch);
             else throw new Exception("Error: No texture/animations found for Sprite.");
         }
 

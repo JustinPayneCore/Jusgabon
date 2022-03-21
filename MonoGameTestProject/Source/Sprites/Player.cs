@@ -19,6 +19,7 @@ namespace Jusgabon
 {
     public class Player : Sprite
     {
+
         /// <summary>
         /// Player constructor.
         /// Initializes Input Keys and Properties like Player speed.
@@ -77,11 +78,16 @@ namespace Jusgabon
 
                 if ((this.Velocity.X > 0 && this.IsTouchingLeft(sprite)) ||
                     (this.Velocity.X < 0 && this.IsTouchingRight(sprite)))
+                {
                     this.Velocity.X = 0;
+                }
 
                 if ((this.Velocity.Y > 0 && this.IsTouchingTop(sprite)) ||
-                    (this.Velocity.Y < 0 && this.IsTouchingBottom(sprite)))
+                (this.Velocity.Y < 0 && this.IsTouchingBottom(sprite)))
+                {
                     this.Velocity.Y = 0;
+                }
+
 
             }
         }

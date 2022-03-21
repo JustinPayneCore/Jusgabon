@@ -49,7 +49,7 @@ namespace Jusgabon
         private List<Sprite> _spritesNonCollidable;
 
         // Player object
-        // note: the player is instantiated to also be Globals.player so other classes can get global access to it
+        // note: _player is also instantiated to be Globals.player for global access
         private Player _player;
 
         // Game window height
@@ -209,16 +209,62 @@ namespace Jusgabon
 
             // TODO: Add your update logic
 
-
+            foreach (var sprite in _spritesNonCollidable)
+                sprite.Update(gameTime, _spritesNonCollidable);
+            
             foreach (var sprite in _spritesCollidable)
                 sprite.Update(gameTime, _spritesCollidable);
 
-
             _camera.Follow(_player);
 
-
+            PostUpdate(gameTime);
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// Post-Update method - Called at the end of Update as a post-check to:
+        /// - Check collision between all current sprites
+        /// - Add new children sprites to the list of _sprites and clear
+        /// - Remove all "IsRemoved" sprites
+        /// </summary>
+        /// <param name="gameTime"></param>
+        protected void PostUpdate(GameTime gameTime)
+        {
+            // 1. Check Collision between all current "Sprites"
+            foreach (var spriteA in _spritesCollidable)
+            {
+                foreach (var spriteB in _spritesCollidable)
+                {
+                    if (spriteA == spriteB)
+                        continue;
+
+                    if (spriteA.IsTouching(spriteB))
+                    {
+                        spriteA.OnCollide(spriteB);
+                    }
+                }
+            }
+
+            // 2. Add Children to the list of "_sprites" and clear
+            int count = _spritesCollidable.Count;
+            for (int i = 0; i < count; i++)
+            {
+                foreach (var child in _spritesCollidable[i].Children)
+                    _spritesCollidable.Add(child);
+
+                _spritesCollidable[i].Children.Clear();
+            }
+
+            // 3. Remove all "IsRemoved" sprites
+            for (int i = 0; i < _spritesCollidable.Count; i++)
+            {
+                if (_spritesCollidable[i].IsRemoved)
+                {
+                    _spritesCollidable.RemoveAt(i);
+                    i--;
+                }
+            }
         }
 
         /// <summary>
