@@ -152,16 +152,19 @@ namespace Jusgabon
         /// </summary>
         private void LoadPlayer()
         {
+            // Content path for Player
+            var path = "Actor/Characters/BlueNinja/SeparateAnim/";
+
             // Player animations
             var playerAnimations = new Dictionary<string, Animation>()
             {
-                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4, 4, 0)  },
-                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4, 4, 16) },
-                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4, 4, 32) },
-                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Characters/BlueNinja/SeparateAnim/Walk"), 4, 4, 48) },
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 48) },
             };
 
-            // test - boss animations
+            // TESTING - boss animations
             var bossDemonCyclopAnimations = new Dictionary<string, Animation>()
             {
                 {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6, false)  },
@@ -173,7 +176,7 @@ namespace Jusgabon
             // Set up player
             Globals.player = new Player(
                 animations: playerAnimations,
-                //animations: bossDemonCyclopAnimations,
+                //animations: bossDemonCyclopAnimations, // TESTING
                 spawnPosition: new Vector2(100, 100)
                 );
             _player = Globals.player;
