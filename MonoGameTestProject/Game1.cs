@@ -175,8 +175,8 @@ namespace Jusgabon
 
             // Set up player
             Globals.player = new Player(
-                //animations: playerAnimations,
-                animations: bossAnimations, // TESTING
+                animations: playerAnimations,
+                //animations: bossAnimations, // TESTING
                 spawnPosition: new Vector2(100, 100)
                 );
             _player = Globals.player;
