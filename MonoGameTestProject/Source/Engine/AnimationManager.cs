@@ -27,14 +27,31 @@ namespace Jusgabon
         // Timer to know when to increment the currentFrame of the animation
         private float _timer;
 
-        // Source Rectangle to locate animation frame.
-        private Rectangle _sourceRectangle;
-
         // The Animation model to manage
         public Animation Animation;
 
         // Position of where to draw texture
         public Vector2 Position { get; set; }
+
+        // Source Rectangle to locate animation frame.
+        public Rectangle SourceRectangle
+        {
+            get
+            {
+                if (Animation.IsSpriteSheetDirectionVertical)
+                    return new Rectangle(
+                        Animation.FrameLocation,
+                        Animation.CurrentFrame * Animation.FrameHeight,
+                        Animation.FrameWidth,
+                        Animation.FrameHeight);
+                else // SpriteSheet is in a horizontal orientation (w/ 1 row of animation frames)
+                    return new Rectangle(
+                        Animation.CurrentFrame * Animation.FrameWidth,
+                        0,
+                        Animation.FrameWidth,
+                        Animation.FrameHeight);
+            }
+        }
 
         #endregion
 
@@ -80,7 +97,7 @@ namespace Jusgabon
         /// The actual 'animate' method where animation frames are incremented.
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, List<Sprite> sprites)
         {
             _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -94,20 +111,6 @@ namespace Jusgabon
                 if (Animation.IsLooping && Animation.CurrentFrame >= Animation.FrameCount)
                     Animation.CurrentFrame = 0;
             }
-
-            // update sourceRectangle
-            if (Animation.IsSpriteSheetDirectionVertical)
-                _sourceRectangle = new Rectangle(
-                    Animation.FrameLocation,
-                    Animation.CurrentFrame * Animation.FrameHeight,
-                    Animation.FrameWidth,
-                    Animation.FrameHeight);
-            else
-                _sourceRectangle = new Rectangle(
-                    Animation.CurrentFrame * Animation.FrameWidth,
-                    0,
-                    Animation.FrameWidth,
-                    Animation.FrameHeight);
         }
 
         /// <summary>
@@ -119,7 +122,7 @@ namespace Jusgabon
             spriteBatch.Draw(
                 texture: Animation.Texture,
                 position: Position,
-                sourceRectangle: _sourceRectangle,
+                sourceRectangle: SourceRectangle,
                 color: Color.White);
         }
 

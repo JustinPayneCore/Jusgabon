@@ -40,7 +40,9 @@ namespace Jusgabon
 
         private Camera _camera;
 
-        private List<Component> _components;
+        private List<Sprite> _spritesCollidable;
+
+        private List<Sprite> _spritesNonCollidable;
 
         private Player _player;
 
@@ -120,14 +122,18 @@ namespace Jusgabon
                 {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6, false) },
             };
 
-            // Instantiate list of components which wil be updated/drawn
-            _components = new List<Component>()
+            // Instantiate list of sprites which wil be updated/drawn
+            _spritesNonCollidable = new List<Sprite>()
             {
                 new Sprite(Globals.content.Load<Texture2D>("Test_Background")),
-                _player,
+            };
+            
+            _spritesCollidable = new List<Sprite>()
+            {
                 new Sprite(npcVillagerAnimations) { Position = new Vector2(100, 200) },
                 new Sprite(npcCatAnimations) { Position = new Vector2(200, 100) },
                 new Sprite(bossDemonCyclopAnimations) { Position = new Vector2(200, 200) },
+                _player,
             };
 
         }
@@ -192,8 +198,8 @@ namespace Jusgabon
             // TODO: Add your update logic
 
 
-            foreach (var component in _components)
-                component.Update(gameTime);
+            foreach (var sprite in _spritesCollidable)
+                sprite.Update(gameTime, _spritesCollidable);
 
 
             _camera.Follow(_player);
@@ -216,8 +222,11 @@ namespace Jusgabon
             // TODO: Add your drawing code
             Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
 
-            foreach (var component in _components)
-                component.Draw(gameTime, Globals.spriteBatch);
+            foreach (var sprite in _spritesNonCollidable)
+                sprite.Draw(gameTime, Globals.spriteBatch);
+            
+            foreach (var sprite in _spritesCollidable)
+                sprite.Draw(gameTime, Globals.spriteBatch);
 
             Globals.spriteBatch.End();
 
