@@ -20,6 +20,7 @@ namespace Jusgabon
     /// <summary>
     /// Animation class to depict an animation model.
     /// Each animation model depict what each frame's properties are.
+    /// Source (tutorial): https://www.youtube.com/watch?v=OLsiWxgONeM
     /// </summary>
     public class Animation
     {

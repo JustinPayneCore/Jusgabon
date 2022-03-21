@@ -96,7 +96,13 @@ namespace Jusgabon
             _texture = texture;
         }
 
-        #region Collision
+        #region Methods - Collision Detection
+        /// <summary>
+        /// Collision method to detect if this sprite is touching the left side of another sprite.
+        /// Sources (tutorial): https://www.youtube.com/watch?v=CV8P9aq2gQo
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <returns></returns>
         protected bool IsTouchingLeft(Sprite sprite)
         {
             return this.Rectangle.Right + this.Velocity.X > sprite.Rectangle.Left &&
@@ -105,6 +111,11 @@ namespace Jusgabon
                 this.Rectangle.Top < sprite.Rectangle.Bottom;
         }
 
+        /// <summary>
+        /// Collision method to detect if this sprite is touching the right side of another sprite.
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <returns></returns>
         protected bool IsTouchingRight(Sprite sprite)
         {
             return this.Rectangle.Left + this.Velocity.X < sprite.Rectangle.Right &&
@@ -113,6 +124,11 @@ namespace Jusgabon
                 this.Rectangle.Top < sprite.Rectangle.Bottom;
         }
 
+        /// <summary>
+        /// Collision method to detect if this sprite is touching the top side of another sprite.
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <returns></returns>
         protected bool IsTouchingTop(Sprite sprite)
         {
             return this.Rectangle.Bottom + this.Velocity.Y > sprite.Rectangle.Top &&
@@ -121,6 +137,11 @@ namespace Jusgabon
                 this.Rectangle.Left < sprite.Rectangle.Right;
         }
 
+        /// <summary>
+        /// Collision method to detect if this sprite is touching the bottom side of another sprite.
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <returns></returns>
         protected bool IsTouchingBottom(Sprite sprite)
         {
             return this.Rectangle.Top + this.Velocity.Y < sprite.Rectangle.Bottom &&

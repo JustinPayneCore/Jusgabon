@@ -19,7 +19,12 @@ namespace Jusgabon
 {
     public class Player : Sprite
     {
-
+        /// <summary>
+        /// Player constructor.
+        /// Initializes Input Keys and Properties like Player speed.
+        /// </summary>
+        /// <param name="animations"></param>
+        /// <param name="spawnPosition"></param>
         public Player(Dictionary<string, Animation> animations, Vector2 spawnPosition) : base(animations)
         {
             Position = spawnPosition;
@@ -36,6 +41,10 @@ namespace Jusgabon
             Speed = 2f;
         }
 
+        /// <summary>
+        /// Move method.
+        /// Checks Keyboard input to move the player.
+        /// </summary>
         protected void Move()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.None))
@@ -53,6 +62,12 @@ namespace Jusgabon
                     Velocity.X = Speed;
             }
         }
+
+        /// <summary>
+        /// Check Collision method.
+        /// Checks player with all other collidable sprites to detect if they are colliding.
+        /// </summary>
+        /// <param name="sprites"></param>
         private void CheckCollision(List<Sprite> sprites)
         {
             foreach (var sprite in sprites)
@@ -71,6 +86,12 @@ namespace Jusgabon
             }
         }
 
+        /// <summary>
+        /// Update method.
+        /// The player update method also invokes methods to detect player movement/collision.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="sprites"></param>
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             Move();

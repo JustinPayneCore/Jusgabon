@@ -19,6 +19,7 @@ namespace Jusgabon
 {
     /// <summary>
     /// AnimationManager Constructor - always keeps track of 1 animation at a time.
+    /// Source (tutorial): https://www.youtube.com/watch?v=OLsiWxgONeM
     /// </summary>
     public class AnimationManager
     {

@@ -20,6 +20,7 @@ namespace Jusgabon
     /// <summary>
     /// Camera class engine.
     /// Camera is used to move the game screen around; depends on player position.
+    /// Source (tutorial): https://www.youtube.com/watch?v=ceBCDKU_mNw
     /// </summary>
     public class Camera
     {

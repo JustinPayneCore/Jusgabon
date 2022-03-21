@@ -36,18 +36,26 @@ namespace Jusgabon
     {
         #region Fields
 
+        // Graphics manager (required in all MonoGame projects)
         GraphicsDeviceManager graphics;
 
+        // Game screen camera object
         private Camera _camera;
 
+        // List of sprites that have collision detection
         private List<Sprite> _spritesCollidable;
 
+        // List of sprites that shouldn't be checked for collision (ex. background)
         private List<Sprite> _spritesNonCollidable;
 
+        // Player object
+        // note: the player is instantiated to also be Globals.player so other classes can get global access to it
         private Player _player;
 
+        // Game window height
         public static int screenHeight;
 
+        // Game window width
         public static int screenWidth;
 
         #endregion
@@ -163,11 +171,12 @@ namespace Jusgabon
             };
 
             // Set up player
-            _player = new Player(
+            Globals.player = new Player(
                 animations: playerAnimations,
                 //animations: bossDemonCyclopAnimations,
                 spawnPosition: new Vector2(100, 100)
                 );
+            _player = Globals.player;
         }
 
         /// <summary>

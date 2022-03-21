@@ -28,5 +28,8 @@ namespace Jusgabon
         // draw sprites
         public static SpriteBatch spriteBatch;
 
+        // player object
+        public static Player player;
+
     }
 }
