@@ -62,6 +62,7 @@ namespace Jusgabon
 
         /// <summary>
         /// Constructor for Animation model.
+        /// Animation for a vertical spritesheet.
         /// </summary>
         /// <param name="texture"></param>
         /// <param name="frameCount"></param>
@@ -84,11 +85,11 @@ namespace Jusgabon
 
         /// <summary>
         /// Constructor for Animation model.
+        /// Animation for a horizontal spritesheet.
         /// </summary>
         /// <param name="texture"></param>
         /// <param name="frameCount"></param>
-        /// <param name="isSpriteSheetDirectionVertical"></param>
-        public Animation(Texture2D texture, int frameCount, bool isSpriteSheetDirectionVertical)
+        public Animation(Texture2D texture, int frameCount)
         {
             Texture = texture;
 
@@ -98,7 +99,7 @@ namespace Jusgabon
 
             FrameSpeed = 0.15f;
 
-            IsSpriteSheetDirectionVertical = isSpriteSheetDirectionVertical;
+            IsSpriteSheetDirectionVertical = false;
 
             if (!IsSpriteSheetDirectionVertical)
             {

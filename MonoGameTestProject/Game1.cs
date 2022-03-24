@@ -121,13 +121,13 @@ namespace Jusgabon
             // Load NPC Cat animations
             var npcCatAnimations = new Dictionary<string, Animation>()
             {
-                {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Animals/Cat/SpriteSheet"), 2, false) },
+                {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Animals/Cat/SpriteSheet"), 2) },
             };
 
             // Load Boss Demon Cyclops animations
             var bossDemonCyclopAnimations = new Dictionary<string, Animation>()
             {
-                {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6, false) },
+                {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6) },
             };
 
             // Instantiate list of sprites which wil be updated/drawn
@@ -158,7 +158,10 @@ namespace Jusgabon
             // Player animations
             var playerAnimations = new Dictionary<string, Animation>()
             {
-                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 0)  },
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 
+                                                frameCount: 4, 
+                                                spritesheetColumns: 4, 
+                                                frameLocation: 0) },
                 {"WalkUp",      new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 16) },
                 {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 32) },
                 {"WalkRight",   new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 48) },
@@ -167,10 +170,10 @@ namespace Jusgabon
             // TESTING - boss animations
             var bossAnimations = new Dictionary<string, Animation>()
             {
-                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Attack"), 3, false)  },
-                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Charge"), 7, false)  },
-                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Hit"), 3, false)  },
-                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Jump"), 6, false)  },
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Attack"), 3)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Charge"), 7)  },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Hit"), 3)  },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Jump"), 6)  },
             };
 
             // Set up player
