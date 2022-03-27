@@ -70,15 +70,33 @@ namespace Jusgabon
                 return;
 
             {
+                if (Keyboard.GetState().IsKeyDown(Input.Dash))
+                {
+                    Console.WriteLine("Player is Dashing");
+                    return;
+                }
+
                 if (Keyboard.GetState().IsKeyDown(Input.Attack))
                 {
                     Console.WriteLine("Player is Attacking");
                     return;
                 }
 
-                if (Keyboard.GetState().IsKeyDown(Input.Magic))
+                if (Keyboard.GetState().IsKeyDown(Input.Special1))
                 {
-                    Console.WriteLine("Player is Casting Magic");
+                    Console.WriteLine("Player is Casting Special 1");
+                    return;
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Input.Special2))
+                {
+                    Console.WriteLine("Player is Casting Special 2");
+                    return;
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Input.Item))
+                {
+                    Console.WriteLine("Player is Using Item");
                     return;
                 }
 
