@@ -149,8 +149,9 @@ namespace Jusgabon
             {
                 new Sprite(npcVillagerAnimations) { Position = new Vector2(100, 200) },
                 new Sprite(npcCatAnimations) { Position = new Vector2(200, 100) },
-                new Sprite(enemyOctopusAnimations) { Position = new Vector2(400, 100) },
-                new Sprite(bossDemonCyclopAnimations) { Position = new Vector2(200, 200) },
+                new Enemy(enemyOctopusAnimations) { Position = new Vector2(400, 100) },
+                new Enemy(enemyOctopusAnimations) { Position = new Vector2(300, 200) },
+                new Boss(bossDemonCyclopAnimations) { Position = new Vector2(200, 200) },
                 _player,
             };
 
@@ -280,7 +281,7 @@ namespace Jusgabon
             }
 
             // 4. Sort sprites by its current Position.Y (for 2.5D drawing effect)
-            _spritesCollidable.Sort((x, y) => x.Position.Y.CompareTo(y.Position.Y));
+            _spritesCollidable.Sort((spriteA, spriteB) => spriteA.Position.Y.CompareTo(spriteB.Position.Y));
         }
 
         /// <summary>
