@@ -19,6 +19,14 @@ namespace Jusgabon
 {
     public class Player : Sprite
     {
+        public enum Directions
+        {
+            Up,
+            Down,
+            Left,
+            Right
+        }
+        public Directions PlayerDirection;
 
         /// <summary>
         /// Player constructor.
@@ -35,36 +43,82 @@ namespace Jusgabon
                 Up = Keys.Up,
                 Down = Keys.Down,
                 Left = Keys.Left,
-                Right = Keys.Right
+                Right = Keys.Right,
+                Attack = Keys.A,
+                Dash = Keys.Space,
+                Magic = Keys.S,
+                Interact = Keys.F
             };
 
             // make player faster than base sprites
             Speed = 2f;
+
+            // default player direction is facing down
+            PlayerDirection = Directions.Down;
         }
 
         /// <summary>
-        /// Move method.
-        /// Checks Keyboard input to move the player.
+        /// CheckInput method.
+        /// Checks Keyboard input for the player.
         /// </summary>
-        protected void Move()
+        protected void CheckInput()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.None))
                 return;
 
             {
-                if (Keyboard.GetState().IsKeyDown(Input.Up))
-                    Velocity.Y = -Speed;
-                else if (Keyboard.GetState().IsKeyDown(Input.Down))
-                    Velocity.Y = Speed;
+                if (Keyboard.GetState().IsKeyDown(Input.Attack))
+                {
+                    Console.WriteLine("Player is Attacking");
+                    return;
+                }
 
-                if (Keyboard.GetState().IsKeyDown(Input.Left))
-                    Velocity.X = -Speed;
-                else if (Keyboard.GetState().IsKeyDown(Input.Right))
-                    Velocity.X = Speed;
+                if (Keyboard.GetState().IsKeyDown(Input.Magic))
+                {
+                    Console.WriteLine("Player is Casting Magic");
+                    return;
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Input.Interact))
+                {
+                    Console.WriteLine("Player is Interacting...");
+                    return;
+                }
+
+                CheckMovement();
             }
         }
 
         /// <summary>
+        /// CheckMovement method.
+        /// Checks Keyboard input for player movement.
+        /// </summary>
+        protected void CheckMovement()
+        {
+            if (Keyboard.GetState().IsKeyDown(Input.Up))
+            {
+                Velocity.Y = -Speed;
+                PlayerDirection = Directions.Up;
+            }
+            else if (Keyboard.GetState().IsKeyDown(Input.Down))
+            {
+                Velocity.Y = Speed;
+                PlayerDirection = Directions.Down;
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Input.Left))
+            {
+                Velocity.X = -Speed;
+                PlayerDirection = Directions.Left;
+            }
+            else if (Keyboard.GetState().IsKeyDown(Input.Right))
+            {
+                Velocity.X = Speed;
+                PlayerDirection = Directions.Right;
+            }
+        }
+
+/*        /// <summary>
         /// Check Collision method.
         /// Checks player with all other collidable sprites to detect if they are colliding.
         /// </summary>
@@ -90,7 +144,7 @@ namespace Jusgabon
 
 
             }
-        }
+        }*/
 
         /// <summary>
         /// Update method.
@@ -100,7 +154,7 @@ namespace Jusgabon
         /// <param name="sprites"></param>
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
-            Move();
+            CheckInput();
 
             SetAnimations();
 

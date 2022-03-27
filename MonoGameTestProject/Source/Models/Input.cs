@@ -29,5 +29,13 @@ namespace Jusgabon
         public Keys Right { get; set; }
 
         public Keys Up { get; set; }
+
+        public Keys Attack { get; set; }
+
+        public Keys Dash { get; set; }
+
+        public Keys Magic { get; set; }
+
+        public Keys Interact { get; set; }
     }
 }
