@@ -25,7 +25,7 @@ namespace Jusgabon
         public float AggroDistance { get; set; } = 75f;
 
         // Modifier to increase/decrease aggro once following target
-        public float AggroModifier = 2;
+        public float AggroModifier = 1.5f;
 
         // If sprite is currently aggro'd to target
         public bool IsAggro { get; set; }
