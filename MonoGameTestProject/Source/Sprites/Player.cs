@@ -54,7 +54,7 @@ namespace Jusgabon
             };
 
             // make player faster than base sprites
-            Speed = 2f;
+            Speed = 1.5f;
 
             // default player direction is facing down
             PlayerDirection = Directions.Down;
@@ -126,7 +126,6 @@ namespace Jusgabon
                 Velocity.Y = Speed;
                 PlayerDirection = Directions.Down;
             }
-
             if (Keyboard.GetState().IsKeyDown(Input.Left))
             {
                 Velocity.X = -Speed;
@@ -137,35 +136,9 @@ namespace Jusgabon
                 Velocity.X = Speed;
                 PlayerDirection = Directions.Right;
             }
+
+
         }
-
-/*        /// <summary>
-        /// Check Collision method.
-        /// Checks player with all other collidable sprites to detect if they are colliding.
-        /// </summary>
-        /// <param name="sprites"></param>
-        private void CheckCollision(List<Sprite> sprites)
-        {
-            foreach (var sprite in sprites)
-            {
-                if (sprite == this)
-                    continue;
-
-                if ((this.Velocity.X > 0 && this.IsTouchingLeft(sprite)) ||
-                    (this.Velocity.X < 0 && this.IsTouchingRight(sprite)))
-                {
-                    this.Velocity.X = 0;
-                }
-
-                if ((this.Velocity.Y > 0 && this.IsTouchingTop(sprite)) ||
-                (this.Velocity.Y < 0 && this.IsTouchingBottom(sprite)))
-                {
-                    this.Velocity.Y = 0;
-                }
-
-
-            }
-        }*/
 
         /// <summary>
         /// Update method.
