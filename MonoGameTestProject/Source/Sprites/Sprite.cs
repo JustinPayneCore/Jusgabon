@@ -41,11 +41,11 @@ namespace Jusgabon
         // Previous key input
         protected KeyboardState _previousKey;
 
-        // The target Sprite that this Sprite wants to follow
+/*        // The target Sprite that this Sprite wants to follow
         public Sprite FollowTarget { get; set; }
 
         // How close we want to be to our target
-        public float FollowDistance { get; set; }
+        public float FollowDistance { get; set; }*/
 
         // List of Child sprites
         public List<Sprite> Children { get; set; }
@@ -391,7 +391,7 @@ namespace Jusgabon
         #endregion
 
 
-        #region Methods - Follow Sprite Logic
+/*        #region Methods - Follow Sprite Logic
 
         public Sprite SetFollowTarget(Sprite followTarget, float followDistance)
         {
@@ -428,7 +428,7 @@ namespace Jusgabon
             }
         }
 
-        #endregion
+        #endregion*/
 
 
         /// <summary>
@@ -470,7 +470,7 @@ namespace Jusgabon
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             // Invoke Follow Sprite logic
-            Follow();
+            //Follow();
 
             if (Velocity != Vector2.Zero)
             {

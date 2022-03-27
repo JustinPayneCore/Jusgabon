@@ -17,12 +17,12 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
-    public class Enemy : Sprite
+    public class Enemy : Npc
     {
         #region Members
 
         // Distance for Sprite to get aggro and follow target
-        public float AggroDistance { get; set; } = 90f;
+        public float AggroDistance { get; set; } = 75f;
 
         // Modifier to increase/decrease aggro once following target
         public float AggroModifier = 2;
@@ -45,6 +45,7 @@ namespace Jusgabon
             // set aggro target to player & follow distance of 16 -> player width/height
             FollowTarget = Globals.player;
             FollowDistance = 16f;
+            
         }
 
         #region Methods - Collision Detection
@@ -65,29 +66,12 @@ namespace Jusgabon
 
         protected override void Follow()
         {
-            if (FollowTarget == null)
-                return;
-
             var currentDistance = Vector2.Distance(this.Position, FollowTarget.Position);
 
-            if (currentDistance <= FollowDistance || IsAggressive(currentDistance) == false)
-            {
-                Velocity = Vector2.Zero;
+            if (IsAggressive(currentDistance) == false)
                 return;
-            }
 
-            var distance = FollowTarget.Position - this.Position;
-            _rotation = (float)Math.Atan2(distance.Y, distance.X);
-
-            Direction = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
-
-            if (currentDistance > FollowDistance)
-            {
-                var t = MathHelper.Min((float)Math.Abs(currentDistance - FollowDistance), Speed);
-                Velocity = Direction * t;
-
-                //Position += Velocity;
-            }
+            base.Follow();
         }
 
         protected virtual bool IsAggressive(float currentDistance)
@@ -116,6 +100,19 @@ namespace Jusgabon
         }
 
         #endregion Methods - Follow Sprite Logic
+
+        #region Methods - Random Movement
+
+        protected override void RandomMovement(GameTime gameTime)
+        {
+            // stop random movement if enemy is in aggro
+            if (IsAggro)
+                return;
+
+            base.RandomMovement(gameTime);
+        }
+
+        #endregion
 
         /// <summary>
         /// Enemy Update method.

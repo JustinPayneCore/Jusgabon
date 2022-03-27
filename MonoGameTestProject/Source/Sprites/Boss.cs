@@ -28,9 +28,8 @@ namespace Jusgabon
         public Boss(Dictionary<string, Animation> animations) : base(animations)
         {
             Speed = 0.5f; // slower than default enemy
-            AggroModifier = 2.5f; // larger modifier to make boss "stickier" to player
+            AggroModifier = 2f; // default enemy modifier = 2f; increase if boss should be "stickier" to player
         }
-
 
 
     }
