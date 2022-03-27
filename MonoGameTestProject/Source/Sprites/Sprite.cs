@@ -19,7 +19,7 @@ namespace Jusgabon
 {
     public class Sprite : Component
     {
-        #region Fields & Properties
+        #region Members
 
         // Texture of sprite
         // All sprites either have a Texture or Animation Manager
@@ -41,6 +41,12 @@ namespace Jusgabon
         // Previous key input
         protected KeyboardState _previousKey;
 
+        // The target Sprite that this Sprite wants to follow
+        public Sprite FollowTarget { get; set; }
+
+        // How close we want to be to our target
+        public float FollowDistance { get; set; }
+
         // List of Child sprites
         public List<Sprite> Children { get; set; }
 
@@ -48,13 +54,16 @@ namespace Jusgabon
         public Sprite Parent;
 
         // Speed of Sprite
-        public float Speed = 1.5f;
+        public float Speed = 0.6f;
 
         // Velocity of Sprite
         public Vector2 Velocity;
 
         // Direction of Sprite
         public Vector2 Direction;
+
+        // How fast sprite rotates (for sprites with only 1 walk animation)
+        public float RotationVelocity = 3f;
 
         // The Alive boolean for Sprite
         public bool IsRemoved = false;
@@ -181,7 +190,7 @@ namespace Jusgabon
             }
         }
 
-        #endregion
+        #endregion Members
 
 
         #region Methods
@@ -216,6 +225,34 @@ namespace Jusgabon
         }
 
         #region Methods - Collision Detection
+        /// <summary>
+        /// Check Collision method.
+        /// Checks player with all other collidable sprites to detect if they are colliding.
+        /// </summary>
+        /// <param name="sprites"></param>
+        public virtual void CheckCollision(List<Sprite> sprites)
+        {
+            foreach (var sprite in sprites)
+            {
+                if (sprite == this)
+                    continue;
+
+                if ((this.Velocity.X > 0 && this.IsTouchingLeft(sprite)) ||
+                    (this.Velocity.X < 0 && this.IsTouchingRight(sprite)))
+                {
+                    this.Velocity.X = 0;
+                }
+
+                if ((this.Velocity.Y > 0 && this.IsTouchingTop(sprite)) ||
+                (this.Velocity.Y < 0 && this.IsTouchingBottom(sprite)))
+                {
+                    this.Velocity.Y = 0;
+                }
+
+
+            }
+        }
+
 
         public bool IsTouching(Sprite sprite)
         {
@@ -353,37 +390,101 @@ namespace Jusgabon
 
         #endregion
 
+
+        #region Methods - Follow Sprite Logic
+
+        public Sprite SetFollowTarget(Sprite followTarget, float followDistance)
+        {
+            FollowTarget = followTarget;
+            FollowDistance = followDistance;
+
+            return this;
+        }
+
+        protected virtual void Follow()
+        {
+            if (FollowTarget == null)
+                return;
+
+            var currentDistance = Vector2.Distance(this.Position, FollowTarget.Position);
+
+            if (currentDistance <= FollowDistance)
+            {
+                Velocity = Vector2.Zero;
+                return;
+            }
+
+            var distance = FollowTarget.Position - this.Position;
+            _rotation = (float)Math.Atan2(distance.Y, distance.X);
+
+            Direction = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
+
+            if (currentDistance > FollowDistance)
+            {
+                var t = MathHelper.Min((float)Math.Abs(currentDistance - FollowDistance), Speed);
+                Velocity = Direction * t;
+
+                //Position += Velocity;
+            }
+        }
+
+        #endregion
+
+
         /// <summary>
         /// SetAnimations Method.
         /// If sprite has animations, then set logic on which animation to use here.
         /// </summary>
         protected virtual void SetAnimations()
         {
-            if (Velocity.X > 0)
-                _animationManager.Play(_animations["WalkRight"]);
-            else if (Velocity.X < 0)
-                _animationManager.Play(_animations["WalkLeft"]);
-            else if (Velocity.Y > 0)
-                _animationManager.Play(_animations["WalkDown"]);
-            else if (Velocity.Y < 0)
-                _animationManager.Play(_animations["WalkUp"]);
-            else
-                _animationManager.Stop();
+            // Movement Animations
+            if (_animations.ContainsKey("Walk")) // Walk animation does not have different directions
+            {
+                if (Velocity != Vector2.Zero)
+                    _animationManager.Play(_animations["Walk"]);
+                else
+                    _animationManager.Stop();
+            }
+            else // Walk animations do have different directions
+            {
+                if (Velocity.X > 0)
+                    _animationManager.Play(_animations["WalkRight"]);
+                else if (Velocity.X < 0)
+                    _animationManager.Play(_animations["WalkLeft"]);
+                else if (Velocity.Y > 0)
+                    _animationManager.Play(_animations["WalkDown"]);
+                else if (Velocity.Y < 0)
+                    _animationManager.Play(_animations["WalkUp"]);
+                else
+                    _animationManager.Stop();
+            }
+
         }
 
         /// <summary>
         /// Update method.
-        /// Only constantly update if sprite has animations.
-        /// If sprite only has a texture, then no update needed, or override this method in child class.
+        /// If sprite is moving, then update collision detection logic and position.
+        /// If sprite only has an animation, then update animation movement & frames.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
+            // Invoke Follow Sprite logic
+            Follow();
+
+            if (Velocity != Vector2.Zero)
+            {
+                CheckCollision(sprites);
+                Position += Velocity;
+            }
+
 
             if (_animationManager != null)
             {
+                // Update moveset animation
                 SetAnimations();
 
+                // Update animation frame
                 _animationManager.Update(gameTime, sprites);
             }
 
