@@ -34,8 +34,12 @@ namespace Jusgabon
 
         public Keys Dash { get; set; }
 
-        public Keys Magic { get; set; }
+        public Keys Special1 { get; set; }
+
+        public Keys Special2 { get; set; }
 
         public Keys Interact { get; set; }
+
+        public Keys Item { get; set; }
     }
 }

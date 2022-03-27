@@ -38,15 +38,18 @@ namespace Jusgabon
         {
             Position = spawnPosition;
 
+            // set player keybindings
             Input = new Input()
             {
                 Up = Keys.Up,
                 Down = Keys.Down,
                 Left = Keys.Left,
                 Right = Keys.Right,
-                Attack = Keys.A,
                 Dash = Keys.Space,
-                Magic = Keys.S,
+                Attack = Keys.Q,
+                Special1 = Keys.W,
+                Special2 = Keys.E,
+                Item = Keys.R,
                 Interact = Keys.F
             };
 
