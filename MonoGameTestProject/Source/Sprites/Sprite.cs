@@ -80,22 +80,23 @@ namespace Jusgabon
         }
 
         // Rectangle hit-box of Sprite
+        // returns 80% of the actual Sprite rectangle (hitbox is smaller than sprite)
         public Rectangle Rectangle
         {
             get
             {
                 if (_texture != null) // for a texture
                     return new Rectangle(
-                        (int)Position.X,
-                        (int)Position.Y,
-                        _texture.Width,
-                        _texture.Height);
+                        (int)Position.X + (_texture.Width / 10),
+                        (int)Position.Y + (_texture.Height / 10),
+                        _texture.Width - (_texture.Width / 10),
+                        _texture.Height - (_texture.Height / 10));
                 else // for an animation
                     return new Rectangle(
-                        (int)Position.X,
-                        (int)Position.Y,
-                        _animationManager.Animation.FrameWidth,
-                        _animationManager.Animation.FrameHeight);
+                        (int)Position.X + (_animationManager.Animation.FrameWidth / 10),
+                        (int)Position.Y + (_animationManager.Animation.FrameHeight / 10),
+                        _animationManager.Animation.FrameWidth - (_animationManager.Animation.FrameWidth / 5),
+                        _animationManager.Animation.FrameHeight - (_animationManager.Animation.FrameHeight / 5));
             }
         }
 
