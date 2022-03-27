@@ -41,12 +41,6 @@ namespace Jusgabon
         // Previous key input
         protected KeyboardState _previousKey;
 
-/*        // The target Sprite that this Sprite wants to follow
-        public Sprite FollowTarget { get; set; }
-
-        // How close we want to be to our target
-        public float FollowDistance { get; set; }*/
-
         // List of Child sprites
         public List<Sprite> Children { get; set; }
 
@@ -391,46 +385,6 @@ namespace Jusgabon
         #endregion
 
 
-/*        #region Methods - Follow Sprite Logic
-
-        public Sprite SetFollowTarget(Sprite followTarget, float followDistance)
-        {
-            FollowTarget = followTarget;
-            FollowDistance = followDistance;
-
-            return this;
-        }
-
-        protected virtual void Follow()
-        {
-            if (FollowTarget == null)
-                return;
-
-            var currentDistance = Vector2.Distance(this.Position, FollowTarget.Position);
-
-            if (currentDistance <= FollowDistance)
-            {
-                Velocity = Vector2.Zero;
-                return;
-            }
-
-            var distance = FollowTarget.Position - this.Position;
-            _rotation = (float)Math.Atan2(distance.Y, distance.X);
-
-            Direction = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
-
-            if (currentDistance > FollowDistance)
-            {
-                var t = MathHelper.Min((float)Math.Abs(currentDistance - FollowDistance), Speed);
-                Velocity = Direction * t;
-
-                //Position += Velocity;
-            }
-        }
-
-        #endregion*/
-
-
         /// <summary>
         /// SetAnimations Method.
         /// If sprite has animations, then set logic on which animation to use here.
@@ -469,8 +423,6 @@ namespace Jusgabon
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
-            // Invoke Follow Sprite logic
-            //Follow();
 
             if (Velocity != Vector2.Zero)
             {
