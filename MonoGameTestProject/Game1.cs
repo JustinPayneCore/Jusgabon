@@ -112,10 +112,10 @@ namespace Jusgabon
             // NPC Villager animations
             var npcVillagerAnimations = new Dictionary<string, Animation>()
             {
-                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1, 4, 0)  },
-                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1, 4, 16) },
-                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1, 4, 32) },
-                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Idle"), 1, 4, 48) },
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 48) },
             };
 
             // Load NPC Cat animations
@@ -144,14 +144,14 @@ namespace Jusgabon
             {
                 new Sprite(Globals.content.Load<Texture2D>("Test_Background")),
             };
-            
+
             _spritesCollidable = new List<Sprite>()
             {
-                new Sprite(npcVillagerAnimations) { Position = new Vector2(100, 200) },
-                new Sprite(npcCatAnimations) { Position = new Vector2(200, 100) },
-                new Enemy(enemyOctopusAnimations) { Position = new Vector2(400, 100) },
-                new Enemy(enemyOctopusAnimations) { Position = new Vector2(300, 200) },
-                new Boss(bossDemonCyclopAnimations) { Position = new Vector2(200, 200) },
+                new Npc(npcVillagerAnimations) { Position = new Vector2(-100, -50) },
+                new Npc(npcCatAnimations) { Position = new Vector2(50, -75), IsStationary = true },
+                new Enemy(enemyOctopusAnimations) { Position = new Vector2(150, 100) },
+                new Enemy(enemyOctopusAnimations) { Position = new Vector2(-100, 200) },
+                new Boss(bossDemonCyclopAnimations) { Position = new Vector2(300, 0) },
                 _player,
             };
 
@@ -200,7 +200,7 @@ namespace Jusgabon
             // Set up player
             Globals.player = new Player(
                 animations: playerAnimations,
-                spawnPosition: new Vector2(100, 100)
+                spawnPosition: new Vector2(0, 0)
                 );
             _player = Globals.player;
         }
