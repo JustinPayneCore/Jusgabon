@@ -169,6 +169,7 @@ namespace Jusgabon
             // Player animations
             var playerAnimations = new Dictionary<string, Animation>()
             {
+                // walk
                 {"WalkDown",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 
                                                 frameCount: 4, 
                                                 spritesheetColumns: 4, 
@@ -176,21 +177,29 @@ namespace Jusgabon
                 {"WalkUp",      new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 16) },
                 {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 32) },
                 {"WalkRight",   new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 48) },
-            };
 
-            // TESTING - boss animations
-            var bossAnimations = new Dictionary<string, Animation>()
-            {
-                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Attack"), 3)  },
-                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Charge"), 7)  },
-                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Hit"), 3)  },
-                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Boss/GiantFrog/Jump"), 6)  },
+                // attack
+                {"AttackDown",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 0) },
+                {"AttackUp",    new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 16) },
+                {"AttackLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 32) },
+                {"AttackRight", new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 48) },
+
+                // jump
+                {"JumpDown",  new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 0) },
+                {"JumpUp",    new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 16) },
+                {"JumpLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 32) },
+                {"JumpRight", new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 48) },
+
+                // other actions
+                {"Item",        new Animation(Globals.content.Load<Texture2D>(path + "Item"), 1) },
+                {"Special1",    new Animation(Globals.content.Load<Texture2D>(path + "Special1"), 1) },
+                {"Special2",    new Animation(Globals.content.Load<Texture2D>(path + "Special2"), 1) },
+                {"Dead",        new Animation(Globals.content.Load<Texture2D>(path + "Dead"), 1) },
             };
 
             // Set up player
             Globals.player = new Player(
                 animations: playerAnimations,
-                //animations: bossAnimations, // TESTING
                 spawnPosition: new Vector2(100, 100)
                 );
             _player = Globals.player;
