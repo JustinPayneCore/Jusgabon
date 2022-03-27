@@ -24,8 +24,6 @@ namespace Jusgabon
     /// </summary>
     public class Animation
     {
-        #region Properties
-
         // the current frame to view
         public int CurrentFrame { get; set; }
 
@@ -58,7 +56,6 @@ namespace Jusgabon
         // the texture to animate
         public Texture2D Texture { get; private set; }
 
-        #endregion
 
         /// <summary>
         /// Constructor for Animation model.

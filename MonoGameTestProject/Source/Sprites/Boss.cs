@@ -17,12 +17,22 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// Boss Class - Inherits Enemy Class.
+    /// Inheritance Order: Boss -> Enemy -> NPC -> Sprite -> Component
+    /// </summary>
     public class Boss : Enemy
     {
+        #region Members
+
+
+        #endregion Members
+
+
+        #region Methods
 
         /// <summary>
         /// Boss Constructor.
-        /// Overrides base Enemy constructor.
         /// </summary>
         /// <param name="animations"></param>
         public Boss(Dictionary<string, Animation> animations) : base(animations)
@@ -31,6 +41,7 @@ namespace Jusgabon
             AggroModifier = 2f; // default enemy modifier = 1.5f; increase if boss should be "stickier" to player
         }
 
+        #endregion
 
     }
 }

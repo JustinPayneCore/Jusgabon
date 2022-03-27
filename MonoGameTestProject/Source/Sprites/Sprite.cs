@@ -17,6 +17,9 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// Sprite Class - The base Sprite/Entity objects in this game.
+    /// </summary>
     public class Sprite : Component
     {
         #region Members
@@ -247,7 +250,11 @@ namespace Jusgabon
             }
         }
 
-
+        /// <summary>
+        /// General collision method to detect if this sprite is touching target sprite.
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <returns></returns>
         public bool IsTouching(Sprite sprite)
         {
             return this.IsTouchingLeft(sprite) ||
@@ -257,7 +264,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// Collision method to detect if this sprite is touching the left side of another sprite.
+        /// Collision method to detect if this sprite is touching the left side of target sprite.
         /// Sources (tutorial): https://www.youtube.com/watch?v=CV8P9aq2gQo
         /// </summary>
         /// <param name="sprite"></param>
@@ -271,7 +278,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// Collision method to detect if this sprite is touching the right side of another sprite.
+        /// Collision method to detect if this sprite is touching the right side of target sprite.
         /// </summary>
         /// <param name="sprite"></param>
         /// <returns></returns>
@@ -284,7 +291,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// Collision method to detect if this sprite is touching the top side of another sprite.
+        /// Collision method to detect if this sprite is touching the top side of target sprite.
         /// </summary>
         /// <param name="sprite"></param>
         /// <returns></returns>
@@ -297,7 +304,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// Collision method to detect if this sprite is touching the bottom side of another sprite.
+        /// Collision method to detect if this sprite is touching the bottom side of target sprite.
         /// </summary>
         /// <param name="sprite"></param>
         /// <returns></returns>
@@ -311,7 +318,7 @@ namespace Jusgabon
 
         /// <summary>
         /// OnCollide method.
-        /// Virtual method to decide what to do if an event happens between two sprites colliding.
+        /// Invoke this method when this Sprite collides with target sprite.
         /// </summary>
         /// <param name="sprite"></param>
         public virtual void OnCollide(Sprite sprite)

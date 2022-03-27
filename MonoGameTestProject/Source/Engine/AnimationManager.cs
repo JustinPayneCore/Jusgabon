@@ -24,7 +24,7 @@ namespace Jusgabon
     /// </summary>
     public class AnimationManager
     {
-        #region Fields and Properties
+        #region Members
 
         // Timer for incrementing Animation's CurrentFrame
         private float _timer;
@@ -64,7 +64,7 @@ namespace Jusgabon
             }
         }
 
-        #endregion
+        #endregion Members
 
         #region Methods
 
@@ -142,7 +142,7 @@ namespace Jusgabon
                 layerDepth: 0);
         }
 
-        #endregion
+        #endregion Methods
 
 
 

@@ -17,8 +17,15 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// Player Class - The Player object that the user controls.
+    /// Inheritance Order: Player -> Sprite -> Component
+    /// </summary>
     public class Player : Sprite
     {
+        #region Members
+
+        // The Directions that Player can face
         public enum Directions
         {
             Up,
@@ -26,7 +33,13 @@ namespace Jusgabon
             Left,
             Right
         }
+        // Direction that Player faces
         public Directions PlayerDirection;
+
+        #endregion Members
+
+
+        #region Methods
 
         /// <summary>
         /// Player constructor.
@@ -159,5 +172,7 @@ namespace Jusgabon
             Position += Velocity;
             Velocity = Vector2.Zero;
         }
+
+        #endregion Methods
     }
 }

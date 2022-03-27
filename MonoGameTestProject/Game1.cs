@@ -24,9 +24,9 @@ using Microsoft.Xna.Framework.Media;
 namespace Jusgabon
 {
     /// <summary>
-    /// Game Class definition - main class program of the MonoGame project.
-    /// This class needs to include these methods necessary for the game to run:
-    ///  - Constructor & key variables
+    /// Game Class - main program of the MonoGame project.
+    /// Needs to include these methods necessary for the game to run:
+    ///  - Constructor & Class members
     ///  - Initialize method
     ///  - LoadContent & UnloadContent method
     ///  - Update method
@@ -34,7 +34,7 @@ namespace Jusgabon
     /// </summary>
     public class Game1 : Game
     {
-        #region Fields
+        #region Members
 
         // Graphics manager (required in all MonoGame projects)
         GraphicsDeviceManager graphics;
@@ -58,7 +58,7 @@ namespace Jusgabon
         // Game window width
         public static int screenWidth;
 
-        #endregion
+        #endregion Members
 
 
         #region Methods
@@ -317,6 +317,6 @@ namespace Jusgabon
             base.Draw(gameTime);
         }
 
-        #endregion 
+        #endregion Methods
     }
 }

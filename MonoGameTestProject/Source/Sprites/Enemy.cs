@@ -17,6 +17,10 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// Enemy Class - Inherits NPC Class.
+    /// Inheritance Order: Enemy -> NPC -> Sprite -> Component
+    /// </summary>
     public class Enemy : Npc
     {
         #region Members
@@ -51,7 +55,7 @@ namespace Jusgabon
         #region Methods - Collision Detection
         /// <summary>
         /// OnCollide method.
-        /// Invoked when Enemy Sprite collides with target sprite.
+        /// Invoke this method when Enemy Sprite collides with target sprite.
         /// </summary>
         /// <param name="sprite"></param>
         public override void OnCollide(Sprite sprite)
@@ -64,6 +68,10 @@ namespace Jusgabon
 
         #region Methods - Follow Sprite Logic
 
+        /// <summary>
+        /// Follow the Player.
+        /// If this Enemy is not yet Aggro'd, then this method returns.
+        /// </summary>
         protected override void Follow()
         {
             var currentDistance = Vector2.Distance(this.Position, FollowTarget.Position);
@@ -74,6 +82,11 @@ namespace Jusgabon
             base.Follow();
         }
 
+        /// <summary>
+        /// Checks if this Enemy is Aggro'd to the Player.
+        /// </summary>
+        /// <param name="currentDistance"></param>
+        /// <returns></returns>
         protected virtual bool IsAggressive(float currentDistance)
         {
             // if current distance is over aggro distance, return false
@@ -103,6 +116,11 @@ namespace Jusgabon
 
         #region Methods - Random Movement
 
+        /// <summary>
+        /// Determine Random Enemy movement.
+        /// Overrides NPC RandomMovement method.
+        /// </summary>
+        /// <param name="gameTime"></param>
         protected override void RandomMovement(GameTime gameTime)
         {
             // stop random movement if enemy is in aggro
@@ -112,7 +130,7 @@ namespace Jusgabon
             base.RandomMovement(gameTime);
         }
 
-        #endregion
+        #endregion Methods - Random Movement
 
         /// <summary>
         /// Enemy Update method.

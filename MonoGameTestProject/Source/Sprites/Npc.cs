@@ -17,6 +17,10 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// NPC Class - Inherits Sprite
+    /// Inheritance Order: NPC -> Sprite -> Component
+    /// </summary>
     public class Npc : Sprite
     {
         #region Members
@@ -65,7 +69,7 @@ namespace Jusgabon
         #region Methods - Collision Detection
         /// <summary>
         /// OnCollide method.
-        /// Invoked when Enemy Sprite collides with target sprite.
+        /// Invoke this method when NPC Sprite collides with target sprite.
         /// </summary>
         /// <param name="sprite"></param>
         public override void OnCollide(Sprite sprite)
@@ -78,6 +82,12 @@ namespace Jusgabon
 
         #region Methods - Follow Sprite Logic
 
+        /// <summary>
+        /// Set a Sprite target to follow, also passed with a follow distance where this sprite stops.
+        /// </summary>
+        /// <param name="followTarget"></param>
+        /// <param name="followDistance"></param>
+        /// <returns></returns>
         public Sprite SetFollowTarget(Sprite followTarget, float followDistance)
         {
             FollowTarget = followTarget;
@@ -86,6 +96,10 @@ namespace Jusgabon
             return this;
         }
 
+        /// <summary>
+        /// Follow the Sprite target.
+        /// There must be a Sprite set to follow, otherwise this method returns.
+        /// </summary>
         protected virtual void Follow()
         {
             if (FollowTarget == null)
@@ -110,6 +124,11 @@ namespace Jusgabon
 
         #region Methods - Random Movement
 
+        /// <summary>
+        /// Determine Random NPC movement.
+        /// If IsStationary is True, then no random NPC movement will occur.
+        /// </summary>
+        /// <param name="gameTime"></param>
         protected virtual void RandomMovement(GameTime gameTime)
         {
             if (_isStationary)
@@ -159,7 +178,7 @@ namespace Jusgabon
 
         }
 
-        #endregion
+        #endregion Methods - Random Movement
 
         /// <summary>
         /// Enemy Update method.
