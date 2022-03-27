@@ -124,6 +124,15 @@ namespace Jusgabon
                 {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Animals/Cat/SpriteSheet"), 2) },
             };
 
+            // Load Enemy Monster animations
+            var enemyOctopusAnimations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 48) },
+            };
+
             // Load Boss Demon Cyclops animations
             var bossDemonCyclopAnimations = new Dictionary<string, Animation>()
             {
@@ -140,6 +149,7 @@ namespace Jusgabon
             {
                 new Sprite(npcVillagerAnimations) { Position = new Vector2(100, 200) },
                 new Sprite(npcCatAnimations) { Position = new Vector2(200, 100) },
+                new Sprite(enemyOctopusAnimations) { Position = new Vector2(400, 100) },
                 new Sprite(bossDemonCyclopAnimations) { Position = new Vector2(200, 200) },
                 _player,
             };
@@ -268,6 +278,9 @@ namespace Jusgabon
                     i--;
                 }
             }
+
+            // 4. Sort sprites by its current Position.Y (for 2.5D drawing effect)
+            _spritesCollidable.Sort((x, y) => x.Position.Y.CompareTo(y.Position.Y));
         }
 
         /// <summary>
