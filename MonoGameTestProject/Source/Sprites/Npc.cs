@@ -99,6 +99,7 @@ namespace Jusgabon
         /// <summary>
         /// Follow the Sprite target.
         /// There must be a Sprite set to follow, otherwise this method returns.
+        /// Sources (tutorial): https://www.youtube.com/watch?v=NxAz_RzM6JM
         /// </summary>
         protected virtual void Follow()
         {
@@ -127,6 +128,7 @@ namespace Jusgabon
         /// <summary>
         /// Determine Random NPC movement.
         /// If IsStationary is True, then no random NPC movement will occur.
+        /// Source (tutorial): https://www.youtube.com/watch?v=uZ8eyaN4Dn8
         /// </summary>
         /// <param name="gameTime"></param>
         protected virtual void RandomMovement(GameTime gameTime)
