@@ -35,6 +35,48 @@ namespace Jusgabon
         // Dictionary of Animations to manage
         protected Dictionary<string, Animation> _animations;
 
+        #region Members - Attributes
+
+        /// <summary>
+        /// These are the types of 'permanent' attributes to only change on level-up, or other sorts of events
+        /// </summary>
+        public Attributes BaseAttributes { get; set; }
+
+        /// <summary>
+        /// These are the extra 'temporary' attributes that can be gained from different sources (equipment, power-ups, spells, etc...)
+        /// </summary>
+        public List<Attributes> AttributeModifiers { get; set; }
+        
+        // The Actual Attributes that this sprite will have; (sum of BaseAttributes and AttributeModifiers)
+        public Attributes TotalAttributes
+        {
+            get
+            {
+                return BaseAttributes + AttributeModifiers.Sum();
+            }
+        }
+        
+        // Speed Attribute
+        public float Speed { get => TotalAttributes.Speed; set => TotalAttributes.Speed = value; }
+
+        // Health Attribute
+        public int Health { get => TotalAttributes.Health; set => TotalAttributes.Health = value; }
+
+        // Mana Attribute (cannot cast magic without mana)
+        public int Mana { get => TotalAttributes.Mana; set => TotalAttributes.Mana = value; }
+
+        // Stamina Attribute (cannot dash without stamina; probably only player-related)
+        public int Stamina { get => TotalAttributes.Stamina; set => TotalAttributes.Stamina = value; }
+
+        // Attack Attribute; the amount of damage a normal attack will do
+        public int Attack { get => TotalAttributes.Attack; set => TotalAttributes.Attack = value; }
+
+        // Magic Attribute; the amount of damage a magic attack will do
+        public int Magic { get => TotalAttributes.Magic; set => TotalAttributes.Magic = value; }
+
+        #endregion Members - Attributes
+
+        #region Members - Input
         // Input object for Keyboard/Mouse input
         public Input Input;
 
@@ -44,14 +86,13 @@ namespace Jusgabon
         // Previous key input
         protected KeyboardState _previousKey;
 
+        #endregion Members - Input
+
         // List of Child sprites
         public List<Sprite> Children { get; set; }
 
         // The Parent Sprite if this sprite is a Child
         public Sprite Parent;
-
-        // Speed of Sprite
-        public float Speed = 0.6f;
 
         // Velocity of Sprite
         public Vector2 Velocity;
@@ -201,6 +242,9 @@ namespace Jusgabon
             _animations = animations;
             _animationManager = new AnimationManager(_animations.First().Value);
 
+            // by default, initialize an empty list of AttributeModifiers
+            AttributeModifiers = new List<Attributes>();
+
             Children = new List<Sprite>();
 
             Colour = Color.White;
@@ -214,6 +258,9 @@ namespace Jusgabon
         public Sprite(Texture2D texture)
         {
             _texture = texture;
+
+            // by default, initialize an empty list of AttributeModifiers
+            AttributeModifiers = new List<Attributes>();
 
             Children = new List<Sprite>();
 

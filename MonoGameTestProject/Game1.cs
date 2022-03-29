@@ -124,6 +124,17 @@ namespace Jusgabon
                 {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Animals/Cat/SpriteSheet"), 2) },
             };
 
+            // Base NPC Attributes
+            var baseNpcAttributes = new Attributes()
+            {
+                Speed = 0.6f,
+                Health = 0,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 0,
+                Magic = 0,
+            };
+
             // Load Enemy Monster animations
             var enemyOctopusAnimations = new Dictionary<string, Animation>()
             {
@@ -133,11 +144,34 @@ namespace Jusgabon
                 {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 48) },
             };
 
+            // Base Enemy Attributes
+            var baseEnemyAttributes = new Attributes()
+            {
+                Speed = 0.6f,
+                Health = 100,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 10,
+                Magic = 0,
+            };
+
             // Load Boss Demon Cyclops animations
             var bossDemonCyclopAnimations = new Dictionary<string, Animation>()
             {
                 {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6) },
             };
+
+            // Base Boss Attributes
+            var baseBossAttributes = new Attributes()
+            {
+                Speed = 0.5f,
+                Health = 400,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 25,
+                Magic = 0,
+            };
+
 
             // Instantiate list of sprites which wil be updated/drawn
             _spritesNonCollidable = new List<Sprite>()
@@ -147,11 +181,11 @@ namespace Jusgabon
 
             _spritesCollidable = new List<Sprite>()
             {
-                new Npc(npcVillagerAnimations) { Position = new Vector2(-100, -50) },
-                new Npc(npcCatAnimations) { Position = new Vector2(50, -75), IsStationary = true },
-                new Enemy(enemyOctopusAnimations) { Position = new Vector2(150, 100) },
-                new Enemy(enemyOctopusAnimations) { Position = new Vector2(-100, 200) },
-                new Boss(bossDemonCyclopAnimations) { Position = new Vector2(300, 0) },
+                new Npc(npcVillagerAnimations) { Position = new Vector2(-100, -50), BaseAttributes = baseNpcAttributes },
+                new Npc(npcCatAnimations) { Position = new Vector2(50, -75), IsStationary = true, BaseAttributes = baseNpcAttributes },
+                new Enemy(enemyOctopusAnimations) { Position = new Vector2(150, 100), BaseAttributes = baseEnemyAttributes },
+                new Enemy(enemyOctopusAnimations) { Position = new Vector2(-100, 200), BaseAttributes = baseEnemyAttributes },
+                new Boss(bossDemonCyclopAnimations) { Position = new Vector2(300, 0), BaseAttributes = baseEnemyAttributes },
                 _player,
             };
 
@@ -196,11 +230,23 @@ namespace Jusgabon
                 {"Special2",    new Animation(Globals.content.Load<Texture2D>(path + "Special2"), 1) },
                 {"Dead",        new Animation(Globals.content.Load<Texture2D>(path + "Dead"), 1) },
             };
+            
+            // Base Attributes
+            var playerAttributes = new Attributes()
+            {
+                Speed = 1.5f,
+                Health = 100,
+                Mana = 100,
+                Stamina = 50,
+                Attack = 20,
+                Magic = 40,
+            };
 
-            // Set up player
+            // Initialize player
             Globals.player = new Player(
                 animations: playerAnimations,
-                spawnPosition: new Vector2(0, 0)
+                spawnPosition: new Vector2(0, 0),
+                baseAttributes: playerAttributes
                 );
             _player = Globals.player;
         }

@@ -47,9 +47,11 @@ namespace Jusgabon
         /// </summary>
         /// <param name="animations"></param>
         /// <param name="spawnPosition"></param>
-        public Player(Dictionary<string, Animation> animations, Vector2 spawnPosition) : base(animations)
+        public Player(Dictionary<string, Animation> animations, Vector2 spawnPosition, Attributes baseAttributes) : base(animations)
         {
             Position = spawnPosition;
+
+            BaseAttributes = baseAttributes;
 
             // set player keybindings
             Input = new Input()
@@ -65,9 +67,6 @@ namespace Jusgabon
                 Item = Keys.R,
                 Interact = Keys.F
             };
-
-            // make player faster than base sprites
-            Speed = 1.5f;
 
             // default player direction is facing down
             PlayerDirection = Directions.Down;

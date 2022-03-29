@@ -37,7 +37,6 @@ namespace Jusgabon
         /// <param name="animations"></param>
         public Boss(Dictionary<string, Animation> animations) : base(animations)
         {
-            Speed = 0.5f; // slower than default enemy
             AggroModifier = 2f; // default enemy modifier = 1.5f; increase if boss should be "stickier" to player
         }
 
