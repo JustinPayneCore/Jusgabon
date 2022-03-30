@@ -299,16 +299,21 @@ namespace Jusgabon
                 _animationManager.Play(_animations["AttackLeft"]);
             else if (PlayerDirection == Directions.Right)
                 _animationManager.Play(_animations["AttackRight"]);
+            
+            // todo
+            // weapon update animations and oncollides between weapon and enemy
         }
 
         protected void SetActionSpecial1()
         {
             _animationManager.Play(_animations["Special1"]);
+            Colour = Color.Blue;
         }
 
         protected void SetActionSpecial2()
         {
             _animationManager.Play(_animations["Special2"]);
+            Colour = Color.Green;
         }
 
         protected void SetActionItem()
@@ -356,7 +361,9 @@ namespace Jusgabon
         {
             if (IsAction)
                 return;
-            
+
+            Colour = Color.White;
+
             if (PlayerDirection == Directions.Up)
                 _animationManager.Play(_animations["IdleUp"]);
             else if (PlayerDirection == Directions.Down)
