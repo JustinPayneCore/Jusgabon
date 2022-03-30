@@ -32,7 +32,7 @@ namespace Jusgabon
 
         public Keys Attack { get; set; }
 
-        public Keys Dash { get; set; }
+        public Keys Jump { get; set; }
 
         public Keys Special1 { get; set; }
 
