@@ -299,15 +299,11 @@ namespace Jusgabon
 
                     this.OnCollide(sprite);
                 }
-
-                
-
-
             }
         }
 
         /// <summary>
-        /// General collision method to detect if this sprite is touching target sprite.
+        /// Wrapper collision method to detect if this sprite is touching target sprite from any direction.
         /// </summary>
         /// <param name="sprite"></param>
         /// <returns></returns>
