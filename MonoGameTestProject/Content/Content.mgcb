@@ -7490,9 +7490,7 @@
 /build:FX/Smoke/SmokeCircular/SpriteSheet.png
 
 #begin HF1_A2.tsx
-/importer:
-/processor:
-/build:HF1_A2.tsx
+/copy:HF1_A2.tsx
 
 #begin HUD/Arrow.png
 /importer:TextureImporter
@@ -9190,7 +9188,5 @@
 /copy:Test_map_1.tmx
 
 #begin Water.tsx
-/importer:
-/processor:
-/build:Water.tsx
+/copy:Water.tsx
 
