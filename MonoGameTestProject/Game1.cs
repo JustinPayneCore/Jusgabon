@@ -211,6 +211,12 @@ namespace Jusgabon
                 {"WalkUp",      new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 16) },
                 {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 32) },
                 {"WalkRight",   new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 48) },
+                
+                // idle
+                {"IdleDown",  new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 0) },
+                {"IdleUp",    new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 16) },
+                {"IdleLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 32) },
+                {"IdleRight", new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 48) },
 
                 // attack
                 {"AttackDown",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 0) },
@@ -293,27 +299,13 @@ namespace Jusgabon
 
         /// <summary>
         /// Post-Update method - Called at the end of Update as a post-check to:
-        /// - Check collision between all current sprites
         /// - Add new children sprites to the list of _sprites and clear
         /// - Remove all "IsRemoved" sprites
+        /// - Sort sprites by its current Y position to create a 2.5D illusion effect
         /// </summary>
         /// <param name="gameTime"></param>
         protected void PostUpdate(GameTime gameTime)
         {
-            // 1. Check Collision between all current "Sprites"
-            foreach (var spriteA in _spritesCollidable)
-            {
-                foreach (var spriteB in _spritesCollidable)
-                {
-                    if (spriteA == spriteB)
-                        continue;
-
-                    if (spriteA.IsTouching(spriteB))
-                    {
-                        spriteA.OnCollide(spriteB);
-                    }
-                }
-            }
 
             // 2. Add Children to the list of "_sprites" and clear
             int count = _spritesCollidable.Count;
@@ -335,7 +327,7 @@ namespace Jusgabon
                 }
             }
 
-            // 4. Sort sprites by its current Position.Y (for 2.5D drawing effect)
+            // 4. Sort sprites by its current Y Position to create a 2.5D illusion effect
             _spritesCollidable.Sort((spriteA, spriteB) => spriteA.Position.Y.CompareTo(spriteB.Position.Y));
         }
 

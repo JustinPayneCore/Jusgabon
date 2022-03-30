@@ -280,18 +280,27 @@ namespace Jusgabon
             {
                 if (sprite == this)
                     continue;
-
-                if ((this.Velocity.X > 0 && this.IsTouchingLeft(sprite)) ||
+                
+                if (this.IsTouching(sprite))
+                {
+                    // check and stop horizontal movement collision
+                    if ((this.Velocity.X > 0 && this.IsTouchingLeft(sprite)) ||
                     (this.Velocity.X < 0 && this.IsTouchingRight(sprite)))
-                {
-                    this.Velocity.X = 0;
+                    {
+                        this.Velocity.X = 0;
+                    }
+
+                    // check and stop vertical movement collision
+                    if ((this.Velocity.Y > 0 && this.IsTouchingTop(sprite)) ||
+                    (this.Velocity.Y < 0 && this.IsTouchingBottom(sprite)))
+                    {
+                        this.Velocity.Y = 0;
+                    }
+
+                    this.OnCollide(sprite);
                 }
 
-                if ((this.Velocity.Y > 0 && this.IsTouchingTop(sprite)) ||
-                (this.Velocity.Y < 0 && this.IsTouchingBottom(sprite)))
-                {
-                    this.Velocity.Y = 0;
-                }
+                
 
 
             }
@@ -370,7 +379,7 @@ namespace Jusgabon
         /// <param name="sprite"></param>
         public virtual void OnCollide(Sprite sprite)
         {
-
+            Console.WriteLine("OnCollide method called");
         }
 
         #region Per-pixel collision detection (OBSOLETE)
