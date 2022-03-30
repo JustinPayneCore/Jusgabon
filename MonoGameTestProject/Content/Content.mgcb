@@ -9169,6 +9169,9 @@
 /processorParam:Quality=Best
 /build:Sounds/Menu/Menu9.wav
 
+#begin Test map 1.tmx
+/copy:Test map 1.tmx
+
 #begin Test_Background.png
 /importer:TextureImporter
 /processor:TextureProcessor

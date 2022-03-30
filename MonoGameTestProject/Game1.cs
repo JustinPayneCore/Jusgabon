@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using TiledSharp;
 #endregion
 
 /// <summary>
@@ -58,6 +59,18 @@ namespace Jusgabon
         // Game window width
         public static int screenWidth;
 
+        private TmxMap map;
+
+        private Texture2D tileset;
+
+        private int tileWidth;
+
+        private int tileHeight;
+
+        private int tilesetTilesWide;
+
+        private int tilesetTilesHigh;
+
         #endregion
 
 
@@ -101,7 +114,13 @@ namespace Jusgabon
             // Create a new content and spriteBatch, which is used to load and draw textures.
             Globals.content = this.Content;
             Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            
+            map = new TmxMap("Content/Test_map_1.tmx");
+            tileset = Content.Load<Texture2D>(map.Tilesets[0].Name.ToString());
+            tileWidth = map.Tilesets[0].TileWidth;
+            tileHeight = map.Tilesets[0].TileHeight;
+            tilesetTilesWide = tileset.Width / tileWidth;
+            tilesetTilesHigh = tileset.Height / tileHeight;
             // TODO: use Globals.Content to load your game content
 
             // Instantiate camera
@@ -276,7 +295,28 @@ namespace Jusgabon
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            Globals.spriteBatch.Begin();
+            for (int i = 0; i < map.Layers[0].Tiles.Count; i++)
+            {
+                int gid = map.Layers[0].Tiles[i].Gid;
+                if (gid == 0)
+                {
 
+                }
+                else
+                {
+                    int tileFrame = gid - 1;
+                    int column = tileFrame % tilesetTilesWide;
+                    int row = (int)Math.Floor((double)tileFrame / (double)tilesetTilesWide);
+
+                    float x = (i % map.Width) * map.TileWidth;
+                    float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
+
+                    Rectangle tilesetRec = new Rectangle(tileWidth * column, tileHeight * row, tileWidth, tileHeight);
+                    Globals.spriteBatch.Draw(tileset, new Rectangle((int)x, (int)y, tileWidth, tileHeight), tilesetRec, Color.White);
+                }
+            }
+            
             // TODO: Add your drawing code
             Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
 
