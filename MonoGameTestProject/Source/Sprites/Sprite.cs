@@ -483,11 +483,10 @@ namespace Jusgabon
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
 
-            if (Velocity != Vector2.Zero)
-            {
-                CheckCollision(sprites);
-                Position += Velocity;
-            }
+            CheckCollision(sprites);
+
+
+            Position += Velocity;
 
 
             if (_animationManager != null)
