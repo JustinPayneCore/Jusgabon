@@ -37,9 +37,9 @@ namespace Jusgabon
         // how tall is each frame
         //public int FrameHeight { get { return Texture.Height / FrameCount; } }
         public int FrameHeight { get; set; }
-        
+
         // how fast to animate through the frames
-        public float FrameSpeed { get; set; }
+        public float FrameSpeed { get; set; } = 0.15f;
 
         // how wide the texture is
         // public int FrameWidth { get { return Texture.Width} }
@@ -51,7 +51,7 @@ namespace Jusgabon
 
         // is the animation something that should be looping i.e. walking
         // vs one where it doesn't loop and stops at the last frame i.e. crouching
-        public bool IsLooping { get; set; }
+        public bool IsLooping { get; set; } = true;
 
         // the texture to animate
         public Texture2D Texture { get; private set; }
@@ -70,10 +70,6 @@ namespace Jusgabon
 
             FrameCount = frameCount;
 
-            IsLooping = true;
-
-            FrameSpeed = 0.15f;
-
             FrameHeight = Texture.Height / FrameCount;
             FrameWidth = Texture.Width / spritesheetColumns; // spritesheet usually has 4 columns
 
@@ -91,10 +87,6 @@ namespace Jusgabon
             Texture = texture;
 
             FrameCount = frameCount;
-
-            IsLooping = true;
-
-            FrameSpeed = 0.15f;
 
             IsSpriteSheetDirectionVertical = false;
 
