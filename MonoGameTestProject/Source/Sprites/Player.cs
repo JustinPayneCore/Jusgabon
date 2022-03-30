@@ -25,24 +25,73 @@ namespace Jusgabon
     {
         #region Members
 
+        #region Members - Action
+        
+        // attack timer to check cooldown and animation length
         private float _attackTimer = 0;
 
+        // item timer to check cooldown and animation length
         private float _itemTimer = 0;
 
+        // special1 timer to check cooldown and animation length
         private float _special1Timer = 0;
 
+        // special2 timer to check cooldown and animation length
         private float _special2Timer = 0;
 
+        // jump timer to check cooldown and animation length
         private float _jumpTimer = 0;
 
+        // interact timer to check cooldown and animation length
         private float _interactTimer = 0;
 
+        // attack cooldown before next attack action can be set
         private float _attackCooldown = 1f;
+
+        // item cooldown before next item action can be set
         private float _itemCooldown = 1f;
+
+        // jump cooldown before next jump action can be set
         private float _jumpCooldown = 1f;
+
+        // special1 cooldown before next special1 action can be set
         private float _special1Cooldown = 1f;
+
+        // special2 cooldown before next special2 action can be set
         private float _special2Cooldown = 1f;
+
+        // interact cooldown before next interact action can be set
         private float _interactCooldown = 1f;
+
+        // if true, perform Attack action during Update
+        public bool IsActionAttack = false;
+
+        // if true, perform Interact action during Update
+        public bool IsActionInteract = false;
+
+        // if true, perform Item action during Update
+        public bool IsActionItem = false;
+
+        // if true, perform Jump action during Update
+        public bool IsActionJump = false;
+
+        // if true, perform Special1 action during Update
+        public bool IsActionSpecial1 = false;
+
+        // if true, perform Special2 action during Update
+        public bool IsActionSpecial2 = false;
+
+        // Check if any actions are being performed
+        public bool IsAction
+        {
+            get
+            {
+                return IsActionAttack || IsActionInteract || IsActionItem ||
+                    IsActionJump || IsActionSpecial1 || IsActionSpecial2;
+            }
+        }
+
+        #endregion Members - Action
 
         // The Directions that Player can face
         public enum Directions
@@ -54,27 +103,6 @@ namespace Jusgabon
         }
         // Direction that Player faces
         public Directions PlayerDirection;
-
-        public bool IsAction
-        {
-            get 
-            {
-                return IsActionAttack || IsActionInteract || IsActionItem ||
-                    IsActionJump || IsActionSpecial1 || IsActionSpecial2;
-            }
-        }
-
-        public bool IsActionAttack = false;
-
-        public bool IsActionInteract = false;
-
-        public bool IsActionItem = false;
-
-        public bool IsActionJump = false;
-
-        public bool IsActionSpecial1 = false;
-
-        public bool IsActionSpecial2 = false;
 
         // Check if Player is Dead
         public bool IsDead
@@ -119,9 +147,10 @@ namespace Jusgabon
             PlayerDirection = Directions.Down;
         }
 
+        #region Methods - Update Methods
+
         /// <summary>
-        /// CheckInput method.
-        /// Checks Keyboard input for the player.
+        /// UpdateInput method - Gets Keyboard input and checks for Action/Movement.
         /// </summary>
         protected void UpdateInput()
         {
@@ -135,9 +164,12 @@ namespace Jusgabon
             UpdateMovement();
         }
 
+        /// <summary>
+        /// UpdateAction method - Checks for Action input.
+        /// </summary>
         private void UpdateAction()
         {
-            // 1. get keyboard input to set action
+            // 1. Start the action if key is pressed and action cooldown is done
             if (_currentKey.IsKeyDown(Input.Jump) && _jumpTimer > _jumpCooldown)
             {
                 _jumpTimer = 0f;
@@ -169,7 +201,11 @@ namespace Jusgabon
                 IsActionInteract = true;
             }
 
-            // 2. check if action event is done
+            // Quick check to see if any actions are in progress
+            if (!IsAction)
+                return;
+
+            // 2. Stop the action if the animation is done.
             if (IsActionJump && _jumpTimer > _animations["JumpDown"].FrameSpeed)
             {
                 IsActionJump = false;
@@ -203,14 +239,15 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// CheckMovement method.
-        /// Checks Keyboard input for player movement.
+        /// UpdateMovement method - Checks for Movement input.
         /// </summary>
         protected void UpdateMovement()
         {
+            // if an action is in progress, player cannot move yet
             if (IsAction)
                 return;
 
+            // Check movements up, down, left, right
             if (_currentKey.IsKeyDown(Input.Up))
             {
                 Velocity.Y = -Speed;
@@ -233,7 +270,11 @@ namespace Jusgabon
             }
         }
 
-        protected void IncrementTimers(GameTime gameTime)
+        /// <summary>
+        /// UpdateTimers method - increments all action timers.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        protected void UpdateTimers(GameTime gameTime)
         {
             _jumpTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             _attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -243,8 +284,13 @@ namespace Jusgabon
             _special2Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
+        #endregion Methods - Update Methods
+
         #region Methods - Action Events
 
+        /// <summary>
+        /// SetAction method.
+        /// </summary>
         private void SetAction()
         {
             if (!IsAction)
@@ -264,6 +310,9 @@ namespace Jusgabon
                 SetActionInteract();
         }
 
+        /// <summary>
+        /// SetActionJump method - update and animate Jump action.
+        /// </summary>
         protected void SetActionJump()
         {
 
@@ -289,6 +338,9 @@ namespace Jusgabon
             }
         }
 
+        /// <summary>
+        /// SetActionAttack method - update and animate Attack action.
+        /// </summary>
         protected void SetActionAttack()
         {
             if (PlayerDirection == Directions.Up)
@@ -304,23 +356,35 @@ namespace Jusgabon
             // weapon update animations and oncollides between weapon and enemy
         }
 
+        /// <summary>
+        /// SetActionSpecial1 method - update and animate Special1 action.
+        /// </summary>
         protected void SetActionSpecial1()
         {
             _animationManager.Play(_animations["Special1"]);
             Colour = Color.Blue;
         }
 
+        /// <summary>
+        /// SetActionSpecial2 method - update and animate Special2 action.
+        /// </summary>
         protected void SetActionSpecial2()
         {
             _animationManager.Play(_animations["Special2"]);
             Colour = Color.Green;
         }
 
+        /// <summary>
+        /// SetActionItem method - update and animate Item action.
+        /// </summary>
         protected void SetActionItem()
         {
             _animationManager.Play(_animations["Item"]);
         }
 
+        /// <summary>
+        /// SetActionInteract method - update and animate Interact action.
+        /// </summary>
         protected void SetActionInteract()
         {
             if (PlayerDirection == Directions.Up)
@@ -337,8 +401,7 @@ namespace Jusgabon
 
 
         /// <summary>
-        /// SetAnimations Method (Overridden in Player).
-        /// Set which animation to use depending on player state/input.
+        /// (Player) SetAnimations method - set movement animations.
         /// </summary>
         protected override void SetAnimations()
         {
@@ -357,6 +420,9 @@ namespace Jusgabon
                 _animationManager.Stop();
         }
 
+        /// <summary>
+        /// SetIdleAnimations - reset player animations and play idle animation.
+        /// </summary>
         protected void SetIdleAnimations()
         {
             if (IsAction)
@@ -374,6 +440,10 @@ namespace Jusgabon
                 _animationManager.Play(_animations["IdleRight"]);
         }
 
+        /// <summary>
+        /// (Player) OnCollide method.
+        /// </summary>
+        /// <param name="sprite"></param>
         public override void OnCollide(Sprite sprite)
         {
             Console.WriteLine("Player.OnCollide method called.");
@@ -381,7 +451,7 @@ namespace Jusgabon
 
         /// <summary>
         /// Update method.
-        /// The player update method also invokes methods to detect player movement/collision.
+        /// The player update method also invokes methods to detect player action/movement/collision.
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="sprites"></param>
@@ -390,7 +460,7 @@ namespace Jusgabon
             if (IsDead)
                 return;
 
-            IncrementTimers(gameTime);
+            UpdateTimers(gameTime);
 
             UpdateInput();
 
