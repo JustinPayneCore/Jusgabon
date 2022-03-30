@@ -204,9 +204,9 @@ namespace Jusgabon
             var playerAnimations = new Dictionary<string, Animation>()
             {
                 // walk
-                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 
-                                                frameCount: 4, 
-                                                spritesheetColumns: 4, 
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"),
+                                                frameCount: 4,
+                                                spritesheetColumns: 4,
                                                 frameLocation: 0) },
                 {"WalkUp",      new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 16) },
                 {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 32) },
@@ -219,21 +219,21 @@ namespace Jusgabon
                 {"IdleRight", new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 48) },
 
                 // attack
-                {"AttackDown",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 0) },
-                {"AttackUp",    new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 16) },
-                {"AttackLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 32) },
-                {"AttackRight", new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 48) },
+                {"AttackDown",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 0) {FrameSpeed = 0.35f } },
+                {"AttackUp",    new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 16) {FrameSpeed = 0.35f } },
+                {"AttackLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 32) {FrameSpeed = 0.35f } },
+                {"AttackRight", new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 48) {FrameSpeed = 0.35f } },
 
                 // jump
-                {"JumpDown",  new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 0) },
-                {"JumpUp",    new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 16) },
-                {"JumpLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 32) },
-                {"JumpRight", new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 48) },
+                {"JumpDown",  new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 0) {FrameSpeed = 0.25f } },
+                {"JumpUp",    new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 16) {FrameSpeed = 0.25f } },
+                {"JumpLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 32) {FrameSpeed = 0.25f } },
+                {"JumpRight", new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 48) {FrameSpeed = 0.25f } },
 
                 // other actions
-                {"Item",        new Animation(Globals.content.Load<Texture2D>(path + "Item"), 1) },
-                {"Special1",    new Animation(Globals.content.Load<Texture2D>(path + "Special1"), 1) },
-                {"Special2",    new Animation(Globals.content.Load<Texture2D>(path + "Special2"), 1) },
+                {"Item",        new Animation(Globals.content.Load<Texture2D>(path + "Item"), 1) {FrameSpeed = 0.75f } },
+                {"Special1",    new Animation(Globals.content.Load<Texture2D>(path + "Special1"), 1) {FrameSpeed = 0.75f } },
+                {"Special2",    new Animation(Globals.content.Load<Texture2D>(path + "Special2"), 1) {FrameSpeed = 0.75f } },
                 {"Dead",        new Animation(Globals.content.Load<Texture2D>(path + "Dead"), 1) },
             };
             
