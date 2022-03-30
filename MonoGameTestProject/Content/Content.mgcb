@@ -6337,6 +6337,18 @@
 /processorParam:TextureFormat=Color
 /build:Backgrounds/Tilesets/Interior/TilesetWallSimple.png
 
+#begin Backgrounds/Tilesets/TilesetAll.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Backgrounds/Tilesets/TilesetAll.png
+
 #begin Backgrounds/Tilesets/TilesetDungeon.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -8640,6 +8652,9 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Items/Weapons/Whip/SpriteInHand.png
+
+#begin level2.tmx
+/copy:level2.tmx
 
 #begin Musics/1 - Adventure Begin.ogg
 /importer:OggImporter

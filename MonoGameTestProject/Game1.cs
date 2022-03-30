@@ -13,6 +13,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using TiledSharp;
+using Jusgabon.Source.Engine;
 #endregion
 
 /// <summary>
@@ -58,6 +60,11 @@ namespace Jusgabon
         // Game window width
         public static int screenWidth;
 
+        // Tiled map import variables
+        private TileMapMananger tileMapManager;
+        private TmxMap map;
+        private Texture2D tileset;
+
         #endregion Members
 
 
@@ -101,6 +108,16 @@ namespace Jusgabon
             // Create a new content and spriteBatch, which is used to load and draw textures.
             Globals.content = this.Content;
             Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // Creates the tiled map using the TiledMapMananger class
+            // Tiled map file path
+            map = new TmxMap("Content/level2.tmx");
+
+            tileset = Globals.content.Load<Texture2D>("Backgrounds/Tilesets/" + map.Tilesets[0].Name.ToString());
+            int tileWidth = map.Tilesets[0].TileWidth;
+            int tileHeight = map.Tilesets[0].TileHeight;
+            int tilesetTilesWide = tileset.Width / tileWidth;
+            tileMapManager = new TileMapMananger(map, tileset, tilesetTilesWide, tileWidth, tileHeight);
 
             // TODO: use Globals.Content to load your game content
 
@@ -176,7 +193,7 @@ namespace Jusgabon
             // Instantiate list of sprites which wil be updated/drawn
             _spritesNonCollidable = new List<Sprite>()
             {
-                new Sprite(Globals.content.Load<Texture2D>("Test_Background")),
+                //new Sprite(Globals.content.Load<Texture2D>("Test_Background")),
             };
 
             _spritesCollidable = new List<Sprite>()
@@ -343,6 +360,9 @@ namespace Jusgabon
 
             // TODO: Add your drawing code
             Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
+
+            // Draw the tiled map
+            tileMapManager.Draw(Globals.spriteBatch);
 
             foreach (var sprite in _spritesNonCollidable)
                 sprite.Draw(gameTime, Globals.spriteBatch);
