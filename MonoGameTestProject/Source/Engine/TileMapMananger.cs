@@ -46,7 +46,14 @@ namespace Jusgabon.Source.Engine
                     if (gid == 0)
                     {
                         // Do nothing
-                    } else
+                    } 
+                    else if (gid == 1049)
+                    {
+                        // do something
+                        
+ 
+                    }
+                    else
                     {
                         // Draws the tile
                         int tileFrame = gid - 1;

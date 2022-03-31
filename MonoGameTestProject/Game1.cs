@@ -111,7 +111,7 @@ namespace Jusgabon
 
             // Creates the tiled map using the TiledMapMananger class
             // Tiled map file path
-            map = new TmxMap("Content/level2.tmx");
+            map = new TmxMap("Content/Level1.tmx");
 
             tileset = Globals.content.Load<Texture2D>("Backgrounds/Tilesets/" + map.Tilesets[0].Name.ToString());
             int tileWidth = map.Tilesets[0].TileWidth;
