@@ -111,12 +111,12 @@ namespace Jusgabon
             var distance = FollowTarget.Position - this.Position;
             _rotation = (float)Math.Atan2(distance.Y, distance.X);
 
-            Direction = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
+            DirectionVector = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
 
             if (currentDistance > FollowDistance)
             {
                 var t = MathHelper.Min((float)Math.Abs(currentDistance - FollowDistance), Speed);
-                Velocity = Direction * t;
+                Velocity = DirectionVector * t;
             }
         }
 

@@ -97,8 +97,19 @@ namespace Jusgabon
         // Velocity of Sprite
         public Vector2 Velocity;
 
-        // Direction of Sprite
-        public Vector2 Direction;
+        // Vector Direction of Sprite
+        public Vector2 DirectionVector;
+
+        // The Directions that Sprite can face
+        public enum Directions
+        {
+            Up,
+            Down,
+            Left,
+            Right
+        }
+        // Direction that Sprite faces
+        public Directions Direction = Directions.Down;
 
         // How fast sprite rotates (for sprites with only 1 walk animation)
         public float RotationVelocity = 3f;
@@ -461,13 +472,25 @@ namespace Jusgabon
             else // Walk animations do have different directions
             {
                 if (Velocity.X > 0)
+                {
                     _animationManager.Play(_animations["WalkRight"]);
+                    Direction = Directions.Right;
+                }
                 else if (Velocity.X < 0)
+                {
                     _animationManager.Play(_animations["WalkLeft"]);
+                    Direction = Directions.Left;
+                }
                 else if (Velocity.Y > 0)
+                {
                     _animationManager.Play(_animations["WalkDown"]);
+                    Direction = Directions.Down;
+                }
                 else if (Velocity.Y < 0)
+                {
                     _animationManager.Play(_animations["WalkUp"]);
+                    Direction = Directions.Up;
+                }
                 else
                     _animationManager.Stop();
             }
