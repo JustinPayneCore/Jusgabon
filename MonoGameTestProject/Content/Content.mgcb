@@ -6443,7 +6443,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Backgrounds/Tilesets/TilesetNature.png
+/build:Backgrounds/Tilesets/TilesetNature.png;Backgrounds/Tilesets/water.png
 
 #begin Backgrounds/Tilesets/TilesetRelief.png
 /importer:TextureImporter
@@ -7488,9 +7488,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:FX/Smoke/SmokeCircular/SpriteSheet.png
-
-#begin HF1_A2.tsx
-/copy:HF1_A2.tsx
 
 #begin HUD/Arrow.png
 /importer:TextureImporter
@@ -9172,6 +9169,21 @@
 /processorParam:Quality=Best
 /build:Sounds/Menu/Menu9.wav
 
+#begin Test map 1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Test map 1.png
+
+#begin Test map 1.tmx
+/copy:Test map 1.tmx
+
 #begin Test_Background.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -9184,9 +9196,33 @@
 /processorParam:TextureFormat=Color
 /build:Test_Background.png
 
-#begin Test_map_1.tmx
-/copy:Test_map_1.tmx
+#begin TilesetFloor.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TilesetFloor.png
 
-#begin Water.tsx
-/copy:Water.tsx
+#begin TilesetFloor.tsx
+/copy:TilesetFloor.tsx
+
+#begin TilesetNature.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TilesetNature.png
+
+#begin TilesetNature.tsx
+/copy:TilesetNature.tsx;water.tsx
 

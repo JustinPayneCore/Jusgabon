@@ -115,7 +115,7 @@ namespace Jusgabon
             Globals.content = this.Content;
             Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
             
-            map = new TmxMap("Content/Test_map_1.tmx");
+            map = new TmxMap("Content/Test map 1.tmx");
             tileset = Content.Load<Texture2D>(map.Tilesets[0].Name.ToString());
             tileWidth = map.Tilesets[0].TileWidth;
             tileHeight = map.Tilesets[0].TileHeight;
@@ -152,7 +152,8 @@ namespace Jusgabon
             // Instantiate list of sprites which wil be updated/drawn
             _spritesNonCollidable = new List<Sprite>()
             {
-                new Sprite(Globals.content.Load<Texture2D>("Test_Background")),
+                //new Sprite(Globals.content.Load<Texture2D>("Test_Background")),
+                new Sprite(Globals.content.Load<Texture2D>("Test map 1")),
             };
             
             _spritesCollidable = new List<Sprite>()
@@ -295,7 +296,8 @@ namespace Jusgabon
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            Globals.spriteBatch.Begin();
+            Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
+            //Globals.spriteBatch.Begin();
             for (int i = 0; i < map.Layers[0].Tiles.Count; i++)
             {
                 int gid = map.Layers[0].Tiles[i].Gid;
@@ -318,7 +320,7 @@ namespace Jusgabon
             }
             
             // TODO: Add your drawing code
-            Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
+            //Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
 
             foreach (var sprite in _spritesNonCollidable)
                 sprite.Draw(gameTime, Globals.spriteBatch);
