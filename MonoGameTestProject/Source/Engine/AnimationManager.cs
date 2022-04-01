@@ -44,6 +44,9 @@ namespace Jusgabon
         // Rotation of Animation Frame
         public float Rotation { get; set; }
 
+        // Layer Depth of Animation Frame
+        public float Layer { get; set; }
+
         // Source Rectangle to locate Animation Frame.
         public Rectangle SourceRectangle
         {
@@ -139,7 +142,7 @@ namespace Jusgabon
                 origin: Origin,
                 scale: 1,
                 effects: SpriteEffects.None,
-                layerDepth: 0);
+                layerDepth: Layer);
         }
 
         #endregion Methods
