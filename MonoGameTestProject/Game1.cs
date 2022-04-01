@@ -14,7 +14,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using TiledSharp;
-using Jusgabon.Source.Engine;
 #endregion
 
 /// <summary>
@@ -47,9 +46,6 @@ namespace Jusgabon
         // List of sprites that have collision detection
         private List<Sprite> _spritesCollidable;
 
-        // List of sprites that shouldn't be checked for collision (ex. background)
-        private List<Sprite> _spritesNonCollidable;
-
         // Player object
         // note: _player is also instantiated to be Globals.player for global access
         private Player _player;
@@ -61,7 +57,7 @@ namespace Jusgabon
         public static int screenWidth;
 
         // Tiled map import variables
-        private TileMapMananger tileMapManager;
+        private TileMapManager tileMapManager;
         private TmxMap map;
         private Texture2D tileset;
 
@@ -117,7 +113,7 @@ namespace Jusgabon
             int tileWidth = map.Tilesets[0].TileWidth;
             int tileHeight = map.Tilesets[0].TileHeight;
             int tilesetTilesWide = tileset.Width / tileWidth;
-            tileMapManager = new TileMapMananger(map, tileset, tilesetTilesWide, tileWidth, tileHeight);
+            tileMapManager = new TileMapManager(map, tileset, tilesetTilesWide, tileWidth, tileHeight);
 
             // TODO: use Globals.Content to load your game content
 
@@ -189,20 +185,13 @@ namespace Jusgabon
                 Magic = 0,
             };
 
-
-            // Instantiate list of sprites which wil be updated/drawn
-            _spritesNonCollidable = new List<Sprite>()
-            {
-                //new Sprite(Globals.content.Load<Texture2D>("Test_Background")),
-            };
-
             _spritesCollidable = new List<Sprite>()
             {
-                new Npc(npcVillagerAnimations) { Position = new Vector2(-100, -50), BaseAttributes = baseNpcAttributes },
-                new Npc(npcCatAnimations) { Position = new Vector2(50, -75), IsStationary = true, BaseAttributes = baseNpcAttributes },
-                new Enemy(enemyOctopusAnimations) { Position = new Vector2(150, 100), BaseAttributes = baseEnemyAttributes },
-                new Enemy(enemyOctopusAnimations) { Position = new Vector2(-100, 200), BaseAttributes = baseEnemyAttributes },
-                new Boss(bossDemonCyclopAnimations) { Position = new Vector2(300, 0), BaseAttributes = baseEnemyAttributes },
+                new Npc(npcVillagerAnimations) { Position = new Vector2(200, 250), BaseAttributes = baseNpcAttributes },
+                new Npc(npcCatAnimations) { Position = new Vector2(350, 215), IsStationary = true, BaseAttributes = baseNpcAttributes },
+                new Enemy(enemyOctopusAnimations) { Position = new Vector2(450, 400), BaseAttributes = baseEnemyAttributes },
+                new Enemy(enemyOctopusAnimations) { Position = new Vector2(200, 500), BaseAttributes = baseEnemyAttributes },
+                new Boss(bossDemonCyclopAnimations) { Position = new Vector2(600, 300), BaseAttributes = baseEnemyAttributes },
                 _player,
             };
 
@@ -268,7 +257,7 @@ namespace Jusgabon
             // Initialize player
             Globals.player = new Player(
                 animations: playerAnimations,
-                spawnPosition: new Vector2(0, 0),
+                spawnPosition: new Vector2(300, 300),
                 baseAttributes: playerAttributes
                 );
             _player = Globals.player;
@@ -300,9 +289,6 @@ namespace Jusgabon
                 Exit();
 
             // TODO: Add your update logic
-
-            foreach (var sprite in _spritesNonCollidable)
-                sprite.Update(gameTime, _spritesNonCollidable);
             
             foreach (var sprite in _spritesCollidable)
                 sprite.Update(gameTime, _spritesCollidable);
@@ -362,11 +348,8 @@ namespace Jusgabon
             Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
 
             // Draw the tiled map
-            tileMapManager.Draw(Globals.spriteBatch);
+            tileMapManager.Draw(gameTime, Globals.spriteBatch);
 
-            foreach (var sprite in _spritesNonCollidable)
-                sprite.Draw(gameTime, Globals.spriteBatch);
-            
             foreach (var sprite in _spritesCollidable)
                 sprite.Draw(gameTime, Globals.spriteBatch);
 

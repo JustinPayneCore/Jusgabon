@@ -31,5 +31,7 @@ namespace Jusgabon
         // player object
         public static Player player;
 
+        // collidable tile objects
+        public static List<Tile> tilesCollidable;
     }
 }
