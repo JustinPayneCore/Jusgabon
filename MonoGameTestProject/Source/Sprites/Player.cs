@@ -36,6 +36,8 @@ namespace Jusgabon
         // interact timer to check cooldown and animation length
         private float _interactTimer = 0;
 
+        private float _switchTimer = 0;
+
         // attack cooldown before next attack action can be set
         private float _attackCooldown = 0.5f;
 
@@ -53,6 +55,8 @@ namespace Jusgabon
 
         // interact cooldown before next interact action can be set
         private float _interactCooldown = 1f;
+
+        private float _switchCooldown = 1f;
 
         public float AttackSpeed = 0.25f;
         public float JumpSpeed = 0.25f;
@@ -97,7 +101,11 @@ namespace Jusgabon
             get { return Health <= 0; }
         }
 
-        public Weapon Weapon { get; set; }
+        public List<Weapon> WeaponInventory;
+
+        public Weapon EquippedWeapon { get; set; }
+
+        public int WeaponIndex = 0;
 
 
         #endregion Members
@@ -129,7 +137,9 @@ namespace Jusgabon
                 Special1 = Keys.W,
                 Special2 = Keys.E,
                 Item = Keys.R,
-                Interact = Keys.F
+                Interact = Keys.F,
+                SwitchWeapon = Keys.D1,
+                SwitchItem = Keys.D2,
             };
 
             // set animation length for all actions
@@ -149,7 +159,7 @@ namespace Jusgabon
             // default player direction is facing down
             Direction = Directions.Down;
 
-            
+            WeaponInventory = new List<Weapon>();
 
         }
 
@@ -157,19 +167,38 @@ namespace Jusgabon
         public void PickUp(Weapon weapon)
         {
             weapon.PickUp(this);
-            Weapon = weapon;
-            Weapon.Equip();
+            WeaponInventory.Add(weapon);
+
+            if (WeaponInventory.Count == 1)
+            {
+                this.Equip(weapon);
+            }
         }
 
-        public void Equip()
+        public void Equip(Weapon weapon)
         {
-            Weapon.Equip();
+            EquippedWeapon = weapon;
+            EquippedWeapon.Equip();
+            Console.WriteLine("Weapon Attack:  " + TotalAttributes.Attack);
         }
 
         public void Unequip()
         {
-            Weapon.Unequip();
-            Console.WriteLine(TotalAttributes.Attack);
+            EquippedWeapon.Unequip();
+        }
+
+        public void SwitchWeapon()
+        {
+            if (WeaponInventory.Count <= 1)
+                return;
+
+            if (WeaponIndex == WeaponInventory.Count - 1)
+                WeaponIndex = 0;
+            else
+                WeaponIndex++;
+
+            Unequip();
+            Equip(EquippedWeapon = WeaponInventory[WeaponIndex]);
         }
 
         #endregion Methods - Weapon methods
@@ -206,7 +235,7 @@ namespace Jusgabon
             {
                 _attackTimer = 0f;
                 IsActionAttack = true;
-                Weapon.Action();
+                EquippedWeapon.Action();
             }
             else if (_currentKey.IsKeyDown(Input.Special1) && _special1Timer > _special1Cooldown)
             {
@@ -227,6 +256,10 @@ namespace Jusgabon
             {
                 _interactTimer = 0f;
                 IsActionInteract = true;
+            } else if (_currentKey.IsKeyDown(Input.SwitchWeapon) && _switchTimer > _switchCooldown)
+            {
+                _switchTimer = 0f;
+                SwitchWeapon();
             }
 
             // Quick check to see if any actions are in progress
@@ -263,7 +296,6 @@ namespace Jusgabon
             {
                 IsActionInteract = false;
                 SetIdleAnimations();
-                Weapon.Unequip();
             }
         }
 
@@ -311,6 +343,7 @@ namespace Jusgabon
             _itemTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             _special1Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             _special2Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _switchTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         #endregion Methods - Update Methods
@@ -492,7 +525,7 @@ namespace Jusgabon
 
             _animationManager.Update(gameTime, sprites);
 
-            Weapon.Update(gameTime, sprites);
+            EquippedWeapon.Update(gameTime, sprites);
 
             CheckCollision(sprites);
 
@@ -514,7 +547,7 @@ namespace Jusgabon
             base.Draw(gameTime, spriteBatch);
 
             if (IsActionAttack)
-                Weapon.Draw(gameTime, spriteBatch);
+                EquippedWeapon.Draw(gameTime, spriteBatch);
         }
 
         #endregion Methods
