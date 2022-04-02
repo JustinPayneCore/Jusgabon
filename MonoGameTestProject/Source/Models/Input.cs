@@ -41,5 +41,9 @@ namespace Jusgabon
         public Keys Interact { get; set; }
 
         public Keys Item { get; set; }
+
+        public Keys SwitchWeapon { get; set; } 
+        
+        public Keys SwitchItem { get; set; }
     }
 }
