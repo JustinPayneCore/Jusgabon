@@ -561,10 +561,11 @@ namespace Jusgabon
             if (IsDead)
                 return;
 
-            base.Draw(gameTime, spriteBatch);
-
             if (IsActionAttack)
                 EquippedWeapon.Draw(gameTime, spriteBatch);
+
+            base.Draw(gameTime, spriteBatch);
+
         }
 
         #endregion Methods

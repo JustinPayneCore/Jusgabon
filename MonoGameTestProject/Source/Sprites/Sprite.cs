@@ -289,6 +289,7 @@ namespace Jusgabon
 
             Colour = Color.White;
 
+            Layer = 0.5f;
         }
         
         /// <summary>
@@ -306,6 +307,7 @@ namespace Jusgabon
 
             Colour = Color.White;
 
+            Layer = 0.5f;
         }
 
         #region Methods - Collision Detection
