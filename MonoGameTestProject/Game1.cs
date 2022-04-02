@@ -174,7 +174,7 @@ namespace Jusgabon
 
             var weaponLanceAnimations = new Dictionary<string, Animation>()
             {
-                {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Lance/SpriteInHand"), 1) },
+                {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Lance/Sprite"), 1) },
                 {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Lance/SpriteInHand"), 1) }
             };
 
@@ -187,6 +187,40 @@ namespace Jusgabon
                 Attack = 10,
                 Magic = 0,
             };
+
+            var weaponBigSwordAnimations = new Dictionary<string, Animation>()
+            {
+                {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/BigSword/Sprite"), 1) },
+                {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/BigSword/SpriteInHand"), 1) }
+            };
+
+            var weaponBigSwordAttributes = new Attributes()
+            {
+                Speed = -0.5f,
+                Health = 0,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 20,
+                Magic = 0,
+            };
+
+            var weaponSaiAnimations = new Dictionary<string, Animation>()
+            {
+                {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Sai/Sprite"), 1) },
+                {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Sai/SpriteInHand"), 1) }
+            };
+
+            var weaponSaiAttributes = new Attributes()
+            {
+                Speed = 0.25f,
+                Health = 0,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 10,
+                Magic = 0,
+            };
+
+
 
 
             // Instantiate list of sprites which will be updated/drawn
@@ -201,7 +235,8 @@ namespace Jusgabon
             };
 
             _player.PickUp(new Weapon(weaponLanceAnimations, weaponLanceAttributes));
-
+            _player.PickUp(new Weapon(weaponBigSwordAnimations, weaponBigSwordAttributes));
+            _player.PickUp(new Weapon(weaponSaiAnimations, weaponSaiAttributes));
         }
 
         /// <summary>
