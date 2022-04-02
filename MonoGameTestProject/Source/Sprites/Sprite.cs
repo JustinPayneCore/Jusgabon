@@ -122,6 +122,7 @@ namespace Jusgabon
         // (ex. A spell has a lifespan before the spell reaches max range and fizzles out)
         public float LifeSpan = 0f;
 
+        // Width of Sprite
         public int Width
         {
             get
@@ -133,6 +134,7 @@ namespace Jusgabon
             }
         }
 
+        // Height of Sprite
         public int Height
         {
             get
@@ -316,7 +318,7 @@ namespace Jusgabon
         /// Checks player with all other collidable sprites to detect if they are colliding.
         /// </summary>
         /// <param name="sprites"></param>
-        public virtual void CheckCollision(List<Sprite> sprites)
+        protected virtual void CheckCollision(List<Sprite> sprites)
         {
             foreach (var sprite in sprites)
             {
@@ -349,7 +351,10 @@ namespace Jusgabon
             CheckTileCollision();
         }
 
-        protected virtual void CheckTileCollision()
+        /// <summary>
+        /// CheckTileCollision method to check if this Sprite is colliding into Tile.
+        /// </summary>
+        protected void CheckTileCollision()
         {
             // if this sprite isn't moving, don't need to check for collision
             if (Velocity == Vector2.Zero)

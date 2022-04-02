@@ -24,34 +24,29 @@ namespace Jusgabon
     /// </summary>
     public class Tile : Component
     {
-        // _texture = tileset
+        // Tile texture
         protected Texture2D _texture;
 
-        // destination rectangle = new Rectangle((int)x, (int)y, tileWidth, tileHeight)
+        // Destination rectangle - game position of where to place tile
         public Rectangle DestinationRec { get; set; }
 
-        // source rectangle = tilesetRec = new Rectangle((tileWidth) * column, (tileHeight) * row, tileWidth, tileHeight);
+        // Source rectangle - where to take tile rectangle from texture
         public Rectangle SourceRec { get; set; }
 
+        // Hitbox rectangle
         public Rectangle Rectangle { get; set; }
 
-        //private Vector2 _position;
-        //public Vector2 Position
-        //{
-        //    get
-        //    {
-        //        return _position;
-        //    }
-        //    set
-        //    {
-        //        _position.X = DestinationRec.X;
-        //        _position.Y = DestinationRec.Y;
-        //    }
-        //}
-        public Vector2 Position { get; set; }
-
+        // Colour of Tile
         public Color Colour {get; set;}
-
+        
+        /// <summary>
+        /// Tile constructor - takes arguments from TileMapManager.
+        /// </summary>
+        /// <param name="texture"></param>
+        /// <param name="destinationRec"></param>
+        /// <param name="sourceRec"></param>
+        /// <param name="colour"></param>
+        /// <param name="hitboxRec"></param>
         public Tile(Texture2D texture, Rectangle destinationRec, Rectangle sourceRec, Color colour, Rectangle hitboxRec)
         {
             _texture = texture;
@@ -66,7 +61,7 @@ namespace Jusgabon
         /// </summary>
         /// <param name="sprite"></param>
         /// <returns></returns>
-        public  bool IsTouching(Sprite sprite)
+        public bool IsTouching(Sprite sprite)
         {
             return this.IsTouchingLeft(sprite) ||
                 this.IsTouchingRight(sprite) ||
@@ -127,11 +122,21 @@ namespace Jusgabon
                 sprite.Rectangle.Left < this.Rectangle.Right;
         }
 
+        /// <summary>
+        /// Draw method for Tile.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, DestinationRec, SourceRec, Colour);
         }
 
+        /// <summary>
+        /// Update method for Tile.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="sprite"></param>
         public override void Update(GameTime gameTime, List<Sprite> sprite)
         {
             // no update method needed for this static tile object.

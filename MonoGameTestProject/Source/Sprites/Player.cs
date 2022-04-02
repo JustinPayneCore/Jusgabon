@@ -27,69 +27,38 @@ namespace Jusgabon
         #region Members
 
         #region Members - Action
-        
-        // attack timer to check cooldown and animation length
+
+        // timers to check cooldowns and animation length
         private float _attackTimer = 0;
-
-        // item timer to check cooldown and animation length
         private float _itemTimer = 0;
-
-        // special1 timer to check cooldown and animation length
-        private float _special1Timer = 0;
-
-        // special2 timer to check cooldown and animation length
-        private float _special2Timer = 0;
-
-        // jump timer to check cooldown and animation length
         private float _jumpTimer = 0;
-
-        // interact timer to check cooldown and animation length
+        private float _special1Timer = 0;
+        private float _special2Timer = 0;
         private float _interactTimer = 0;
-
         private float _switchTimer = 0;
 
-        // attack cooldown before next attack action can be set
+        // cooldowns before action can be done again
         private float _attackCooldown = 0.5f;
-
-        // item cooldown before next item action can be set
         private float _itemCooldown = 1f;
-
-        // jump cooldown before next jump action can be set
         private float _jumpCooldown = 1f;
-
-        // special1 cooldown before next special1 action can be set
         private float _special1Cooldown = 1f;
-
-        // special2 cooldown before next special2 action can be set
         private float _special2Cooldown = 1f;
-
-        // interact cooldown before next interact action can be set
         private float _interactCooldown = 1f;
-
         private float _switchCooldown = 1f;
-
+        
+        // animation length of actions
         public float AttackSpeed = 0.25f;
         public float JumpSpeed = 0.25f;
         public float ItemSpeed = 0.75f;
         public float Special1Speed = 0.75f;
         public float Special2Speed = 0.75f;
 
-        // if true, perform Attack action during Update
+        // when true, perform action during Update
         public bool IsActionAttack = false;
-
-        // if true, perform Interact action during Update
         public bool IsActionInteract = false;
-
-        // if true, perform Item action during Update
         public bool IsActionItem = false;
-
-        // if true, perform Jump action during Update
         public bool IsActionJump = false;
-
-        // if true, perform Special1 action during Update
         public bool IsActionSpecial1 = false;
-
-        // if true, perform Special2 action during Update
         public bool IsActionSpecial2 = false;
 
         // Check if any actions are being performed
@@ -111,10 +80,13 @@ namespace Jusgabon
             get { return Health <= 0; }
         }
 
+        // Weapon Inventory
         public List<Weapon> WeaponInventory;
 
+        // Currently equipped weapon
         public Weapon EquippedWeapon { get; set; }
-
+        
+        // Index to track which weapon from the inventory is equipped
         public int WeaponIndex = 0;
 
 
@@ -169,11 +141,18 @@ namespace Jusgabon
             // default player direction is facing down
             Direction = Directions.Down;
 
+            // create weapon inventory
             WeaponInventory = new List<Weapon>();
 
         }
 
         #region Methods - Weapon methods
+
+        /// <summary>
+        /// PickUp method to add Weapon to inventory.
+        /// If this is the first weapon in the inventory, then equip it.
+        /// </summary>
+        /// <param name="weapon"></param>
         public void PickUp(Weapon weapon)
         {
             weapon.PickUp(this);
@@ -185,6 +164,10 @@ namespace Jusgabon
             }
         }
 
+        /// <summary>
+        /// Equip Weapon method.
+        /// </summary>
+        /// <param name="weapon"></param>
         public void Equip(Weapon weapon)
         {
             EquippedWeapon = weapon;
@@ -192,31 +175,40 @@ namespace Jusgabon
             Console.WriteLine("Weapon Attack:  " + TotalAttributes.Attack);
         }
 
+        /// <summary>
+        /// Unequip Weapon method.
+        /// </summary>
         public void Unequip()
         {
             EquippedWeapon.Unequip();
         }
 
+        /// <summary>
+        /// SwitchWeapon method to Equip the next weapon in Weapon Inventory.
+        /// </summary>
         public void SwitchWeapon()
         {
+            // only 1 weapon
             if (WeaponInventory.Count <= 1)
                 return;
 
+            // increment weapon inventory index
             if (WeaponIndex == WeaponInventory.Count - 1)
                 WeaponIndex = 0;
             else
                 WeaponIndex++;
 
+            // unequip current weapon and equip next weapon in inventory
             Unequip();
             Equip(EquippedWeapon = WeaponInventory[WeaponIndex]);
         }
 
         #endregion Methods - Weapon methods
 
-        #region Methods - Update Methods
+        #region Methods - Check Input Methods
 
         /// <summary>
-        /// UpdateInput method - Gets Keyboard input and checks for Action/Movement.
+        /// UpdateInput method - Gets Keyboard input then checks for Action/Movement input.
         /// </summary>
         protected void UpdateInput()
         {
@@ -227,12 +219,12 @@ namespace Jusgabon
                 return;
 
             StartAction();
-            EndAction();
-            UpdateMovement();
+            StopAction();
+            CheckMovement();
         }
 
         /// <summary>
-        /// UpdateAction method - Checks for Action input.
+        /// StartAction method - Checks for Action input to start an action.
         /// </summary>
         private void StartAction()
         {
@@ -279,7 +271,10 @@ namespace Jusgabon
             }
         }
 
-        private void EndAction()
+        /// <summary>
+        /// EndAction method - Checks to stop a current action.
+        /// </summary>
+        private void StopAction()
         {
             // Don't need to check if no actions are in progress
             if (!IsAction)
@@ -319,9 +314,9 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// UpdateMovement method - Checks for Movement input.
+        /// CheckMovement method - Checks for Movement input.
         /// </summary>
-        protected void UpdateMovement()
+        protected void CheckMovement()
         {
             // if an action is in progress, player cannot move yet
             if (IsAction)
@@ -350,27 +345,12 @@ namespace Jusgabon
             }
         }
 
-        /// <summary>
-        /// UpdateTimers method - increments all action timers.
-        /// </summary>
-        /// <param name="gameTime"></param>
-        protected void UpdateTimers(GameTime gameTime)
-        {
-            _jumpTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _interactTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _itemTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _special1Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _special2Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _switchTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-        }
+        #endregion Methods - Set Input Methods
 
-        #endregion Methods - Update Methods
-
-        #region Methods - Action Events
+        #region Methods - Update Action Events
 
         /// <summary>
-        /// SetAction method.
+        /// SetAction method - update any current actions.
         /// </summary>
         private void SetAction()
         {
@@ -432,9 +412,6 @@ namespace Jusgabon
                 _animationManager.Play(_animations["AttackLeft"]);
             else if (Direction == Directions.Right)
                 _animationManager.Play(_animations["AttackRight"]);
-            
-            // todo
-            // weapon update animations and oncollides between weapon and enemy
         }
 
         /// <summary>
@@ -478,11 +455,26 @@ namespace Jusgabon
                 _animationManager.Play(_animations["IdleRight"]);
         }
 
-        #endregion Methods - Action Events
+        /// <summary>
+        /// UpdateTimers method - increments all action timers.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        protected void UpdateTimers(GameTime gameTime)
+        {
+            _jumpTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _interactTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _itemTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _special1Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _special2Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _switchTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        #endregion Methods - Update Action Events
 
 
         /// <summary>
-        /// (Player) SetAnimations method - set movement animations.
+        /// SetAnimations method (Player) - set movement animations.
         /// </summary>
         protected override void SetAnimations()
         {
@@ -502,7 +494,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// SetIdleAnimations - reset player animations and play idle animation.
+        /// SetIdleAnimations method - reset player animations and play idle animation.
         /// </summary>
         protected void SetIdleAnimations()
         {

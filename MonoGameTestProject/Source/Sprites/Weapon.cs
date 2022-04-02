@@ -21,16 +21,22 @@ namespace Jusgabon
     {
         #region Members
 
-        public new Player Parent;
-
-        public bool IsAction = false;
-
-        public bool IsEquipped = false;
-
+        // timer to check action animation length
         private float _timer;
 
+        // Action animation length
         public float ActionSpeed;
 
+        // Parent player that has this weapon.
+        public new Player Parent;
+
+        // when true, weapon can be updated and drawn.
+        public bool IsAction = false;
+
+        // when true, weapon can be used by parent.
+        public bool IsEquipped = false;
+
+        // Speed of weapon action
         public new float Speed { get; set; }
 
         #endregion Members
@@ -38,7 +44,7 @@ namespace Jusgabon
         #region Methods
 
         /// <summary>
-        /// Weapon constructor - made up of a weapon texture with baseAttributes for weapon stats.
+        /// Weapon constructor - made up of a weapon animation dictionary and baseAttributes for weapon attributes.
         /// </summary>
         /// <param name="texture"></param>
         /// <param name="baseAttributes"></param>
@@ -47,6 +53,10 @@ namespace Jusgabon
             BaseAttributes = baseAttributes;
         }
 
+        /// <summary>
+        /// PickUp method to set Parent and Attack animation length
+        /// </summary>
+        /// <param name="parent"></param>
         public virtual void PickUp(Player parent)
         {
             if (parent != Globals.player)
@@ -56,67 +66,80 @@ namespace Jusgabon
             ActionSpeed = parent.AttackSpeed;
         }
 
+        /// <summary>
+        /// Equip method for weapon and add weapon attributes to player attributes.
+        /// </summary>
         public virtual void Equip()
         {
             Parent.AttributeModifiers.Add(BaseAttributes);
             IsEquipped = true;
         }
 
+        /// <summary>
+        /// Unequip method for weapon and remove weapon attributes from player attributes.
+        /// </summary>
         public virtual void Unequip()
         {
             Parent.AttributeModifiers.Remove(BaseAttributes);
             IsEquipped = false;
         }
 
+        /// <summary>
+        /// Action method to set up the weapon attack action.
+        /// </summary>
         public virtual void Action()
         {
+            // cannot make action is no player is holding this weapon
             if (Parent == null)
                 return;
 
+            // cannot make action is weapon is not equipped
             if (IsEquipped == false)
                 return;
 
+            // start action for update method
+            IsAction = true;
 
+            // get weapon direction and inital position
             Direction = Parent.Direction;
-
             Position = new Vector2(Parent.Position.X + (5), Parent.Position.Y + (4));
-            Rotation = 0;
 
-            Vector2 finalPosition;
-
+            // get rotation, new position from rotation, and final position based on direction of action
             if (Direction == Directions.Down)
             {
                 Rotation = 0;
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
-                finalPosition = new Vector2(Position.X, Position.Y + (Parent.Height));
+                var finalPosition = new Vector2(Position.X, Position.Y + (Parent.Height));
                 Speed = (finalPosition.Y - Position.Y) / 7;     
             }
             else if (Direction == Directions.Up)
             {
                 Rotation = MathHelper.ToRadians(180);
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
-                finalPosition = new Vector2(Position.X, Position.Y - (Parent.Height));
+                var finalPosition = new Vector2(Position.X, Position.Y - (Parent.Height));
                 Speed = (Position.Y - finalPosition.Y) / 7;
             }
             else if (Direction == Directions.Left)
             {
                 Rotation = MathHelper.ToRadians(90);
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
-                finalPosition = new Vector2(Position.X - (Parent.Height), Position.Y);
+                var finalPosition = new Vector2(Position.X - (Parent.Height), Position.Y);
                 Speed = (Position.X - finalPosition.X) / 7;
             }
             else // Direction == Directions.Right
             {
                 Rotation = MathHelper.ToRadians(-90);
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
-                finalPosition = new Vector2(Position.X + (Parent.Height), Position.Y);
+                var finalPosition = new Vector2(Position.X + (Parent.Height), Position.Y);
                 Speed = (finalPosition.X - Position.X) / 7;
             }
-
-            IsAction = true;
         }
 
-        public override void CheckCollision(List<Sprite> sprites)
+        /// <summary>
+        /// CheckCollision method for weapon.
+        /// </summary>
+        /// <param name="sprites"></param>
+        protected override void CheckCollision(List<Sprite> sprites)
         {
             foreach(var sprite in sprites)
             {
@@ -136,8 +159,12 @@ namespace Jusgabon
             }
         }
 
+        /// <summary>
+        /// UpdateAction method - moves weapon in a stabbing motion.
+        /// </summary>
         protected virtual void UpdateAction()
         {
+            // stop action if timer is past animation length
             if (_timer > ActionSpeed)
             {
                 IsAction = false;
@@ -146,6 +173,7 @@ namespace Jusgabon
                 return;
             }
 
+            // move weapon in forward direction in first half of action, then move backwards for second half of action
             if (Direction == Directions.Down)
             {
                 Velocity.Y = Speed;
@@ -171,9 +199,15 @@ namespace Jusgabon
                     Velocity.X = -Speed;
             }
 
+            // set animations
             _animationManager.Play(_animations["Sprite"]);
         }
 
+        /// <summary>
+        /// Update method for weapon - only updates if there is an action and weapon is equipped.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="sprites"></param>
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             if (IsAction == false)
@@ -188,12 +222,19 @@ namespace Jusgabon
             // update action
             UpdateAction();
 
+            // check collision
             CheckCollision(sprites);
 
+            // update weapon movement
             Position += Velocity;
             Velocity = Vector2.Zero;
         }
 
+        /// <summary>
+        /// Draw method for weapon - only draws if there is an action and weapon is equipped.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (IsAction == false)

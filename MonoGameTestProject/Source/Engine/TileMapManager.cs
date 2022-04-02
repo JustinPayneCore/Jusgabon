@@ -18,6 +18,10 @@ using TiledSharp;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// TileMapManager Class.
+    /// Takes a TmxMap from Tiled and converts it into the map for the game.
+    /// </summary>
     public class TileMapManager
     {
         // List of Tiles that have collision
@@ -38,6 +42,14 @@ namespace Jusgabon
         // Height size of single tile
         int tileHeight;
 
+        /// <summary>
+        /// TileMapManager constructor - Loads tileset and properties, then creates a list of Tiles for collidable objects.
+        /// </summary>
+        /// <param name="_map"></param>
+        /// <param name="_tileset"></param>
+        /// <param name="_tilesetTilesWide"></param>
+        /// <param name="_tileWidth"></param>
+        /// <param name="_tileHeight"></param>
         public TileMapManager(TmxMap _map, Texture2D _tileset,
             int _tilesetTilesWide, int _tileWidth, int _tileHeight)
         {
@@ -52,6 +64,10 @@ namespace Jusgabon
             Globals.tilesCollidable = _tilesCollidable;
         }
 
+        /// <summary>
+        /// LoadTiles method - Creates a list of Collidable objects in the tileset and returns as a list of Tile objects.
+        /// </summary>
+        /// <returns></returns>
         public List<Tile> LoadTiles()
         {
             var tiles = new List<Tile>();
@@ -110,7 +126,11 @@ namespace Jusgabon
             return tiles;
         }
 
-        // 
+        /// <summary>
+        /// Draw method for TileMapManager - draws all the floor tiles then the collidable tiles.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Loops through each layer in the Tiled map file
