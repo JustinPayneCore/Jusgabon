@@ -79,36 +79,61 @@ namespace Jusgabon
 
             Direction = Parent.Direction;
 
+            Position = new Vector2(Parent.Position.X + (5), Parent.Position.Y + (4));
+            Rotation = 0;
+
+            Vector2 finalPosition;
+
             if (Direction == Directions.Down)
             {
-                Position = new Vector2(Parent.Position.X + 4, Parent.Position.Y + 4);
-                var finalPosition = new Vector2(Position.X, Position.Y + 12);
-                Speed = (finalPosition.Y - Position.Y) / 7;
                 Rotation = 0;
-            } 
+                Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
+                finalPosition = new Vector2(Position.X, Position.Y + (Parent.Height));
+                Speed = (finalPosition.Y - Position.Y) / 7;     
+            }
             else if (Direction == Directions.Up)
             {
-                Position = new Vector2(Parent.Position.X + 8, Parent.Position.Y + 12);
-                var finalPosition = new Vector2(Position.X, Position.Y - 12);
-                Speed = (Position.Y - finalPosition.Y) / 7;
                 Rotation = MathHelper.ToRadians(180);
-            } 
+                Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
+                finalPosition = new Vector2(Position.X, Position.Y - (Parent.Height));
+                Speed = (Position.Y - finalPosition.Y) / 7;
+            }
             else if (Direction == Directions.Left)
             {
-                Position = new Vector2(Parent.Position.X + 12, Parent.Position.Y + 9);
-                var finalPosition = new Vector2(Position.X - 12, Position.Y);
-                Speed = (Position.X - finalPosition.X) / 7;
                 Rotation = MathHelper.ToRadians(90);
+                Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
+                finalPosition = new Vector2(Position.X - (Parent.Height), Position.Y);
+                Speed = (Position.X - finalPosition.X) / 7;
             }
             else // Direction == Directions.Right
             {
-                Position = new Vector2(Parent.Position.X + 4, Parent.Position.Y + 14);
-                var finalPosition = new Vector2(Position.X + 12, Position.Y);
-                Speed = (finalPosition.X - Position.X) / 7;
                 Rotation = MathHelper.ToRadians(-90);
+                Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
+                finalPosition = new Vector2(Position.X + (Parent.Height), Position.Y);
+                Speed = (finalPosition.X - Position.X) / 7;
             }
 
             IsAction = true;
+        }
+
+        public override void CheckCollision(List<Sprite> sprites)
+        {
+            foreach(var sprite in sprites)
+            {
+                if (sprite == this)
+                    continue;
+
+                if (sprite == Parent)
+                    continue;
+
+                
+                if (this.Intersects(sprite))
+                {
+                    Console.WriteLine("hit something");
+                    sprite.OnCollide(this);
+                }
+                
+            }
         }
 
         protected virtual void UpdateAction()
@@ -146,7 +171,7 @@ namespace Jusgabon
                     Velocity.X = -Speed;
             }
 
-            _animationManager.Play(_animations["SpriteInHand"]);
+            _animationManager.Play(_animations["Sprite"]);
         }
 
         public override void Update(GameTime gameTime, List<Sprite> sprites)
@@ -154,11 +179,16 @@ namespace Jusgabon
             if (IsAction == false)
                 return;
 
+            if (IsEquipped == false)
+                return;
+
             // update timer
             _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // update action
             UpdateAction();
+
+            CheckCollision(sprites);
 
             Position += Velocity;
             Velocity = Vector2.Zero;
