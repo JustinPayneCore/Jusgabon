@@ -137,8 +137,8 @@ namespace Jusgabon
                     return new Rectangle(
                         (int)Position.X + (_texture.Width / 10),
                         (int)Position.Y + (_texture.Height / 10),
-                        _texture.Width - (_texture.Width / 10),
-                        _texture.Height - (_texture.Height / 10));
+                        _texture.Width - (_texture.Width / 5),
+                        _texture.Height - (_texture.Height / 5));
                 else // for an animation
                     return new Rectangle(
                         (int)Position.X + (_animationManager.Animation.FrameWidth / 10),
@@ -193,6 +193,23 @@ namespace Jusgabon
                         _animationManager.Animation.FrameHeight / 2);
             }
         }
+
+        // Layer Depth of Sprite
+        protected float _layer;
+        public float Layer
+        {
+            get { return _layer; }
+            set
+            {
+                // for a texture
+                _layer = value;
+
+                // for an animation
+                if (_animationManager != null)
+                    _animationManager.Layer = _layer;
+            }
+        }
+        
 
         // Color TextureData of Sprite
         // (DEPRECATED) only used for per-pixel collision detection
@@ -301,7 +318,37 @@ namespace Jusgabon
                     this.OnCollide(sprite);
                 }
             }
+
+            CheckTileCollision();
         }
+
+        protected virtual void CheckTileCollision()
+        {
+            // if this sprite isn't moving, don't need to check for collision
+            if (Velocity == Vector2.Zero)
+                return;
+
+            foreach (var tile in Globals.tilesCollidable)
+            {
+                if (tile.IsTouching(this))
+                {
+                    // check and stop horizontal movement collision
+                    if ((this.Velocity.X > 0 && tile.IsTouchingLeft(this)) ||
+                    (this.Velocity.X < 0 && tile.IsTouchingRight(this)))
+                    {
+                        this.Velocity.X = 0;
+                    }
+
+                    // check and stop vertical movement collision
+                    if ((this.Velocity.Y > 0 && tile.IsTouchingTop(this)) ||
+                    (this.Velocity.Y < 0 && tile.IsTouchingBottom(this)))
+                    {
+                        this.Velocity.Y = 0;
+                    }
+                }
+            }
+        }
+        
 
         /// <summary>
         /// Wrapper collision method to detect if this sprite is touching target sprite from any direction.
@@ -519,7 +566,7 @@ namespace Jusgabon
                     origin: Origin,
                     scale: 1,
                     effects: SpriteEffects.None,
-                    layerDepth: 0);
+                    layerDepth: Layer);
             else if (_animationManager != null)
                 _animationManager.Draw(gameTime, spriteBatch);
             else throw new Exception("Error: No texture/animations found for Sprite.");
