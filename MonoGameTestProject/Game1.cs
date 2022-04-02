@@ -187,11 +187,11 @@ namespace Jusgabon
 
             _spritesCollidable = new List<Sprite>()
             {
-                new Npc(npcVillagerAnimations) { Position = new Vector2(200, 250), BaseAttributes = baseNpcAttributes },
+                new Npc(npcVillagerAnimations) { Position = new Vector2(200, 215), BaseAttributes = baseNpcAttributes },
                 new Npc(npcCatAnimations) { Position = new Vector2(350, 215), IsStationary = true, BaseAttributes = baseNpcAttributes },
-                new Enemy(enemyOctopusAnimations) { Position = new Vector2(450, 400), BaseAttributes = baseEnemyAttributes },
+                new Enemy(enemyOctopusAnimations) { Position = new Vector2(700, 550), BaseAttributes = baseEnemyAttributes },
                 new Enemy(enemyOctopusAnimations) { Position = new Vector2(200, 500), BaseAttributes = baseEnemyAttributes },
-                new Boss(bossDemonCyclopAnimations) { Position = new Vector2(600, 300), BaseAttributes = baseEnemyAttributes },
+                new Boss(bossDemonCyclopAnimations) { Position = new Vector2(1180, 1100), BaseAttributes = baseEnemyAttributes },
                 _player,
             };
 
@@ -270,9 +270,6 @@ namespace Jusgabon
         protected override void UnloadContent()
         {
             // TODO: Unload any non-ContentManager content
-
-
-
 
             base.UnloadContent();
         }
