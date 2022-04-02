@@ -211,7 +211,7 @@ namespace Jusgabon
         {
             get
             {
-                return new Vector2(Width / 2, Height / 2);
+                return new Vector2(Position.X + (Width / 2), Position.Y + (Height / 2));
             }
         }
 
@@ -411,7 +411,7 @@ namespace Jusgabon
         /// </summary>
         /// <param name="sprite"></param>
         /// <returns></returns>
-        [Obsolete("Intersects is deprecated, please use normal rect-rect collision methods instead.")]
+        //[Obsolete("Intersects is deprecated, please use normal rect-rect collision methods instead.")]
         public bool Intersects(Sprite sprite)
         {
             // Calculate a matrix which transforms from A's local space into
