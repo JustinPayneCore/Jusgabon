@@ -120,9 +120,10 @@ namespace Jusgabon
             // Instantiate camera
             _camera = new Camera();
 
+            // Instantiate Player
             LoadPlayer();
 
-            // NPC Villager animations
+            // Load NPC Villager animations
             var npcVillagerAnimations = new Dictionary<string, Animation>()
             {
                 {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 0)  },
@@ -137,7 +138,7 @@ namespace Jusgabon
                 {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Animals/Cat/SpriteSheet"), 2) },
             };
 
-            // Base NPC Attributes
+            // Load basic NPC Attributes
             var baseNpcAttributes = new Attributes()
             {
                 Speed = 0.6f,
@@ -157,7 +158,7 @@ namespace Jusgabon
                 {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 48) },
             };
 
-            // Base Enemy Attributes
+            // Load basic Enemy Attributes
             var baseEnemyAttributes = new Attributes()
             {
                 Speed = 0.6f,
@@ -174,7 +175,7 @@ namespace Jusgabon
                 {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6) },
             };
 
-            // Base Boss Attributes
+            // Load basic Boss Attributes
             var baseBossAttributes = new Attributes()
             {
                 Speed = 0.5f,
@@ -185,12 +186,12 @@ namespace Jusgabon
                 Magic = 0,
             };
 
+            // Load weapon Lance animations & attributes
             var weaponLanceAnimations = new Dictionary<string, Animation>()
             {
                 {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Lance/Sprite"), 1) },
                 {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Lance/SpriteInHand"), 1) }
             };
-
             var weaponLanceAttributes = new Attributes()
             {
                 Speed = 0f,
@@ -201,12 +202,12 @@ namespace Jusgabon
                 Magic = 0,
             };
 
+            // Load weapon Big Sword animations & attributes
             var weaponBigSwordAnimations = new Dictionary<string, Animation>()
             {
                 {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/BigSword/Sprite"), 1) },
                 {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/BigSword/SpriteInHand"), 1) }
             };
-
             var weaponBigSwordAttributes = new Attributes()
             {
                 Speed = -0.5f,
@@ -217,12 +218,12 @@ namespace Jusgabon
                 Magic = 0,
             };
 
+            // Load weapon Sai animations & attributes
             var weaponSaiAnimations = new Dictionary<string, Animation>()
             {
                 {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Sai/Sprite"), 1) },
                 {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Sai/SpriteInHand"), 1) }
             };
-
             var weaponSaiAttributes = new Attributes()
             {
                 Speed = 0.25f,
@@ -232,8 +233,6 @@ namespace Jusgabon
                 Attack = 10,
                 Magic = 0,
             };
-
-
 
 
             // Instantiate list of sprites which will be updated/drawn
@@ -247,6 +246,7 @@ namespace Jusgabon
                 _player,
             };
 
+            // Add weapons to player weapon inventory
             _player.PickUp(new Weapon(weaponLanceAnimations, weaponLanceAttributes));
             _player.PickUp(new Weapon(weaponBigSwordAnimations, weaponBigSwordAttributes));
             _player.PickUp(new Weapon(weaponSaiAnimations, weaponSaiAttributes));
@@ -342,14 +342,15 @@ namespace Jusgabon
 
             // TODO: Add your update logic
             
+            // Update all sprites
             foreach (var sprite in _spritesCollidable)
                 sprite.Update(gameTime, _spritesCollidable);
 
+            // update camera position to follow player
             _camera.Follow(_player);
 
+ 
             PostUpdate(gameTime);
-
-            base.Update(gameTime);
         }
 
         /// <summary>
@@ -362,7 +363,7 @@ namespace Jusgabon
         protected void PostUpdate(GameTime gameTime)
         {
 
-            // 2. Add Children to the list of "_sprites" and clear
+            // Add Children to the list of "_sprites" and clear
             int count = _spritesCollidable.Count;
             for (int i = 0; i < count; i++)
             {
@@ -372,7 +373,7 @@ namespace Jusgabon
                 _spritesCollidable[i].Children.Clear();
             }
 
-            // 3. Remove all "IsRemoved" sprites
+            // Remove all "IsRemoved" sprites
             for (int i = 0; i < _spritesCollidable.Count; i++)
             {
                 if (_spritesCollidable[i].IsRemoved)
@@ -382,7 +383,7 @@ namespace Jusgabon
                 }
             }
 
-            // 4. Sort sprites by its current Y Position to create a 2.5D illusion effect
+            // Sort sprites by its current Y Position to create a 2.5D illusion effect
             _spritesCollidable.Sort((spriteA, spriteB) => spriteA.Position.Y.CompareTo(spriteB.Position.Y));
         }
 
@@ -402,12 +403,11 @@ namespace Jusgabon
             // Draw the tiled map
             tileMapManager.Draw(gameTime, Globals.spriteBatch);
 
+            // Draw all the sprites
             foreach (var sprite in _spritesCollidable)
                 sprite.Draw(gameTime, Globals.spriteBatch);
 
             Globals.spriteBatch.End();
-
-            base.Draw(gameTime);
         }
 
         #endregion Methods
