@@ -64,7 +64,7 @@ namespace Jusgabon
             //Console.WriteLine("Enemy hp (before): " + this.Health);
             //this.Health -= sprite.Parent.Attack;
             //Console.WriteLine("Enemy hp (after):  " + this.Health);
-            Console.WriteLine("Enemy.OnCollide method called.");
+            //Console.WriteLine("Enemy.OnCollide method called.");
         }
 
         #endregion Methods - Collision Detection

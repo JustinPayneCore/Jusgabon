@@ -75,7 +75,7 @@ namespace Jusgabon
         /// <param name="sprite"></param>
         public override void OnCollide(Sprite sprite)
         {
-            Console.WriteLine("Npc.OnCollide method called.");
+            //Console.WriteLine("Npc.OnCollide method called.");
         }
 
         #endregion Methods - Collision Detection

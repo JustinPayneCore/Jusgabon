@@ -127,9 +127,9 @@ namespace Jusgabon
                     continue;
 
                 
-                if (this.Intersects(sprite))
+                if (this.IsTouching(sprite))
                 {
-                    Console.WriteLine("hit something");
+                    //Console.WriteLine("hit something");
                     sprite.OnCollide(this);
                 }
                 
