@@ -98,8 +98,19 @@ namespace Jusgabon
         // Velocity of Sprite
         public Vector2 Velocity;
 
-        // Direction of Sprite
-        public Vector2 Direction;
+        // Vector Direction of Sprite
+        public Vector2 DirectionVector;
+
+        // The Directions that Sprite can face
+        public enum Directions
+        {
+            Up,
+            Down,
+            Left,
+            Right
+        }
+        // Direction that Sprite faces
+        public Directions Direction = Directions.Down;
 
         // How fast sprite rotates (for sprites with only 1 walk animation)
         public float RotationVelocity = 3f;
@@ -110,6 +121,29 @@ namespace Jusgabon
         // The Lifespan of a Sprite
         // (ex. A spell has a lifespan before the spell reaches max range and fizzles out)
         public float LifeSpan = 0f;
+
+        public int Width
+        {
+            get
+            {
+                if (_texture != null)
+                    return _texture.Width;
+                else
+                    return _animationManager.Animation.FrameWidth;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                if (_texture != null)
+                    return _texture.Height;
+                else
+                    return _animationManager.Animation.FrameHeight;
+            }
+        }
+
 
         // Game-Position of where to draw Sprite
         protected Vector2 _position;
@@ -133,18 +167,11 @@ namespace Jusgabon
         {
             get
             {
-                if (_texture != null) // for a texture
-                    return new Rectangle(
-                        (int)Position.X + (_texture.Width / 10),
-                        (int)Position.Y + (_texture.Height / 10),
-                        _texture.Width - (_texture.Width / 5),
-                        _texture.Height - (_texture.Height / 5));
-                else // for an animation
-                    return new Rectangle(
-                        (int)Position.X + (_animationManager.Animation.FrameWidth / 10),
-                        (int)Position.Y + (_animationManager.Animation.FrameHeight / 10),
-                        _animationManager.Animation.FrameWidth - (_animationManager.Animation.FrameWidth / 5),
-                        _animationManager.Animation.FrameHeight - (_animationManager.Animation.FrameHeight / 5));
+                return new Rectangle(
+                    (int)Position.X + (Width / 10),
+                    (int)Position.Y + (Height / 10),
+                    Width - (Width / 10),
+                    Height - (Height / 10));
             }
         }
 
@@ -185,12 +212,7 @@ namespace Jusgabon
         {
             get
             {
-                if (_texture != null) // for a texture
-                    return new Vector2(_texture.Width / 2, _texture.Height / 2);
-                else // for an animation
-                    return new Vector2(
-                        _animationManager.Animation.FrameWidth / 2,
-                        _animationManager.Animation.FrameHeight / 2);
+                return new Vector2(Position.X + (Width / 2), Position.Y + (Height / 2));
             }
         }
 
@@ -297,6 +319,9 @@ namespace Jusgabon
             foreach (var sprite in sprites)
             {
                 if (sprite == this)
+                    continue;
+
+                if (sprite.Parent == this)
                     continue;
                 
                 if (this.IsTouching(sprite))
@@ -434,7 +459,7 @@ namespace Jusgabon
         /// </summary>
         /// <param name="sprite"></param>
         /// <returns></returns>
-        [Obsolete("Intersects is deprecated, please use normal rect-rect collision methods instead.")]
+        //[Obsolete("Intersects is deprecated, please use normal rect-rect collision methods instead.")]
         public bool Intersects(Sprite sprite)
         {
             // Calculate a matrix which transforms from A's local space into
@@ -509,13 +534,25 @@ namespace Jusgabon
             else // Walk animations do have different directions
             {
                 if (Velocity.X > 0)
+                {
                     _animationManager.Play(_animations["WalkRight"]);
+                    Direction = Directions.Right;
+                }
                 else if (Velocity.X < 0)
+                {
                     _animationManager.Play(_animations["WalkLeft"]);
+                    Direction = Directions.Left;
+                }
                 else if (Velocity.Y > 0)
+                {
                     _animationManager.Play(_animations["WalkDown"]);
+                    Direction = Directions.Down;
+                }
                 else if (Velocity.Y < 0)
+                {
                     _animationManager.Play(_animations["WalkUp"]);
+                    Direction = Directions.Up;
+                }
                 else
                     _animationManager.Stop();
             }

@@ -46,8 +46,10 @@ namespace Jusgabon
         // interact timer to check cooldown and animation length
         private float _interactTimer = 0;
 
+        private float _switchTimer = 0;
+
         // attack cooldown before next attack action can be set
-        private float _attackCooldown = 1f;
+        private float _attackCooldown = 0.5f;
 
         // item cooldown before next item action can be set
         private float _itemCooldown = 1f;
@@ -63,6 +65,14 @@ namespace Jusgabon
 
         // interact cooldown before next interact action can be set
         private float _interactCooldown = 1f;
+
+        private float _switchCooldown = 1f;
+
+        public float AttackSpeed = 0.25f;
+        public float JumpSpeed = 0.25f;
+        public float ItemSpeed = 0.75f;
+        public float Special1Speed = 0.75f;
+        public float Special2Speed = 0.75f;
 
         // if true, perform Attack action during Update
         public bool IsActionAttack = false;
@@ -94,22 +104,18 @@ namespace Jusgabon
 
         #endregion Members - Action
 
-        // The Directions that Player can face
-        public enum Directions
-        {
-            Up,
-            Down,
-            Left,
-            Right
-        }
-        // Direction that Player faces
-        public Directions PlayerDirection;
 
         // Check if Player is Dead
         public bool IsDead
         {
             get { return Health <= 0; }
         }
+
+        public List<Weapon> WeaponInventory;
+
+        public Weapon EquippedWeapon { get; set; }
+
+        public int WeaponIndex = 0;
 
 
         #endregion Members
@@ -141,12 +147,71 @@ namespace Jusgabon
                 Special1 = Keys.W,
                 Special2 = Keys.E,
                 Item = Keys.R,
-                Interact = Keys.F
+                Interact = Keys.F,
+                SwitchWeapon = Keys.D1,
+                SwitchItem = Keys.D2,
             };
 
+            // set animation length for all actions
+            _animations["AttackDown"].FrameSpeed = AttackSpeed;
+            _animations["AttackUp"].FrameSpeed = AttackSpeed;
+            _animations["AttackLeft"].FrameSpeed = AttackSpeed;
+            _animations["AttackRight"].FrameSpeed = AttackSpeed;
+            _animations["JumpDown"].FrameSpeed = JumpSpeed;
+            _animations["JumpUp"].FrameSpeed = JumpSpeed;
+            _animations["JumpLeft"].FrameSpeed = JumpSpeed;
+            _animations["JumpRight"].FrameSpeed = JumpSpeed;
+            _animations["Item"].FrameSpeed = ItemSpeed;
+            _animations["Special1"].FrameSpeed = Special1Speed;
+            _animations["Special2"].FrameSpeed = Special2Speed;
+
+
             // default player direction is facing down
-            PlayerDirection = Directions.Down;
+            Direction = Directions.Down;
+
+            WeaponInventory = new List<Weapon>();
+
         }
+
+        #region Methods - Weapon methods
+        public void PickUp(Weapon weapon)
+        {
+            weapon.PickUp(this);
+            WeaponInventory.Add(weapon);
+
+            if (WeaponInventory.Count == 1)
+            {
+                this.Equip(weapon);
+            }
+        }
+
+        public void Equip(Weapon weapon)
+        {
+            EquippedWeapon = weapon;
+            EquippedWeapon.Equip();
+            Console.WriteLine("Weapon Attack:  " + TotalAttributes.Attack);
+        }
+
+        public void Unequip()
+        {
+            EquippedWeapon.Unequip();
+        }
+
+        public void SwitchWeapon()
+        {
+            if (WeaponInventory.Count <= 1)
+                return;
+
+            if (WeaponIndex == WeaponInventory.Count - 1)
+                WeaponIndex = 0;
+            else
+                WeaponIndex++;
+
+            Unequip();
+            Equip(EquippedWeapon = WeaponInventory[WeaponIndex]);
+        }
+
+        #endregion Methods - Weapon methods
 
         #region Methods - Update Methods
 
@@ -180,6 +245,7 @@ namespace Jusgabon
             {
                 _attackTimer = 0f;
                 IsActionAttack = true;
+                EquippedWeapon.Action();
             }
             else if (_currentKey.IsKeyDown(Input.Special1) && _special1Timer > _special1Cooldown)
             {
@@ -200,6 +266,10 @@ namespace Jusgabon
             {
                 _interactTimer = 0f;
                 IsActionInteract = true;
+            } else if (_currentKey.IsKeyDown(Input.SwitchWeapon) && _switchTimer > _switchCooldown)
+            {
+                _switchTimer = 0f;
+                SwitchWeapon();
             }
 
             // Quick check to see if any actions are in progress
@@ -252,22 +322,22 @@ namespace Jusgabon
             if (_currentKey.IsKeyDown(Input.Up))
             {
                 Velocity.Y = -Speed;
-                PlayerDirection = Directions.Up;
+                Direction = Directions.Up;
             }
             else if (_currentKey.IsKeyDown(Input.Down))
             {
                 Velocity.Y = Speed;
-                PlayerDirection = Directions.Down;
+                Direction = Directions.Down;
             }
             if (_currentKey.IsKeyDown(Input.Left))
             {
                 Velocity.X = -Speed;
-                PlayerDirection = Directions.Left;
+                Direction = Directions.Left;
             }
             else if (_currentKey.IsKeyDown(Input.Right))
             {
                 Velocity.X = Speed;
-                PlayerDirection = Directions.Right;
+                Direction = Directions.Right;
             }
         }
 
@@ -283,6 +353,7 @@ namespace Jusgabon
             _itemTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             _special1Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             _special2Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _switchTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         #endregion Methods - Update Methods
@@ -317,22 +388,22 @@ namespace Jusgabon
         protected void SetActionJump()
         {
 
-            if (PlayerDirection == Directions.Up)
+            if (Direction == Directions.Up)
             {
                 Velocity.Y = -Speed * 2;
                 _animationManager.Play(_animations["JumpUp"]);
             }
-            else if (PlayerDirection == Directions.Down)
+            else if (Direction == Directions.Down)
             {
                 Velocity.Y = Speed * 2;
                 _animationManager.Play(_animations["JumpDown"]);
             } 
-            else if (PlayerDirection == Directions.Left)
+            else if (Direction == Directions.Left)
             {
                 Velocity.X = -Speed * 2;
                 _animationManager.Play(_animations["JumpLeft"]);
             } 
-            else if (PlayerDirection == Directions.Right)
+            else if (Direction == Directions.Right)
             {
                 Velocity.X = Speed * 2;
                 _animationManager.Play(_animations["JumpRight"]);
@@ -344,13 +415,13 @@ namespace Jusgabon
         /// </summary>
         protected void SetActionAttack()
         {
-            if (PlayerDirection == Directions.Up)
+            if (Direction == Directions.Up)
                 _animationManager.Play(_animations["AttackUp"]);
-            else if (PlayerDirection == Directions.Down)
+            else if (Direction == Directions.Down)
                 _animationManager.Play(_animations["AttackDown"]);
-            else if (PlayerDirection == Directions.Left)
+            else if (Direction == Directions.Left)
                 _animationManager.Play(_animations["AttackLeft"]);
-            else if (PlayerDirection == Directions.Right)
+            else if (Direction == Directions.Right)
                 _animationManager.Play(_animations["AttackRight"]);
             
             // todo
@@ -388,13 +459,13 @@ namespace Jusgabon
         /// </summary>
         protected void SetActionInteract()
         {
-            if (PlayerDirection == Directions.Up)
+            if (Direction == Directions.Up)
                 _animationManager.Play(_animations["IdleUp"]);
-            else if (PlayerDirection == Directions.Down)
+            else if (Direction == Directions.Down)
                 _animationManager.Play(_animations["IdleDown"]);
-            else if (PlayerDirection == Directions.Left)
+            else if (Direction == Directions.Left)
                 _animationManager.Play(_animations["IdleLeft"]);
-            else if (PlayerDirection == Directions.Right)
+            else if (Direction == Directions.Right)
                 _animationManager.Play(_animations["IdleRight"]);
         }
 
@@ -431,13 +502,13 @@ namespace Jusgabon
 
             Colour = Color.White;
 
-            if (PlayerDirection == Directions.Up)
+            if (Direction == Directions.Up)
                 _animationManager.Play(_animations["IdleUp"]);
-            else if (PlayerDirection == Directions.Down)
+            else if (Direction == Directions.Down)
                 _animationManager.Play(_animations["IdleDown"]);
-            else if (PlayerDirection == Directions.Left)
+            else if (Direction == Directions.Left)
                 _animationManager.Play(_animations["IdleLeft"]);
-            else if (PlayerDirection == Directions.Right)
+            else if (Direction == Directions.Right)
                 _animationManager.Play(_animations["IdleRight"]);
         }
 
@@ -471,6 +542,8 @@ namespace Jusgabon
 
             _animationManager.Update(gameTime, sprites);
 
+            EquippedWeapon.Update(gameTime, sprites);
+
             CheckCollision(sprites);
 
             Position += Velocity;
@@ -489,6 +562,9 @@ namespace Jusgabon
                 return;
 
             base.Draw(gameTime, spriteBatch);
+
+            if (IsActionAttack)
+                EquippedWeapon.Draw(gameTime, spriteBatch);
         }
 
         #endregion Methods

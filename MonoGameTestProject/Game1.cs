@@ -185,6 +185,58 @@ namespace Jusgabon
                 Magic = 0,
             };
 
+            var weaponLanceAnimations = new Dictionary<string, Animation>()
+            {
+                {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Lance/Sprite"), 1) },
+                {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Lance/SpriteInHand"), 1) }
+            };
+
+            var weaponLanceAttributes = new Attributes()
+            {
+                Speed = 0f,
+                Health = 0,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 10,
+                Magic = 0,
+            };
+
+            var weaponBigSwordAnimations = new Dictionary<string, Animation>()
+            {
+                {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/BigSword/Sprite"), 1) },
+                {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/BigSword/SpriteInHand"), 1) }
+            };
+
+            var weaponBigSwordAttributes = new Attributes()
+            {
+                Speed = -0.5f,
+                Health = 0,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 20,
+                Magic = 0,
+            };
+
+            var weaponSaiAnimations = new Dictionary<string, Animation>()
+            {
+                {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Sai/Sprite"), 1) },
+                {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Sai/SpriteInHand"), 1) }
+            };
+
+            var weaponSaiAttributes = new Attributes()
+            {
+                Speed = 0.25f,
+                Health = 0,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 10,
+                Magic = 0,
+            };
+
+
+
+
+            // Instantiate list of sprites which will be updated/drawn
             _spritesCollidable = new List<Sprite>()
             {
                 new Npc(npcVillagerAnimations) { Position = new Vector2(200, 215), BaseAttributes = baseNpcAttributes },
@@ -195,6 +247,9 @@ namespace Jusgabon
                 _player,
             };
 
+            _player.PickUp(new Weapon(weaponLanceAnimations, weaponLanceAttributes));
+            _player.PickUp(new Weapon(weaponBigSwordAnimations, weaponBigSwordAttributes));
+            _player.PickUp(new Weapon(weaponSaiAnimations, weaponSaiAttributes));
         }
 
         /// <summary>
@@ -225,21 +280,21 @@ namespace Jusgabon
                 {"IdleRight", new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 48) },
 
                 // attack
-                {"AttackDown",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 0) {FrameSpeed = 0.35f } },
-                {"AttackUp",    new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 16) {FrameSpeed = 0.35f } },
-                {"AttackLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 32) {FrameSpeed = 0.35f } },
-                {"AttackRight", new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 48) {FrameSpeed = 0.35f } },
+                {"AttackDown",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 0) },
+                {"AttackUp",    new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 16) },
+                {"AttackLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 32) },
+                {"AttackRight", new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 48) },
 
                 // jump
-                {"JumpDown",  new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 0) {FrameSpeed = 0.25f } },
-                {"JumpUp",    new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 16) {FrameSpeed = 0.25f } },
-                {"JumpLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 32) {FrameSpeed = 0.25f } },
-                {"JumpRight", new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 48) {FrameSpeed = 0.25f } },
+                {"JumpDown",  new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 0) },
+                {"JumpUp",    new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 16) },
+                {"JumpLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 32) },
+                {"JumpRight", new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 48) },
 
                 // other actions
-                {"Item",        new Animation(Globals.content.Load<Texture2D>(path + "Item"), 1) {FrameSpeed = 0.75f } },
-                {"Special1",    new Animation(Globals.content.Load<Texture2D>(path + "Special1"), 1) {FrameSpeed = 0.75f } },
-                {"Special2",    new Animation(Globals.content.Load<Texture2D>(path + "Special2"), 1) {FrameSpeed = 0.75f } },
+                {"Item",        new Animation(Globals.content.Load<Texture2D>(path + "Item"), 1) },
+                {"Special1",    new Animation(Globals.content.Load<Texture2D>(path + "Special1"), 1) },
+                {"Special2",    new Animation(Globals.content.Load<Texture2D>(path + "Special2"), 1) },
                 {"Dead",        new Animation(Globals.content.Load<Texture2D>(path + "Dead"), 1) },
             };
             

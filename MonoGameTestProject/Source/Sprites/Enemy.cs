@@ -61,6 +61,9 @@ namespace Jusgabon
         /// <param name="sprite"></param>
         public override void OnCollide(Sprite sprite)
         {
+            //Console.WriteLine("Enemy hp (before): " + this.Health);
+            //this.Health -= sprite.Parent.Attack;
+            //Console.WriteLine("Enemy hp (after):  " + this.Health);
             Console.WriteLine("Enemy.OnCollide method called.");
         }
 
