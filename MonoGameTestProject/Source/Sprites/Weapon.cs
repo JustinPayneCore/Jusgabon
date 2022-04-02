@@ -39,6 +39,25 @@ namespace Jusgabon
         // Speed of weapon action
         public new float Speed { get; set; }
 
+        public new int Width { get; set; }
+
+        public new int Height { get; set; }
+
+        public new Rectangle Rectangle
+        {
+            get
+            {
+                return new Rectangle(
+                    (int)Position.X,
+                    (int)Position.Y,
+                    Width,
+                    Height);
+            }
+        }
+
+
+        public Vector2 FinalPosition { get; set; }
+
         #endregion Members
 
         #region Methods
@@ -51,6 +70,9 @@ namespace Jusgabon
         public Weapon(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations)
         {
             BaseAttributes = baseAttributes;
+
+            Width = _animationManager.Animation.FrameWidth;
+            Height = _animationManager.Animation.FrameHeight;
         }
 
         /// <summary>
@@ -109,37 +131,71 @@ namespace Jusgabon
             {
                 Rotation = 0;
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
-                var finalPosition = new Vector2(Position.X, Position.Y + (Parent.Height));
-                Speed = (finalPosition.Y - Position.Y) / 7;     
+                FinalPosition = new Vector2(Position.X, Position.Y + (Parent.Height));
+                Speed = (FinalPosition.Y - Position.Y) / 7;
+
+                if (Width > Height)
+                {
+                    var temp = Width;
+                    Width = Height;
+                    Height = temp;
+                }
+
+                
             }
             else if (Direction == Directions.Up)
             {
                 Rotation = MathHelper.ToRadians(180);
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
-                var finalPosition = new Vector2(Position.X, Position.Y - (Parent.Height));
-                Speed = (Position.Y - finalPosition.Y) / 7;
+                FinalPosition = new Vector2(Position.X, Position.Y - (Parent.Height));
+                Speed = (Position.Y - FinalPosition.Y) / 7;
+
+                if (Width > Height)
+                {
+                    var temp = Width;
+                    Width = Height;
+                    Height = temp;
+                }
             }
             else if (Direction == Directions.Left)
             {
                 Rotation = MathHelper.ToRadians(90);
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
-                var finalPosition = new Vector2(Position.X - (Parent.Height), Position.Y);
-                Speed = (Position.X - finalPosition.X) / 7;
+                FinalPosition = new Vector2(Position.X - (Parent.Height), Position.Y);
+                Speed = (Position.X - FinalPosition.X) / 7;
+
+                if (Height > Width)
+                {
+                    var temp = Width;
+                    Width = Height;
+                    Height = temp;
+                }
             }
             else // Direction == Directions.Right
             {
                 Rotation = MathHelper.ToRadians(-90);
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
-                var finalPosition = new Vector2(Position.X + (Parent.Height), Position.Y);
-                Speed = (finalPosition.X - Position.X) / 7;
+                FinalPosition = new Vector2(Position.X + (Parent.Height), Position.Y);
+                Speed = (FinalPosition.X - Position.X) / 7;
+
+                if (Height > Width)
+                {
+                    var temp = Width;
+                    Width = Height;
+                    Height = temp;
+                }
             }
+
+            Console.WriteLine("Width: " + Width);
+            Console.WriteLine("Height: " + Height);
+            Console.WriteLine("Rectangle: " + Rectangle);
         }
 
         /// <summary>
         /// CheckCollision method for weapon.
         /// </summary>
         /// <param name="sprites"></param>
-        protected override void CheckCollision(List<Sprite> sprites)
+        public override void CheckCollision(List<Sprite> sprites)
         {
             foreach(var sprite in sprites)
             {
@@ -152,12 +208,66 @@ namespace Jusgabon
                 
                 if (this.IsTouching(sprite))
                 {
-                    //Console.WriteLine("hit something");
+                    Console.WriteLine("hit something");
                     sprite.OnCollide(this);
                 }
                 
             }
         }
+
+        /// <summary>
+        /// Collision method to detect if this sprite is touching the left side of target sprite.
+        /// Sources (tutorial): https://www.youtube.com/watch?v=CV8P9aq2gQo
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <returns></returns>
+        protected override bool IsTouchingLeft(Sprite sprite)
+        {
+            return this.Rectangle.Right > sprite.Rectangle.Left &&
+                this.Rectangle.Left < sprite.Rectangle.Left &&
+                this.Rectangle.Bottom > sprite.Rectangle.Top &&
+                this.Rectangle.Top < sprite.Rectangle.Bottom;
+        }
+
+        /// <summary>
+        /// Collision method to detect if this sprite is touching the right side of target sprite.
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <returns></returns>
+        protected override bool IsTouchingRight(Sprite sprite)
+        {
+            return this.Rectangle.Left < sprite.Rectangle.Right &&
+                this.Rectangle.Right > sprite.Rectangle.Right &&
+                this.Rectangle.Bottom > sprite.Rectangle.Top &&
+                this.Rectangle.Top < sprite.Rectangle.Bottom;
+        }
+
+        /// <summary>
+        /// Collision method to detect if this sprite is touching the top side of target sprite.
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <returns></returns>
+        protected override bool IsTouchingTop(Sprite sprite)
+        {
+            return this.Rectangle.Bottom > sprite.Rectangle.Top &&
+                this.Rectangle.Top < sprite.Rectangle.Top &&
+                this.Rectangle.Right > sprite.Rectangle.Left &&
+                this.Rectangle.Left < sprite.Rectangle.Right;
+        }
+
+        /// <summary>
+        /// Collision method to detect if this sprite is touching the bottom side of target sprite.
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <returns></returns>
+        protected override bool IsTouchingBottom(Sprite sprite)
+        {
+            return this.Rectangle.Top < sprite.Rectangle.Bottom &&
+                this.Rectangle.Bottom > sprite.Rectangle.Bottom &&
+                this.Rectangle.Right > sprite.Rectangle.Left &&
+                this.Rectangle.Left < sprite.Rectangle.Right;
+        }
+
 
         /// <summary>
         /// UpdateAction method - moves weapon in a stabbing motion.
