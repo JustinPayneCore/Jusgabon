@@ -226,16 +226,21 @@ namespace Jusgabon
             if (Keyboard.GetState().IsKeyDown(Keys.None))
                 return;
 
-            UpdateAction();
+            StartAction();
+            EndAction();
             UpdateMovement();
         }
 
         /// <summary>
         /// UpdateAction method - Checks for Action input.
         /// </summary>
-        private void UpdateAction()
+        private void StartAction()
         {
-            // 1. Start the action if key is pressed and action cooldown is done
+            // Don't look for another action to start
+            if (IsAction)
+                return;
+
+            // Start the action if key is pressed and action cooldown is done
             if (_currentKey.IsKeyDown(Input.Jump) && _jumpTimer > _jumpCooldown)
             {
                 _jumpTimer = 0f;
@@ -266,22 +271,26 @@ namespace Jusgabon
             {
                 _interactTimer = 0f;
                 IsActionInteract = true;
-            } else if (_currentKey.IsKeyDown(Input.SwitchWeapon) && _switchTimer > _switchCooldown)
+            }
+            else if (_currentKey.IsKeyDown(Input.SwitchWeapon) && _switchTimer > _switchCooldown)
             {
                 _switchTimer = 0f;
                 SwitchWeapon();
             }
+        }
 
-            // Quick check to see if any actions are in progress
+        private void EndAction()
+        {
+            // Don't need to check if no actions are in progress
             if (!IsAction)
                 return;
 
-            // 2. Stop the action if the animation is done.
+            // Stop the action if the animation is done.
             if (IsActionJump && _jumpTimer > _animations["JumpDown"].FrameSpeed)
             {
                 IsActionJump = false;
                 SetIdleAnimations();
-            } 
+            }
             else if (IsActionAttack && _attackTimer > _animations["AttackDown"].FrameSpeed)
             {
                 IsActionAttack = false;
