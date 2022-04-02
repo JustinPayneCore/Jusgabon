@@ -42,6 +42,7 @@ namespace Jusgabon
         /// <summary>
         /// Rotation helper method.
         /// Returns a more accurate rotated vector based on origin (target vector that it should be rotated on)
+        /// Source: https://stackoverflow.com/questions/8148651/rotation-of-an-object-around-a-central-vector2-point
         /// </summary>
         /// <param name="point"></param>
         /// <param name="origin"></param>
