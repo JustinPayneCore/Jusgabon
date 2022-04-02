@@ -121,6 +121,29 @@ namespace Jusgabon
         // (ex. A spell has a lifespan before the spell reaches max range and fizzles out)
         public float LifeSpan = 0f;
 
+        public int Width
+        {
+            get
+            {
+                if (_texture != null)
+                    return _texture.Width;
+                else
+                    return _animationManager.Animation.FrameWidth;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                if (_texture != null)
+                    return _texture.Height;
+                else
+                    return _animationManager.Animation.FrameHeight;
+            }
+        }
+
+
         // Game-Position of where to draw Sprite
         protected Vector2 _position;
         public Vector2 Position 
@@ -143,18 +166,11 @@ namespace Jusgabon
         {
             get
             {
-                if (_texture != null) // for a texture
-                    return new Rectangle(
-                        (int)Position.X + (_texture.Width / 10),
-                        (int)Position.Y + (_texture.Height / 10),
-                        _texture.Width - (_texture.Width / 10),
-                        _texture.Height - (_texture.Height / 10));
-                else // for an animation
-                    return new Rectangle(
-                        (int)Position.X + (_animationManager.Animation.FrameWidth / 10),
-                        (int)Position.Y + (_animationManager.Animation.FrameHeight / 10),
-                        _animationManager.Animation.FrameWidth - (_animationManager.Animation.FrameWidth / 5),
-                        _animationManager.Animation.FrameHeight - (_animationManager.Animation.FrameHeight / 5));
+                return new Rectangle(
+                    (int)Position.X + (Width / 10),
+                    (int)Position.Y + (Height / 10),
+                    Width - (Width / 10),
+                    Height - (Height / 10));
             }
         }
 
@@ -195,12 +211,7 @@ namespace Jusgabon
         {
             get
             {
-                if (_texture != null) // for a texture
-                    return new Vector2(_texture.Width / 2, _texture.Height / 2);
-                else // for an animation
-                    return new Vector2(
-                        _animationManager.Animation.FrameWidth / 2,
-                        _animationManager.Animation.FrameHeight / 2);
+                return new Vector2(Width / 2, Height / 2);
             }
         }
 
@@ -290,6 +301,9 @@ namespace Jusgabon
             foreach (var sprite in sprites)
             {
                 if (sprite == this)
+                    continue;
+
+                if (sprite.Parent == this)
                     continue;
                 
                 if (this.IsTouching(sprite))

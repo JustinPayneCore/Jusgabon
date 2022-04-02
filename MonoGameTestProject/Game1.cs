@@ -172,13 +172,24 @@ namespace Jusgabon
                 Magic = 0,
             };
 
-
-            // Instantiate list of sprites which wil be updated/drawn
-            _spritesNonCollidable = new List<Sprite>()
+            var weaponLanceAnimations = new Dictionary<string, Animation>()
             {
-                new Sprite(Globals.content.Load<Texture2D>("Test_Background")),
+                {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Lance/SpriteInHand"), 1) },
+                {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Lance/SpriteInHand"), 1) }
             };
 
+            var weaponLanceAttributes = new Attributes()
+            {
+                Speed = 0f,
+                Health = 0,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 10,
+                Magic = 0,
+            };
+
+
+            // Instantiate list of sprites which will be updated/drawn
             _spritesCollidable = new List<Sprite>()
             {
                 new Npc(npcVillagerAnimations) { Position = new Vector2(-100, -50), BaseAttributes = baseNpcAttributes },
@@ -188,6 +199,8 @@ namespace Jusgabon
                 new Boss(bossDemonCyclopAnimations) { Position = new Vector2(300, 0), BaseAttributes = baseEnemyAttributes },
                 _player,
             };
+
+            _player.PickUp(new Weapon(weaponLanceAnimations, weaponLanceAttributes));
 
         }
 
@@ -265,9 +278,6 @@ namespace Jusgabon
         {
             // TODO: Unload any non-ContentManager content
 
-
-
-
             base.UnloadContent();
         }
 
@@ -283,9 +293,6 @@ namespace Jusgabon
                 Exit();
 
             // TODO: Add your update logic
-
-            foreach (var sprite in _spritesNonCollidable)
-                sprite.Update(gameTime, _spritesNonCollidable);
             
             foreach (var sprite in _spritesCollidable)
                 sprite.Update(gameTime, _spritesCollidable);
@@ -343,9 +350,6 @@ namespace Jusgabon
 
             // TODO: Add your drawing code
             Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
-
-            foreach (var sprite in _spritesNonCollidable)
-                sprite.Draw(gameTime, Globals.spriteBatch);
             
             foreach (var sprite in _spritesCollidable)
                 sprite.Draw(gameTime, Globals.spriteBatch);

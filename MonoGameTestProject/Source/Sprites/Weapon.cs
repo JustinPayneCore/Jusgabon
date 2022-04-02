@@ -25,13 +25,13 @@ namespace Jusgabon
 
         public bool IsAction = false;
 
+        public bool IsEquipped = false;
+
         private float _timer;
 
         public float ActionSpeed;
 
-        public Vector2 InitPosition { get; set; }
-
-        public Vector2 FinalPosition { get; set; }
+        public new float Speed { get; set; }
 
         #endregion Members
 
@@ -42,50 +42,140 @@ namespace Jusgabon
         /// </summary>
         /// <param name="texture"></param>
         /// <param name="baseAttributes"></param>
-        public Weapon(Texture2D texture, Attributes baseAttributes) : base(texture)
+        public Weapon(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations)
         {
             BaseAttributes = baseAttributes;
         }
 
-        protected virtual void PickUp(Player parent)
+        public virtual void PickUp(Player parent)
         {
             if (parent != Globals.player)
                 return;
 
             Parent = parent;
-            parent.AttributeModifiers.Add(BaseAttributes);
             ActionSpeed = parent.AttackSpeed;
         }
 
-        protected virtual void Action()
+        public virtual void Equip()
+        {
+            Parent.AttributeModifiers.Add(BaseAttributes);
+            IsEquipped = true;
+        }
+
+        public virtual void Unequip()
+        {
+            Parent.AttributeModifiers.Remove(BaseAttributes);
+            IsEquipped = false;
+        }
+
+        public virtual void Action()
         {
             if (Parent == null)
                 return;
 
-            var parentPosition = Parent.Position;
-            var parentDirection = Parent.Direction;
+            if (IsEquipped == false)
+                return;
 
-            if (parentDirection == Directions.Down)
+
+            Direction = Parent.Direction;
+
+            if (Direction == Directions.Down)
             {
-                InitPosition = new Vector2(Parent.Position.X, Parent.Position.Y + 16);
-                FinalPosition = new Vector2(Parent.Position.X, Parent.Position.Y + 16 + _texture.Height);
+                Position = new Vector2(Parent.Position.X + 4, Parent.Position.Y + 4);
+                var finalPosition = new Vector2(Position.X, Position.Y + 12);
+                Speed = (finalPosition.Y - Position.Y) / 7;
+                Rotation = 0;
             } 
-            else if (parentDirection == Directions.Up)
+            else if (Direction == Directions.Up)
             {
-                InitPosition = new Vector2(Parent.Position.X, Parent.Position.Y - 16);
-                FinalPosition = new Vector2(Parent.Position.X, Parent.Position.Y - 16 - _texture.Height);
+                Position = new Vector2(Parent.Position.X + 8, Parent.Position.Y + 12);
+                var finalPosition = new Vector2(Position.X, Position.Y - 12);
+                Speed = (Position.Y - finalPosition.Y) / 7;
+                Rotation = MathHelper.ToRadians(180);
             } 
-            else if (parentDirection == Directions.Right)
+            else if (Direction == Directions.Left)
             {
-                InitPosition = new Vector2(Parent.Position.X + 16, Parent.Position.Y);
-                FinalPosition = new Vector2(Parent.Position.X + 16 + _texture.Height, Parent.Position.Y);
+                Position = new Vector2(Parent.Position.X + 12, Parent.Position.Y + 9);
+                var finalPosition = new Vector2(Position.X - 12, Position.Y);
+                Speed = (Position.X - finalPosition.X) / 7;
+                Rotation = MathHelper.ToRadians(90);
             }
-            else if (parentDirection == Directions.Right)
+            else // Direction == Directions.Right
             {
-                InitPosition = new Vector2(Parent.Position.X - 16, Parent.Position.Y);
-                FinalPosition = new Vector2(Parent.Position.X - 16 - _texture.Height, Parent.Position.Y);
+                Position = new Vector2(Parent.Position.X + 4, Parent.Position.Y + 14);
+                var finalPosition = new Vector2(Position.X + 12, Position.Y);
+                Speed = (finalPosition.X - Position.X) / 7;
+                Rotation = MathHelper.ToRadians(-90);
             }
+
+            IsAction = true;
         }
+
+        protected virtual void UpdateAction()
+        {
+            if (_timer > ActionSpeed)
+            {
+                IsAction = false;
+                _timer = 0f;
+                _animationManager.Stop();
+                return;
+            }
+
+            if (Direction == Directions.Down)
+            {
+                Velocity.Y = Speed;
+                if (_timer > ActionSpeed / 2)
+                    Velocity.Y = -Speed;
+            }
+            else if (Direction == Directions.Up)
+            {
+                Velocity.Y = -Speed;
+                if (_timer > ActionSpeed / 2)
+                    Velocity.Y = Speed;
+            }
+            else if (Direction == Directions.Left)
+            {
+                Velocity.X = -Speed;
+                if (_timer > ActionSpeed / 2)
+                    Velocity.X = Speed;
+            }
+            else if (Direction == Directions.Right)
+            {
+                Velocity.X = Speed;
+                if (_timer > ActionSpeed / 2)
+                    Velocity.X = -Speed;
+            }
+
+            _animationManager.Play(_animations["SpriteInHand"]);
+        }
+
+        public override void Update(GameTime gameTime, List<Sprite> sprites)
+        {
+            if (IsAction == false)
+                return;
+
+            // update timer
+            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            // update action
+            UpdateAction();
+
+            Position += Velocity;
+            Velocity = Vector2.Zero;
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            if (IsAction == false)
+                return;
+
+            if (IsEquipped == false)
+                return;
+
+            base.Draw(gameTime, spriteBatch);
+        }
+
+
 
         #endregion Methods
     }

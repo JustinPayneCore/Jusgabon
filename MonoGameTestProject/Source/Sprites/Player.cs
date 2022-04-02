@@ -37,7 +37,7 @@ namespace Jusgabon
         private float _interactTimer = 0;
 
         // attack cooldown before next attack action can be set
-        private float _attackCooldown = 1f;
+        private float _attackCooldown = 0.5f;
 
         // item cooldown before next item action can be set
         private float _itemCooldown = 1f;
@@ -54,7 +54,7 @@ namespace Jusgabon
         // interact cooldown before next interact action can be set
         private float _interactCooldown = 1f;
 
-        public float AttackSpeed = 0.35f;
+        public float AttackSpeed = 0.25f;
         public float JumpSpeed = 0.25f;
         public float ItemSpeed = 0.75f;
         public float Special1Speed = 0.75f;
@@ -90,22 +90,14 @@ namespace Jusgabon
 
         #endregion Members - Action
 
-        //// The Directions that Player can face
-        //public enum Directions
-        //{
-        //    Up,
-        //    Down,
-        //    Left,
-        //    Right
-        //}
-        //// Direction that Player faces
-        //public Directions PlayerDirection;
 
         // Check if Player is Dead
         public bool IsDead
         {
             get { return Health <= 0; }
         }
+
+        public Weapon Weapon { get; set; }
 
 
         #endregion Members
@@ -156,7 +148,31 @@ namespace Jusgabon
 
             // default player direction is facing down
             Direction = Directions.Down;
+
+            
+
         }
+
+        #region Methods - Weapon methods
+        public void PickUp(Weapon weapon)
+        {
+            weapon.PickUp(this);
+            Weapon = weapon;
+            Weapon.Equip();
+        }
+
+        public void Equip()
+        {
+            Weapon.Equip();
+        }
+
+        public void Unequip()
+        {
+            Weapon.Unequip();
+            Console.WriteLine(TotalAttributes.Attack);
+        }
+
+        #endregion Methods - Weapon methods
 
         #region Methods - Update Methods
 
@@ -190,6 +206,7 @@ namespace Jusgabon
             {
                 _attackTimer = 0f;
                 IsActionAttack = true;
+                Weapon.Action();
             }
             else if (_currentKey.IsKeyDown(Input.Special1) && _special1Timer > _special1Cooldown)
             {
@@ -246,6 +263,7 @@ namespace Jusgabon
             {
                 IsActionInteract = false;
                 SetIdleAnimations();
+                Weapon.Unequip();
             }
         }
 
@@ -474,6 +492,8 @@ namespace Jusgabon
 
             _animationManager.Update(gameTime, sprites);
 
+            Weapon.Update(gameTime, sprites);
+
             CheckCollision(sprites);
 
             Position += Velocity;
@@ -492,6 +512,9 @@ namespace Jusgabon
                 return;
 
             base.Draw(gameTime, spriteBatch);
+
+            if (IsActionAttack)
+                Weapon.Draw(gameTime, spriteBatch);
         }
 
         #endregion Methods
