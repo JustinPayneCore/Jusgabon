@@ -19,7 +19,7 @@ using TiledSharp;
 namespace Jusgabon
 {
     /// <summary>
-    /// Static Helper class for Attributes.
+    /// Static Helper class for various helper methods.
     /// </summary>
     public static class Helpers
     {
@@ -39,6 +39,14 @@ namespace Jusgabon
             return finalAttributes;
         }
 
+        /// <summary>
+        /// Rotation helper method.
+        /// Returns a more accurate rotated vector based on origin (target vector that it should be rotated on)
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="origin"></param>
+        /// <param name="rotation"></param>
+        /// <returns></returns>
         public static Vector2 RotateAboutOrigin(Vector2 point, Vector2 origin, float rotation)
         {
             return Vector2.Transform(point - origin, Matrix.CreateRotationZ(rotation)) + origin;
