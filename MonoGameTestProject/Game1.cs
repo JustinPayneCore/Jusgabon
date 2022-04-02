@@ -341,7 +341,7 @@ namespace Jusgabon
                 Exit();
 
             // TODO: Add your update logic
-            
+
             // Update all sprites
             foreach (var sprite in _spritesCollidable)
                 sprite.Update(gameTime, _spritesCollidable);
@@ -349,7 +349,7 @@ namespace Jusgabon
             // update camera position to follow player
             _camera.Follow(_player);
 
- 
+
             PostUpdate(gameTime);
         }
 
@@ -399,7 +399,7 @@ namespace Jusgabon
 
             // TODO: Add your drawing code
             Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
-
+           
             // Draw the tiled map
             tileMapManager.Draw(gameTime, Globals.spriteBatch);
 

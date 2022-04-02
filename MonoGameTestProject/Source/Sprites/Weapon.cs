@@ -195,7 +195,7 @@ namespace Jusgabon
         /// CheckCollision method for weapon.
         /// </summary>
         /// <param name="sprites"></param>
-        public override void CheckCollision(List<Sprite> sprites)
+        protected override void CheckCollision(List<Sprite> sprites)
         {
             foreach(var sprite in sprites)
             {

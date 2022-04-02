@@ -233,7 +233,7 @@ namespace Jusgabon
                     _animationManager.Layer = _layer;
             }
         }
-        
+
 
         // Color TextureData of Sprite
         // (DEPRECATED) only used for per-pixel collision detection
@@ -380,7 +380,7 @@ namespace Jusgabon
                 }
             }
         }
-        
+
 
         /// <summary>
         /// Wrapper collision method to detect if this sprite is touching target sprite from any direction.
@@ -401,7 +401,7 @@ namespace Jusgabon
         /// </summary>
         /// <param name="sprite"></param>
         /// <returns></returns>
-        protected bool IsTouchingLeft(Sprite sprite)
+        protected virtual bool IsTouchingLeft(Sprite sprite)
         {
             return this.Rectangle.Right + this.Velocity.X > sprite.Rectangle.Left &&
                 this.Rectangle.Left < sprite.Rectangle.Left &&
@@ -414,7 +414,7 @@ namespace Jusgabon
         /// </summary>
         /// <param name="sprite"></param>
         /// <returns></returns>
-        protected bool IsTouchingRight(Sprite sprite)
+        protected virtual bool IsTouchingRight(Sprite sprite)
         {
             return this.Rectangle.Left + this.Velocity.X < sprite.Rectangle.Right &&
                 this.Rectangle.Right > sprite.Rectangle.Right &&
@@ -427,7 +427,7 @@ namespace Jusgabon
         /// </summary>
         /// <param name="sprite"></param>
         /// <returns></returns>
-        protected bool IsTouchingTop(Sprite sprite)
+        protected virtual bool IsTouchingTop(Sprite sprite)
         {
             return this.Rectangle.Bottom + this.Velocity.Y > sprite.Rectangle.Top &&
                 this.Rectangle.Top < sprite.Rectangle.Top &&
@@ -440,7 +440,7 @@ namespace Jusgabon
         /// </summary>
         /// <param name="sprite"></param>
         /// <returns></returns>
-        protected bool IsTouchingBottom(Sprite sprite)
+        protected virtual bool IsTouchingBottom(Sprite sprite)
         {
             return this.Rectangle.Top + this.Velocity.Y < sprite.Rectangle.Bottom &&
                 this.Rectangle.Bottom > sprite.Rectangle.Bottom &&
