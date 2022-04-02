@@ -38,5 +38,10 @@ namespace Jusgabon
 
             return finalAttributes;
         }
+
+        public static Vector2 RotateAboutOrigin(Vector2 point, Vector2 origin, float rotation)
+        {
+            return Vector2.Transform(point - origin, Matrix.CreateRotationZ(rotation)) + origin;
+        }
     }
 }
