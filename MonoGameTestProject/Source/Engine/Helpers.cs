@@ -13,13 +13,13 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using TiledSharp;
 #endregion
+
 
 namespace Jusgabon
 {
     /// <summary>
-    /// Static Helper class for various helper methods.
+    /// Static Helper class for Attributes.
     /// </summary>
     public static class Helpers
     {
@@ -39,18 +39,22 @@ namespace Jusgabon
             return finalAttributes;
         }
 
-        /// <summary>
-        /// Rotation helper method.
-        /// Returns a more accurate rotated vector based on origin (target vector that it should be rotated on)
-        /// Source: https://stackoverflow.com/questions/8148651/rotation-of-an-object-around-a-central-vector2-point
-        /// </summary>
-        /// <param name="point"></param>
-        /// <param name="origin"></param>
-        /// <param name="rotation"></param>
-        /// <returns></returns>
         public static Vector2 RotateAboutOrigin(Vector2 point, Vector2 origin, float rotation)
         {
             return Vector2.Transform(point - origin, Matrix.CreateRotationZ(rotation)) + origin;
+        }
+
+
+        private static Texture2D rect;
+
+        public static void DrawRectangle(Rectangle coords, Color color)
+        {
+            if (rect == null)
+            {
+                rect = new Texture2D(Globals.spriteBatch.GraphicsDevice, 1, 1);
+                rect.SetData(new[] { Color.White });
+            }
+            Globals.spriteBatch.Draw(rect, coords, color);
         }
     }
 }

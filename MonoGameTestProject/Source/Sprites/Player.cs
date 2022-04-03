@@ -77,7 +77,7 @@ namespace Jusgabon
         // Check if Player is Dead
         public bool IsDead
         {
-            get { return Health <= 0; }
+            get { return _currentHealth <= 0; }
         }
 
         // Weapon Inventory
@@ -103,9 +103,12 @@ namespace Jusgabon
         /// <param name="spawnPosition"></param>
         public Player(Dictionary<string, Animation> animations, Vector2 spawnPosition, Attributes baseAttributes) : base(animations)
         {
+            // set player position
             Position = spawnPosition;
 
+            // set player attributes
             BaseAttributes = baseAttributes;
+            _currentHealth = Health;
 
             // set player keybindings
             Input = new Input()
@@ -137,13 +140,15 @@ namespace Jusgabon
             _animations["Special1"].FrameSpeed = Special1Speed;
             _animations["Special2"].FrameSpeed = Special2Speed;
 
-
             // default player direction is facing down
             Direction = Directions.Down;
 
             // create weapon inventory
             WeaponInventory = new List<Weapon>();
 
+            // change default Take Hit animation length & cooldowns
+            _hitCooldown = 1f;
+            HitSpeed = 0.15f;
         }
 
         #region Methods - Weapon methods
@@ -519,7 +524,32 @@ namespace Jusgabon
         /// <param name="sprite"></param>
         public override void OnCollide(Sprite sprite)
         {
-            Console.WriteLine("Player.OnCollide method called.");
+            if (IsDead)
+                return;
+            
+            if (sprite is Enemy)
+                TakeDamage(((Enemy)sprite).Attack);
+        }
+
+        protected override void SetTakeDamage(GameTime gameTime)
+        {
+            // increment timers
+            _hitTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            // check if sprite is taking hit
+            if (IsHit == false)
+                return;
+
+            // set take hit properties
+            Colour = Color.Red;
+            Velocity = Vector2.Zero;
+
+            // reset sprite take hit cooldown
+            if (_hitTimer > HitSpeed)
+            {
+                Colour = Color.White;
+                IsHit = false;
+            }
         }
 
         /// <summary>
@@ -531,14 +561,26 @@ namespace Jusgabon
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             if (IsDead)
+            {
+                _animationManager.Play(_animations["Dead"]);
                 return;
+            }
+
+            // General Order of Updates
+            // 1. Update Timers
+            // 2. Update Input
+            // 3. Set Input Actions/Animations
+            // 4. Update Animation Manager
+            // 5. Update Child
+            // 6. Check Collision
+            // 7. Check Take Damage Action
+            // 8. Update Position
 
             UpdateTimers(gameTime);
 
             UpdateInput();
 
             SetAction();
-
             SetAnimations();
 
             _animationManager.Update(gameTime, sprites);
@@ -546,6 +588,8 @@ namespace Jusgabon
             EquippedWeapon.Update(gameTime, sprites);
 
             CheckCollision(sprites);
+
+            SetTakeDamage(gameTime);
 
             Position += Velocity;
             Velocity = Vector2.Zero;
@@ -559,9 +603,6 @@ namespace Jusgabon
         /// <param name="spriteBatch"></param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (IsDead)
-                return;
-
             if (IsActionAttack)
                 EquippedWeapon.Draw(gameTime, spriteBatch);
 

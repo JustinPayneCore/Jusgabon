@@ -56,8 +56,11 @@ namespace Jusgabon
         /// Overrides base Sprite constructor with an Animation Dictionary.
         /// </summary>
         /// <param name="animations"></param>
-        public Npc(Dictionary<string, Animation> animations) : base(animations)
+        public Npc(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations)
         {
+            BaseAttributes = baseAttributes;
+            _currentHealth = Health;
+            
             _random = new Random();
             _randomTimer = 0f;
 
@@ -75,7 +78,7 @@ namespace Jusgabon
         /// <param name="sprite"></param>
         public override void OnCollide(Sprite sprite)
         {
-            Console.WriteLine("Npc.OnCollide method called.");
+            //Console.WriteLine("Npc.OnCollide method called.");
         }
 
         #endregion Methods - Collision Detection

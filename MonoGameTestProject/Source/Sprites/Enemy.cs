@@ -45,12 +45,13 @@ namespace Jusgabon
         /// Overrides base Sprite constructor with an Animation Dictionary.
         /// </summary>
         /// <param name="animations"></param>
-        public Enemy(Dictionary<string, Animation> animations) : base(animations)
+        public Enemy(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations, baseAttributes)
         {
-            // set aggro target to player & follow distance of 16 -> player width/height
+            // set aggro target to player
             FollowTarget = Globals.player;
-            FollowDistance = 16f;
-            
+
+            // set follow distance to 10 -> very close to player rectangle hitbox
+            FollowDistance = 10f;
         }
 
         #region Methods - Collision Detection
@@ -61,10 +62,11 @@ namespace Jusgabon
         /// <param name="sprite"></param>
         public override void OnCollide(Sprite sprite)
         {
-            //Console.WriteLine("Enemy hp (before): " + this.Health);
-            //this.Health -= sprite.Parent.Attack;
-            //Console.WriteLine("Enemy hp (after):  " + this.Health);
-            Console.WriteLine("Enemy.OnCollide method called.");
+            if (sprite is Weapon && ((Weapon)sprite).Parent is Player)
+            {
+                TakeDamage(((Weapon)sprite).Parent.Attack);
+            }
+            
         }
 
         #endregion Methods - Collision Detection
@@ -135,16 +137,6 @@ namespace Jusgabon
         }
 
         #endregion Methods - Random Movement
-
-        /// <summary>
-        /// Enemy Update method.
-        /// 
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime, List<Sprite> sprites)
-        {
-            base.Update(gameTime, sprites);
-        }
 
 
         #endregion Methods

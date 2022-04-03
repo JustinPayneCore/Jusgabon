@@ -36,6 +36,20 @@ namespace Jusgabon
         // Dictionary of Animations to manage
         protected Dictionary<string, Animation> _animations;
 
+        #region Members - Take Hit
+
+        protected int _currentHealth;
+
+        protected float _hitTimer = 0;
+
+        protected float _hitCooldown = 0.5f;
+
+        public float HitSpeed = 0.25f;
+
+        public bool IsHit = false;
+
+        #endregion Members - Take Damage
+
         #region Members - Attributes
 
         /// <summary>
@@ -330,6 +344,9 @@ namespace Jusgabon
                 
                 if (this.IsTouching(sprite))
                 {
+                    // hit sprite
+                    sprite.OnCollide(this);
+
                     // check and stop horizontal movement collision
                     if ((this.Velocity.X > 0 && this.IsTouchingLeft(sprite)) ||
                     (this.Velocity.X < 0 && this.IsTouchingRight(sprite)))
@@ -344,7 +361,6 @@ namespace Jusgabon
                         this.Velocity.Y = 0;
                     }
 
-                    this.OnCollide(sprite);
                 }
             }
 
@@ -521,7 +537,50 @@ namespace Jusgabon
 
         #endregion
 
-        #endregion
+        #endregion Methods - Collision Detection
+
+        #region Methods - Take Damage
+        public virtual void TakeDamage(int damage)
+        {
+            if (IsHit == false && _hitTimer > _hitCooldown)
+            {
+                _hitTimer = 0f;
+                IsHit = true;
+
+                _currentHealth -= damage;
+                Console.WriteLine(this.GetType().Name + " Health: " + _currentHealth);
+            }
+        }
+
+        protected virtual void SetTakeDamage(GameTime gameTime)
+        {
+            // increment timers
+            _hitTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            // check if sprite is taking hit
+            if (IsHit == false)
+                return;
+
+            // set take hit properties
+            Colour = Color.Red;
+            Velocity = Vector2.Zero;
+
+            // reset sprite take hit cooldown
+            if (_hitTimer > HitSpeed)
+            {
+                Colour = Color.White;
+                IsHit = false;
+
+                // check if sprite is dead
+                if (_currentHealth <= 0)
+                {
+                    Console.WriteLine(this.GetType().Name + " killed.");
+                    IsRemoved = true;
+                }
+            }
+        }
+
+        #endregion Methods - Take Damage
 
 
         /// <summary>
@@ -574,21 +633,34 @@ namespace Jusgabon
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
-
-            CheckCollision(sprites);
-
-
-            Position += Velocity;
-
+            // General Order of Updates
+            // 1. Update Timers
+            // 2. Update Input
+            // 3. Set Input Actions/Animations
+            // 4. Update Animation Manager
+            // 5. Update Child
+            // 6. Check Collision
+            // 7. Check Take Damage Action
+            // 8. Update Position
 
             if (_animationManager != null)
             {
-                // Update moveset animation
+                // Set Input Animations
                 SetAnimations();
 
-                // Update animation frame
+                // Update Animation Manager
                 _animationManager.Update(gameTime, sprites);
             }
+
+            // Check Collision
+            CheckCollision(sprites);
+
+            // Check Take Damage Action
+            SetTakeDamage(gameTime);
+
+            // Update Position
+            Position += Velocity;
+            Velocity = Vector2.Zero;
 
         }
 

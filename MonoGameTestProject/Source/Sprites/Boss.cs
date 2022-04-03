@@ -36,9 +36,40 @@ namespace Jusgabon
         /// Boss Constructor.
         /// </summary>
         /// <param name="animations"></param>
-        public Boss(Dictionary<string, Animation> animations) : base(animations)
+        public Boss(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations, baseAttributes)
         {
             AggroModifier = 2f; // default enemy modifier = 1.5f; increase if boss should be "stickier" to player
+
+            // change default Take Hit animation length & cooldowns
+            _hitCooldown = 1f;
+            HitSpeed = 0.45f;
+        }
+
+        protected override void SetTakeDamage(GameTime gameTime)
+        {
+            // increment timers
+            _hitTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            // check if sprite is taking hit
+            if (IsHit == false)
+                return;
+
+            // set take hit properties
+            _animationManager.Play(_animations["Hit"]);
+            Velocity = Velocity / 2;
+
+            // reset sprite take hit cooldown
+            if (_hitTimer > HitSpeed)
+            {
+                IsHit = false;
+
+                // check if sprite is dead
+                if (_currentHealth <= 0)
+                {
+                    Console.WriteLine(this.GetType().Name + " killed.");
+                    IsRemoved = true;
+                }
+            }
         }
 
         #endregion

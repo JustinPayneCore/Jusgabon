@@ -173,6 +173,7 @@ namespace Jusgabon
             var bossDemonCyclopAnimations = new Dictionary<string, Animation>()
             {
                 {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6) },
+                {"Hit", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Hit"), 3) },
             };
 
             // Load basic Boss Attributes
@@ -238,11 +239,11 @@ namespace Jusgabon
             // Instantiate list of sprites which will be updated/drawn
             _spritesCollidable = new List<Sprite>()
             {
-                new Npc(npcVillagerAnimations) { Position = new Vector2(200, 215), BaseAttributes = baseNpcAttributes },
-                new Npc(npcCatAnimations) { Position = new Vector2(350, 215), IsStationary = true, BaseAttributes = baseNpcAttributes },
-                new Enemy(enemyOctopusAnimations) { Position = new Vector2(700, 550), BaseAttributes = baseEnemyAttributes },
-                new Enemy(enemyOctopusAnimations) { Position = new Vector2(200, 500), BaseAttributes = baseEnemyAttributes },
-                new Boss(bossDemonCyclopAnimations) { Position = new Vector2(1180, 1100), BaseAttributes = baseEnemyAttributes },
+                new Npc(npcVillagerAnimations, baseNpcAttributes) { Position = new Vector2(200, 215) },
+                new Npc(npcCatAnimations, baseNpcAttributes) { Position = new Vector2(340, 200), IsStationary = true },
+                new Enemy(enemyOctopusAnimations, baseEnemyAttributes) { Position = new Vector2(700, 550) },
+                new Enemy(enemyOctopusAnimations, baseEnemyAttributes) { Position = new Vector2(200, 500) },
+                new Boss(bossDemonCyclopAnimations, baseBossAttributes) { Position = new Vector2(1180, 1100) },
                 _player,
             };
 
@@ -410,6 +411,8 @@ namespace Jusgabon
             Globals.spriteBatch.End();
         }
 
+
         #endregion Methods
+
     }
 }

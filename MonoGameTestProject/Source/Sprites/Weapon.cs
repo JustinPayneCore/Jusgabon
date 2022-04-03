@@ -43,18 +43,7 @@ namespace Jusgabon
 
         public new int Height { get; set; }
 
-        public new Rectangle Rectangle
-        {
-            get
-            {
-                return new Rectangle(
-                    (int)Position.X,
-                    (int)Position.Y,
-                    Width,
-                    Height);
-            }
-        }
-
+        public new Rectangle Rectangle { get; set; }
 
         public Vector2 FinalPosition { get; set; }
 
@@ -126,69 +115,93 @@ namespace Jusgabon
             Direction = Parent.Direction;
             Position = new Vector2(Parent.Position.X + (5), Parent.Position.Y + (4));
 
-            // get rotation, new position from rotation, and final position based on direction of action
+            // set weapon texture properties
             if (Direction == Directions.Down)
             {
+                // rotation, position, final position, and speed
                 Rotation = 0;
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
                 FinalPosition = new Vector2(Position.X, Position.Y + (Parent.Height));
                 Speed = (FinalPosition.Y - Position.Y) / 7;
-
+                // check width & height
                 if (Width > Height)
                 {
                     var temp = Width;
                     Width = Height;
                     Height = temp;
                 }
-
-                
+                // hitbox rectangle
+                Rectangle = new Rectangle(
+                    (int)Position.X,
+                    (int)Position.Y,
+                    Width,
+                    (int)(FinalPosition.Y - Position.Y) + Height
+                    );
             }
             else if (Direction == Directions.Up)
             {
+                // rotation, position, final position, and speed
                 Rotation = MathHelper.ToRadians(180);
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
                 FinalPosition = new Vector2(Position.X, Position.Y - (Parent.Height));
                 Speed = (Position.Y - FinalPosition.Y) / 7;
-
+                // check width & height
                 if (Width > Height)
                 {
                     var temp = Width;
                     Width = Height;
                     Height = temp;
                 }
+                // hitbox rectangle
+                Rectangle = new Rectangle(
+                    (int)FinalPosition.X - Width,
+                    (int)FinalPosition.Y - Height,
+                    Width,
+                    (int)(Position.Y - FinalPosition.Y) + Height
+                    );
             }
             else if (Direction == Directions.Left)
-            {
+            {   
+                // rotation, position, final position, and speed
                 Rotation = MathHelper.ToRadians(90);
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
                 FinalPosition = new Vector2(Position.X - (Parent.Height), Position.Y);
                 Speed = (Position.X - FinalPosition.X) / 7;
-
+                // check width & height
                 if (Height > Width)
                 {
                     var temp = Width;
                     Width = Height;
                     Height = temp;
                 }
+                // hitbox rectangle
+                Rectangle = new Rectangle(
+                    (int)FinalPosition.X - Width,
+                    (int)FinalPosition.Y,
+                    (int)(Position.X - FinalPosition.X) + Width,
+                    Height);
             }
             else // Direction == Directions.Right
             {
+                // rotation, position, final position, and speed
                 Rotation = MathHelper.ToRadians(-90);
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
                 FinalPosition = new Vector2(Position.X + (Parent.Height), Position.Y);
                 Speed = (FinalPosition.X - Position.X) / 7;
-
+                // check width & height
                 if (Height > Width)
                 {
                     var temp = Width;
                     Width = Height;
                     Height = temp;
                 }
+                // hitbox rectangle
+                Rectangle = new Rectangle(
+                    (int)Position.X,
+                    (int)Position.Y - Height,
+                    (int)(FinalPosition.X - Position.X) + Width,
+                    Height);
             }
-
-            Console.WriteLine("Width: " + Width);
-            Console.WriteLine("Height: " + Height);
-            Console.WriteLine("Rectangle: " + Rectangle);
         }
 
         /// <summary>
@@ -205,13 +218,9 @@ namespace Jusgabon
                 if (sprite == Parent)
                     continue;
 
-                
+                // hit sprite
                 if (this.IsTouching(sprite))
-                {
-                    Console.WriteLine("hit something");
                     sprite.OnCollide(this);
-                }
-                
             }
         }
 
@@ -355,7 +364,6 @@ namespace Jusgabon
 
             base.Draw(gameTime, spriteBatch);
         }
-
 
 
         #endregion Methods
