@@ -37,8 +37,8 @@ namespace Jusgabon
         public Rectangle Rectangle { get; set; }
 
         // Colour of Tile
-        public Color Colour {get; set;}
-        
+        public Color Colour { get; set; }
+
         /// <summary>
         /// Tile constructor - takes arguments from TileMapManager.
         /// </summary>
