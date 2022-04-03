@@ -56,6 +56,7 @@ namespace Jusgabon
             Rectangle = hitboxRec;
         }
 
+        #region Methods - Collision detection
         /// <summary>
         /// Wrapper collision method to detect if this sprite is touching target sprite from any direction.
         /// </summary>
@@ -122,6 +123,19 @@ namespace Jusgabon
                 sprite.Rectangle.Left < this.Rectangle.Right;
         }
 
+        #endregion Methods - Collision detection
+
+        /// <summary>
+        /// Update method for Tile.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="sprite"></param>
+        public override void Update(GameTime gameTime, List<Sprite> sprite)
+        {
+            // No update method needed for this static tile object.
+            // Note: Sprite objects will use Collision detection methods on the Tiles, so no need to CheckCollision here either.
+        }
+
         /// <summary>
         /// Draw method for Tile.
         /// </summary>
@@ -132,15 +146,5 @@ namespace Jusgabon
             spriteBatch.Draw(_texture, DestinationRec, SourceRec, Colour);
         }
 
-        /// <summary>
-        /// Update method for Tile.
-        /// </summary>
-        /// <param name="gameTime"></param>
-        /// <param name="sprite"></param>
-        public override void Update(GameTime gameTime, List<Sprite> sprite)
-        {
-            // no update method needed for this static tile object.
-            // Sprite objects will have Collision detection methods.
-        }
     }
 }

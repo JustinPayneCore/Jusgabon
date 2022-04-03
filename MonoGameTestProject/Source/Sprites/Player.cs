@@ -192,11 +192,11 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// SwitchWeapon method to Equip the next weapon in Weapon Inventory.
+        /// SwitchWeapon method - Equip next weapon in Weapon Inventory.
         /// </summary>
         public void SwitchWeapon()
         {
-            // only 1 weapon
+            // can not switch if there is only one weapon
             if (WeaponInventory.Count <= 1)
                 return;
 
@@ -206,8 +206,9 @@ namespace Jusgabon
             else
                 WeaponIndex++;
 
-            // unequip current weapon and equip next weapon in inventory
+            // unequip current weapon
             Unequip();
+            // equip next weapon in inventory
             Equip(EquippedWeapon = WeaponInventory[WeaponIndex]);
         }
 
@@ -522,7 +523,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// (Player) OnCollide method.
+        /// OnCollide method (Player).
         /// </summary>
         /// <param name="sprite"></param>
         public override void OnCollide(Sprite sprite)
@@ -531,10 +532,14 @@ namespace Jusgabon
                 return;
             
             if (sprite is Enemy)
-                TakeDamage(((Enemy)sprite).Attack);
+                TakeHit(((Enemy)sprite).Attack);
         }
 
-        protected override void SetTakeDamage(GameTime gameTime)
+        /// <summary>
+        /// SetTakeHit method (Player) - update take hit method.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        protected override void SetTakeHit(GameTime gameTime)
         {
             // increment timers
             _hitTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -556,8 +561,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// Update method.
-        /// The player update method also invokes methods to detect player action/movement/collision.
+        /// Update method (Player).
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="sprites"></param>
@@ -592,15 +596,15 @@ namespace Jusgabon
 
             CheckCollision(sprites);
 
-            SetTakeDamage(gameTime);
+            SetTakeHit(gameTime);
 
             Position += Velocity;
             Velocity = Vector2.Zero;
         }
 
         /// <summary>
-        /// Draw method.
-        /// The player method only overrides this to check player isn't drawn if it is dead.
+        /// Draw method (Player).
+        /// The Draw method also draws any action items.
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="spriteBatch"></param>
@@ -610,7 +614,6 @@ namespace Jusgabon
                 EquippedWeapon.Draw(gameTime, spriteBatch);
 
             base.Draw(gameTime, spriteBatch);
-
         }
 
         #endregion Methods

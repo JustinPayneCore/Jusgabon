@@ -541,20 +541,32 @@ namespace Jusgabon
 
         #endregion Methods - Collision Detection
 
-        #region Methods - Take Damage
-        public virtual void TakeDamage(int damage)
+        #region Methods - Take Hit Action
+
+        /// <summary>
+        /// TakeHit method - starts update action to take hit and decreases sprite health.
+        /// </summary>
+        /// <param name="hitDamage"></param>
+        public virtual void TakeHit(int hitDamage)
         {
+            // Take hit only if it has not been hit recently
             if (IsHit == false && _hitTimer > _hitCooldown)
             {
+                // start update action
                 _hitTimer = 0f;
                 IsHit = true;
 
-                _currentHealth -= damage;
+                // decrease sprite health
+                _currentHealth -= hitDamage;
                 Console.WriteLine(this.GetType().Name + " Health: " + _currentHealth);
             }
         }
 
-        protected virtual void SetTakeDamage(GameTime gameTime)
+        /// <summary>
+        /// SetTakeHit method - update take hit method.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        protected virtual void SetTakeHit(GameTime gameTime)
         {
             // increment timers
             _hitTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -582,7 +594,7 @@ namespace Jusgabon
             }
         }
 
-        #endregion Methods - Take Damage
+        #endregion Methods - Take Hit Action
 
 
         /// <summary>
@@ -658,7 +670,7 @@ namespace Jusgabon
             CheckCollision(sprites);
 
             // Check Take Damage Action
-            SetTakeDamage(gameTime);
+            SetTakeHit(gameTime);
 
             // Update Position
             Position += Velocity;

@@ -50,29 +50,11 @@ namespace Jusgabon
             // set aggro target to player
             FollowTarget = Globals.player;
 
-            // set follow distance to 10 -> very close to player rectangle hitbox
+            // set follow distance to 10f -> close enough to collide with player hitbox
             FollowDistance = 10f;
         }
 
-        #region Methods - Collision Detection
-        /// <summary>
-        /// OnCollide method.
-        /// Invoke this method when Enemy Sprite collides with target sprite.
-        /// </summary>
-        /// <param name="sprite"></param>
-        public override void OnCollide(Sprite sprite)
-        {
-            if (sprite is Weapon && ((Weapon)sprite).Parent is Player)
-            {
-                TakeDamage(((Weapon)sprite).Parent.Attack);
-            }
-            
-        }
-
-        #endregion Methods - Collision Detection
-
-
-        #region Methods - Follow Sprite Logic
+        #region Methods - Follow Sprite & Aggro Logic
 
         /// <summary>
         /// Follow the Player.
@@ -89,7 +71,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// Checks if this Enemy is Aggro'd to the Player.
+        /// IsAggressive method - Checks if the Enemy is Aggro'd to the FollowTarget.
         /// </summary>
         /// <param name="currentDistance"></param>
         /// <returns></returns>
@@ -118,9 +100,7 @@ namespace Jusgabon
             return true;
         }
 
-        #endregion Methods - Follow Sprite Logic
-
-        #region Methods - Random Movement
+        #endregion Methods - Follow Sprite & Aggro Logic
 
         /// <summary>
         /// Determine Random Enemy movement.
@@ -136,13 +116,29 @@ namespace Jusgabon
             base.RandomMovement(gameTime);
         }
 
-        #endregion Methods - Random Movement
+        /// <summary>
+        /// OnCollide method.
+        /// Invoke this method when Enemy Sprite collides with target sprite.
+        /// </summary>
+        /// <param name="sprite"></param>
+        public override void OnCollide(Sprite sprite)
+        {
+            if (sprite is Weapon && ((Weapon)sprite).Parent is Player)
+            {
+                TakeHit(((Weapon)sprite).Parent.Attack);
+            }
 
-        protected override void SetTakeDamage(GameTime gameTime)
+        }
+
+        /// <summary>
+        /// SetTakeHit method (Enemy) - update take hit method.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        protected override void SetTakeHit(GameTime gameTime)
         {
             HitVelocity = -Velocity / 2;
 
-            base.SetTakeDamage(gameTime);
+            base.SetTakeHit(gameTime);
         }
 
         #endregion Methods

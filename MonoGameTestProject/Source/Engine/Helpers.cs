@@ -39,14 +39,30 @@ namespace Jusgabon
             return finalAttributes;
         }
 
+        /// <summary>
+        /// RotateAboutOrigin helper method.
+        /// Returns Rotated Vector from a Vector that's been rotated on the passed origin value.
+        /// Source: https://stackoverflow.com/questions/8148651/rotation-of-an-object-around-a-central-vector2-point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="origin"></param>
+        /// <param name="rotation"></param>
+        /// <returns></returns>
         public static Vector2 RotateAboutOrigin(Vector2 point, Vector2 origin, float rotation)
         {
             return Vector2.Transform(point - origin, Matrix.CreateRotationZ(rotation)) + origin;
         }
 
-
+        // Texture2D var for DrawRectangle helper method
         private static Texture2D rect;
 
+        /// <summary>
+        /// DrawRectangle helper method.
+        /// Draws a simple rectangle of the passed Rectangle coords and Color.
+        /// Note: Mostly used for testing/debugging.
+        /// </summary>
+        /// <param name="coords"></param>
+        /// <param name="color"></param>
         public static void DrawRectangle(Rectangle coords, Color color)
         {
             if (rect == null)

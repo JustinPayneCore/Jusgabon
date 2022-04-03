@@ -59,7 +59,7 @@ namespace Jusgabon
                         Animation.CurrentFrame * Animation.FrameHeight,
                         Animation.FrameWidth,
                         Animation.FrameHeight);
-                else // SpriteSheet is in a horizontal orientation (w/ 1 row of animation frames)
+                else // SpriteSheet is in a horizontal orientation (with 1 row of animation frames)
                     return new Rectangle(
                         Animation.CurrentFrame * Animation.FrameWidth,
                         0,

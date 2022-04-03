@@ -111,6 +111,14 @@ namespace Jusgabon
             // start action for update method
             IsAction = true;
 
+            SetWeaponProperties();
+        }
+
+        /// <summary>
+        /// SetWeaponProperties method - set texture properties like weapon direction, position, rotation, speed.
+        /// </summary>
+        protected void SetWeaponProperties()
+        {
             // get weapon direction and inital position
             Direction = Parent.Direction;
             Position = new Vector2(Parent.Position.X + (5), Parent.Position.Y + (4));
@@ -161,7 +169,7 @@ namespace Jusgabon
                     );
             }
             else if (Direction == Directions.Left)
-            {   
+            {
                 // rotation, position, final position, and speed
                 Rotation = MathHelper.ToRadians(90);
                 Position = Helpers.RotateAboutOrigin(Position, Parent.Origin, Rotation);
@@ -205,12 +213,58 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// CheckCollision method for weapon.
+        /// UpdateAction method - moves weapon in a stabbing motion.
+        /// </summary>
+        protected virtual void UpdateAction()
+        {
+            // stop action if timer is past animation length
+            if (_timer > ActionSpeed)
+            {
+                IsAction = false;
+                _timer = 0f;
+                _animationManager.Stop();
+                return;
+            }
+
+            // move weapon in forward direction in first half of action, then move backwards for second half of action
+            if (Direction == Directions.Down)
+            {
+                Velocity.Y = Speed;
+                if (_timer > ActionSpeed / 2)
+                    Velocity.Y = -Speed;
+            }
+            else if (Direction == Directions.Up)
+            {
+                Velocity.Y = -Speed;
+                if (_timer > ActionSpeed / 2)
+                    Velocity.Y = Speed;
+            }
+            else if (Direction == Directions.Left)
+            {
+                Velocity.X = -Speed;
+                if (_timer > ActionSpeed / 2)
+                    Velocity.X = Speed;
+            }
+            else if (Direction == Directions.Right)
+            {
+                Velocity.X = Speed;
+                if (_timer > ActionSpeed / 2)
+                    Velocity.X = -Speed;
+            }
+
+            // set animations
+            _animationManager.Play(_animations["Sprite"]);
+        }
+
+        #region Methods - Collision detection
+
+        /// <summary>
+        /// CheckCollision method (Weapon).
         /// </summary>
         /// <param name="sprites"></param>
         protected override void CheckCollision(List<Sprite> sprites)
         {
-            foreach(var sprite in sprites)
+            foreach (var sprite in sprites)
             {
                 if (sprite == this)
                     continue;
@@ -277,50 +331,8 @@ namespace Jusgabon
                 this.Rectangle.Left < sprite.Rectangle.Right;
         }
 
-
-        /// <summary>
-        /// UpdateAction method - moves weapon in a stabbing motion.
-        /// </summary>
-        protected virtual void UpdateAction()
-        {
-            // stop action if timer is past animation length
-            if (_timer > ActionSpeed)
-            {
-                IsAction = false;
-                _timer = 0f;
-                _animationManager.Stop();
-                return;
-            }
-
-            // move weapon in forward direction in first half of action, then move backwards for second half of action
-            if (Direction == Directions.Down)
-            {
-                Velocity.Y = Speed;
-                if (_timer > ActionSpeed / 2)
-                    Velocity.Y = -Speed;
-            }
-            else if (Direction == Directions.Up)
-            {
-                Velocity.Y = -Speed;
-                if (_timer > ActionSpeed / 2)
-                    Velocity.Y = Speed;
-            }
-            else if (Direction == Directions.Left)
-            {
-                Velocity.X = -Speed;
-                if (_timer > ActionSpeed / 2)
-                    Velocity.X = Speed;
-            }
-            else if (Direction == Directions.Right)
-            {
-                Velocity.X = Speed;
-                if (_timer > ActionSpeed / 2)
-                    Velocity.X = -Speed;
-            }
-
-            // set animations
-            _animationManager.Play(_animations["Sprite"]);
-        }
+        #endregion Methods - Collision detection
+        
 
         /// <summary>
         /// Update method for weapon - only updates if there is an action and weapon is equipped.

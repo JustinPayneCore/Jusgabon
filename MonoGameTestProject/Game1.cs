@@ -108,14 +108,11 @@ namespace Jusgabon
             // Creates the tiled map using the TiledMapMananger class
             // Tiled map file path
             map = new TmxMap("Content/Level1.tmx");
-
             tileset = Globals.content.Load<Texture2D>("Backgrounds/Tilesets/" + map.Tilesets[0].Name.ToString());
             int tileWidth = map.Tilesets[0].TileWidth;
             int tileHeight = map.Tilesets[0].TileHeight;
             int tilesetTilesWide = tileset.Width / tileWidth;
             tileMapManager = new TileMapManager(map, tileset, tilesetTilesWide, tileWidth, tileHeight);
-
-            // TODO: use Globals.Content to load your game content
 
             // Instantiate camera
             _camera = new Camera();
@@ -266,37 +263,37 @@ namespace Jusgabon
             var playerAnimations = new Dictionary<string, Animation>()
             {
                 // walk
-                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"),
-                                                frameCount: 4,
-                                                spritesheetColumns: 4,
-                                                frameLocation: 0) },
-                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 16) },
-                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 32) },
-                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 48) },
+                {"WalkDown"   , new Animation(texture: Globals.content.Load<Texture2D>(path + "Walk"),
+                                              frameCount: 4,
+                                              spritesheetColumns: 4,
+                                              frameLocation: 0)                                         },
+                {"WalkUp"     , new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 16) },
+                {"WalkLeft"   , new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 32) },
+                {"WalkRight"  , new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 48) },
                 
                 // idle
-                {"IdleDown",  new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 0) },
-                {"IdleUp",    new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 16) },
-                {"IdleLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 32) },
-                {"IdleRight", new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 48) },
+                {"IdleDown"   , new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 0)  },
+                {"IdleUp"     , new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 16) },
+                {"IdleLeft"   , new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 32) },
+                {"IdleRight"  , new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 48) },
 
                 // attack
-                {"AttackDown",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 0) },
-                {"AttackUp",    new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 16) },
-                {"AttackLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 32) },
+                {"AttackDown" , new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 0)  },
+                {"AttackUp"   , new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 16) },
+                {"AttackLeft" , new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 32) },
                 {"AttackRight", new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 48) },
 
                 // jump
-                {"JumpDown",  new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 0) },
-                {"JumpUp",    new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 16) },
-                {"JumpLeft",  new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 32) },
-                {"JumpRight", new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 48) },
+                {"JumpDown"   , new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 0)  },
+                {"JumpUp"     , new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 16) },
+                {"JumpLeft"   , new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 32) },
+                {"JumpRight"  , new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 48) },
 
                 // other actions
-                {"Item",        new Animation(Globals.content.Load<Texture2D>(path + "Item"), 1) },
-                {"Special1",    new Animation(Globals.content.Load<Texture2D>(path + "Special1"), 1) },
-                {"Special2",    new Animation(Globals.content.Load<Texture2D>(path + "Special2"), 1) },
-                {"Dead",        new Animation(Globals.content.Load<Texture2D>(path + "Dead"), 1) },
+                {"Item"       , new Animation(Globals.content.Load<Texture2D>(path + "Item"), 1)     },
+                {"Special1"   , new Animation(Globals.content.Load<Texture2D>(path + "Special1"), 1) },
+                {"Special2"   , new Animation(Globals.content.Load<Texture2D>(path + "Special2"), 1) },
+                {"Dead"       , new Animation(Globals.content.Load<Texture2D>(path + "Dead"), 1)     },
             };
             
             // Base Attributes
@@ -305,7 +302,7 @@ namespace Jusgabon
                 Speed = 1.5f,
                 Health = 100,
                 Mana = 100,
-                Stamina = 50,
+                Stamina = 100,
                 Attack = 20,
                 Magic = 40,
             };
@@ -325,7 +322,7 @@ namespace Jusgabon
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non-ContentManager content
+            // Unload any non-ContentManager content
 
             base.UnloadContent();
         }
@@ -340,8 +337,6 @@ namespace Jusgabon
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic
 
             // Update all sprites
             foreach (var sprite in _spritesCollidable)
@@ -398,16 +393,17 @@ namespace Jusgabon
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code
+            // Begin Spritebatch
             Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
            
-            // Draw the tiled map
+            // Draw tiled map
             tileMapManager.Draw(gameTime, Globals.spriteBatch);
 
             // Draw all the sprites
             foreach (var sprite in _spritesCollidable)
                 sprite.Draw(gameTime, Globals.spriteBatch);
 
+            // End Spritebatch
             Globals.spriteBatch.End();
         }
 

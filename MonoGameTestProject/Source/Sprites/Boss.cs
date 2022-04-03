@@ -40,31 +40,35 @@ namespace Jusgabon
         {
             AggroModifier = 2f; // default enemy modifier = 1.5f; increase if boss should be "stickier" to player
 
-            // change default Take Hit animation length & cooldowns
+            // change default TakeHit animation length & cooldowns
             _hitCooldown = 1f;
             HitSpeed = 0.45f;
         }
 
-        protected override void SetTakeDamage(GameTime gameTime)
+        /// <summary>
+        /// SetTakeDamage method (Boss) - update take hit action.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        protected override void SetTakeHit(GameTime gameTime)
         {
             // increment timers
             _hitTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            // check if sprite is taking hit
+            // check if boss is taking hit
             if (IsHit == false)
                 return;
 
-            // set take hit properties
+            // set boss hit properties including playing a Hit animation
             _animationManager.Play(_animations["Hit"]);
             HitVelocity = -Velocity / 2;
             Velocity = HitVelocity;
 
-            // reset sprite take hit cooldown
+            // reset boss take hit cooldown
             if (_hitTimer > HitSpeed)
             {
                 IsHit = false;
 
-                // check if sprite is dead
+                // check if boss is dead
                 if (_currentHealth <= 0)
                 {
                     Console.WriteLine(this.GetType().Name + " killed.");
