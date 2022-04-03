@@ -35,6 +35,9 @@ namespace Jusgabon
         // If sprite is currently aggro'd to target
         public bool IsAggro { get; set; }
 
+        // Gold to give on kill
+        public int GoldGiven { get; set; }
+
         #endregion Members
 
 
@@ -52,6 +55,9 @@ namespace Jusgabon
 
             // set follow distance to 10f -> close enough to collide with player hitbox
             FollowDistance = 10f;
+
+            // set gold given to 10
+            GoldGiven = 10;
         }
 
         #region Methods - Follow Sprite & Aggro Logic
@@ -139,6 +145,16 @@ namespace Jusgabon
             HitVelocity = -Velocity / 2;
 
             base.SetTakeHit(gameTime);
+        }
+
+        /// <summary>
+        /// Remove method (Enemy).
+        /// </summary>
+        protected override void Remove()
+        {
+            Console.WriteLine(this.GetType().Name + " killed.");
+            Globals.player.GetGold(GoldGiven);
+            IsRemoved = true;
         }
 
         #endregion Methods

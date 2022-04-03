@@ -43,6 +43,9 @@ namespace Jusgabon
             // change default TakeHit animation length & cooldowns
             _hitCooldown = 1f;
             HitSpeed = 0.45f;
+
+            // change amount of gold to give on kill
+            GoldGiven = 250;
         }
 
         /// <summary>
@@ -70,10 +73,7 @@ namespace Jusgabon
 
                 // check if boss is dead
                 if (_currentHealth <= 0)
-                {
-                    Console.WriteLine(this.GetType().Name + " killed.");
-                    IsRemoved = true;
-                }
+                    Remove();
             }
         }
 

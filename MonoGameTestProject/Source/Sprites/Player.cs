@@ -89,6 +89,8 @@ namespace Jusgabon
         // Index to track which weapon from the inventory is equipped
         public int WeaponIndex = 0;
 
+        // Shop currency
+        public int Gold = 0;
 
         #endregion Members
 
@@ -151,6 +153,16 @@ namespace Jusgabon
             HitSpeed = 0.15f;
         }
 
+        /// <summary>
+        /// GetGold method to give player gold.
+        /// </summary>
+        /// <param name="goldAmount"></param>
+        public void GetGold(int goldAmount)
+        {
+            Gold += goldAmount;
+            Console.WriteLine("\nPlayer Gold: " + Gold + "\n");
+        }
+
         #region Methods - Weapon methods
 
         /// <summary>
@@ -177,8 +189,7 @@ namespace Jusgabon
         {
             EquippedWeapon = weapon;
             EquippedWeapon.Equip();
-            Console.WriteLine("\nSwitching Weapon...");
-            Console.WriteLine("Player Stats");
+            Console.WriteLine("\nPlayer Stats");
             Console.WriteLine("Attack:  " + TotalAttributes.Attack);
             Console.WriteLine("Speed:   " + TotalAttributes.Speed + "\n");
         }
@@ -208,6 +219,8 @@ namespace Jusgabon
 
             // unequip current weapon
             Unequip();
+
+            Console.WriteLine("\nSwitching Weapon...\n");
             // equip next weapon in inventory
             Equip(EquippedWeapon = WeaponInventory[WeaponIndex]);
         }
@@ -570,6 +583,7 @@ namespace Jusgabon
             if (IsDead)
             {
                 _animationManager.Play(_animations["Dead"]);
+                Console.WriteLine("Player died.");
                 return;
             }
 

@@ -587,11 +587,18 @@ namespace Jusgabon
 
                 // check if sprite is dead
                 if (_currentHealth <= 0)
-                {
-                    Console.WriteLine(this.GetType().Name + " killed.");
-                    IsRemoved = true;
-                }
+                    Remove();
             }
+        }
+
+        /// <summary>
+        /// Remove sprite method.
+        /// </summary>
+        protected virtual void Remove()
+        {
+            Console.WriteLine(this.GetType().Name + " killed.");
+            Globals.player.GetGold(0);
+            IsRemoved = true;
         }
 
         #endregion Methods - Take Hit Action
