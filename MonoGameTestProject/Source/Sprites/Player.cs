@@ -177,7 +177,10 @@ namespace Jusgabon
         {
             EquippedWeapon = weapon;
             EquippedWeapon.Equip();
-            Console.WriteLine("Weapon Attack:  " + TotalAttributes.Attack);
+            Console.WriteLine("\nSwitching Weapon...");
+            Console.WriteLine("Player Stats");
+            Console.WriteLine("Attack:  " + TotalAttributes.Attack);
+            Console.WriteLine("Speed:   " + TotalAttributes.Speed + "\n");
         }
 
         /// <summary>
