@@ -56,7 +56,8 @@ namespace Jusgabon
 
             // set take hit properties
             _animationManager.Play(_animations["Hit"]);
-            Velocity = Velocity / 2;
+            HitVelocity = -Velocity / 2;
+            Velocity = HitVelocity;
 
             // reset sprite take hit cooldown
             if (_hitTimer > HitSpeed)

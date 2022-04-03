@@ -48,6 +48,8 @@ namespace Jusgabon
 
         public bool IsHit = false;
 
+        public Vector2 HitVelocity = Vector2.Zero;
+
         #endregion Members - Take Damage
 
         #region Members - Attributes
@@ -563,7 +565,7 @@ namespace Jusgabon
 
             // set take hit properties
             Colour = Color.Red;
-            Velocity = Vector2.Zero;
+            Velocity = HitVelocity;
 
             // reset sprite take hit cooldown
             if (_hitTimer > HitSpeed)

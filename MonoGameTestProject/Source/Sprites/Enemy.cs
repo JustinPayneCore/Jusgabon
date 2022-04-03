@@ -138,8 +138,14 @@ namespace Jusgabon
 
         #endregion Methods - Random Movement
 
+        protected override void SetTakeDamage(GameTime gameTime)
+        {
+            HitVelocity = -Velocity / 2;
+
+            base.SetTakeDamage(gameTime);
+        }
 
         #endregion Methods
 
-        }
+    }
 }
