@@ -23,6 +23,8 @@ namespace Jusgabon.Source.Models
         // Equipped Weapon
         Texture2D weaponTexture;
         Rectangle weaponRectangle;
+        Texture2D weaponBackgroundTexture;
+        Rectangle weaponBackgroundRectangle;
 
         // Player Positions
         int playerXPos;
@@ -53,9 +55,11 @@ namespace Jusgabon.Source.Models
             staminaRectangle = new Rectangle((playerXPos - 148), (playerYPos - 66), (int)(player.Stamina / 1.5), 6);
 
             // Update the weapon texture
-            //weaponTexture = Globals.content.Load<Texture2D>("Items/Weapons/" + player. + "/" + "weapon");
-            //weapon = player.EquippedWeapon
-            Console.WriteLine(player.EquippedWeapon.ToString());
+            weaponTexture = Globals.content.Load<Texture2D>("Items/Weapons/" + player.EquippedWeapon.Name + "/Sprite");
+            weaponRectangle = new Rectangle(playerXPos - 143, playerYPos + 72, 15, 21);
+            weaponBackgroundTexture = Globals.content.Load<Texture2D>("HUD/WeaponBackground");
+            weaponBackgroundRectangle = new Rectangle(playerXPos - 148, playerYPos + 70, 25, 25);
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -68,18 +72,10 @@ namespace Jusgabon.Source.Models
 
             // Draw the stamina bar
             spriteBatch.Draw(staminaTexture, staminaRectangle, Color.White);
+
+            // Draw the weapon box
+            spriteBatch.Draw(weaponBackgroundTexture, weaponBackgroundRectangle, Color.White);
+            spriteBatch.Draw(weaponTexture, weaponRectangle, Color.White);
         }
     }
 }
-
-// Hud import
-//Hud hud;
-
-// Instantiate Hud
-//hud = new Hud();
-
-// Update Hud
-//hud.Update(_player);
-
-// Draw Hud
-//hud.Draw(Globals.spriteBatch);

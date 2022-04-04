@@ -36,6 +36,9 @@ namespace Jusgabon
         // when true, weapon can be used by parent.
         public bool IsEquipped = false;
 
+        // Name of the weapon
+        public String Name;
+
         // Speed of weapon action
         public new float Speed { get; set; }
 
@@ -56,12 +59,13 @@ namespace Jusgabon
         /// </summary>
         /// <param name="texture"></param>
         /// <param name="baseAttributes"></param>
-        public Weapon(Dictionary<string, Animation> animations, Attributes attributes) : base(animations, baseAttributes: attributes)
+        public Weapon(Dictionary<string, Animation> animations, Attributes attributes, String name) : base(animations, baseAttributes: attributes)
         {
             //BaseAttributes = baseAttributes;
 
             Width = _animationManager.Animation.FrameWidth;
             Height = _animationManager.Animation.FrameHeight;
+            this.Name = name;
         }
 
         /// <summary>
