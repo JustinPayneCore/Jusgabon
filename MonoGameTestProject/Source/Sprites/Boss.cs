@@ -34,11 +34,15 @@ namespace Jusgabon
 
         /// <summary>
         /// Boss Constructor.
+        /// Overrides base Enemy constructor with an Animation Dictionary, optional SpawnPosition Vector2, and optional Attributes.
         /// </summary>
         /// <param name="animations"></param>
-        public Boss(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations, baseAttributes)
+        /// <param name="spawnPosition"></param>
+        /// <param name="baseAttributes"></param>
+        public Boss(Dictionary<string, Animation> animations, Vector2 spawnPosition, Attributes baseAttributes) : base(animations, spawnPosition, baseAttributes)
         {
-            AggroModifier = 2f; // default enemy modifier = 1.5f; increase if boss should be "stickier" to player
+            // default enemy modifier = 1.5f; increase if boss should be "stickier" to player
+            AggroModifier = 2f;
 
             // change default TakeHit animation length & cooldowns
             _hitCooldown = 1f;

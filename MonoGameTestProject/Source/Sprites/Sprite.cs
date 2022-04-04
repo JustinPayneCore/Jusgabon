@@ -131,6 +131,9 @@ namespace Jusgabon
         // How fast sprite rotates (for sprites with only 1 walk animation)
         public float RotationVelocity = 3f;
 
+        // Spawn position of sprite (initial game position)
+        public Vector2 SpawnPosition { get; set; }
+
         // The Alive boolean for Sprite
         public bool IsRemoved = false;
 
@@ -295,13 +298,35 @@ namespace Jusgabon
         /// Sprite Constructor for a sprite with a dictionary(ex. spritesheet) of animations
         /// </summary>
         /// <param name="animations"></param>
-        public Sprite(Dictionary<string, Animation> animations)
+        /// <param name="spawnPosition">optional</param>
+        /// <param name="baseAttributes">optional</param>
+        public Sprite(
+            Dictionary<string, Animation> animations, 
+            Vector2 spawnPosition = default,
+            Attributes baseAttributes = default)
         {
+            // check if optional attributes were provided (spawnPosition & base Attributes)
+            if (spawnPosition == default)
+                spawnPosition = Vector2.Zero;
+            if (baseAttributes == default)
+                baseAttributes = Attributes.Zero;
+
+            // set dictionary of animation textures
             _animations = animations;
             _animationManager = new AnimationManager(_animations.First().Value);
 
+            // set sprite spawn
+            SpawnPosition = spawnPosition;
+            Position = SpawnPosition;
+
+            // set sprite attributes
+            BaseAttributes = baseAttributes;
+
             // by default, initialize an empty list of AttributeModifiers
             AttributeModifiers = new List<Attributes>();
+
+            // set health
+            _currentHealth = Health;
 
             Children = new List<Sprite>();
 
@@ -309,17 +334,40 @@ namespace Jusgabon
 
             Layer = 0.5f;
         }
-        
+
+
         /// <summary>
         /// Sprite Constructor for a sprite with a static texture i.e. an idle texture.
         /// </summary>
         /// <param name="texture"></param>
-        public Sprite(Texture2D texture)
+        /// <param name="spawnPosition">optional</param>
+        /// <param name="baseAttributes">optional</param>
+        public Sprite(
+            Texture2D texture, 
+            Vector2 spawnPosition = default,
+            Attributes baseAttributes = default)
         {
+            // check if optional attributes were provided (spawnPosition & base Attributes)
+            if (spawnPosition == default)
+                spawnPosition = Vector2.Zero;
+            if (baseAttributes == default)
+                baseAttributes = Attributes.Zero;
+            
+            // set texture
             _texture = texture;
+
+            // set sprite spawn
+            SpawnPosition = spawnPosition;
+            Position = SpawnPosition;
+            
+            // set sprite attributes
+            BaseAttributes = baseAttributes;
 
             // by default, initialize an empty list of AttributeModifiers
             AttributeModifiers = new List<Attributes>();
+
+            // set health
+            _currentHealth = Health;
 
             Children = new List<Sprite>();
 

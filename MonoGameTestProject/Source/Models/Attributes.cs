@@ -46,6 +46,12 @@ namespace Jusgabon
         // Magic power of sprite; how much power a magic spell does
         public int Magic { get; set; }
 
+        // Returns an Attributes with all Zero values
+        public static Attributes Zero
+        {
+            get { return new Attributes() { Speed = 0f, Health = 0, Attack = 0, Magic = 0, Mana = 0, Stamina = 0 }; }
+        }
+
         #endregion Attribute Property Members
 
         #region Operations

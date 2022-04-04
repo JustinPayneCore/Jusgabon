@@ -45,10 +45,12 @@ namespace Jusgabon
 
         /// <summary>
         /// Enemy Constructor.
-        /// Overrides base Sprite constructor with an Animation Dictionary.
+        /// Overrides base Npc constructor with an Animation Dictionary, optional SpawnPosition Vector2, and optional Attributes.
         /// </summary>
         /// <param name="animations"></param>
-        public Enemy(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations, baseAttributes)
+        /// <param name="spawnPosition"></param>
+        /// <param name="baseAttributes"></param>
+        public Enemy(Dictionary<string, Animation> animations, Vector2 spawnPosition , Attributes baseAttributes) : base(animations, spawnPosition, baseAttributes)
         {
             // set aggro target to player
             FollowTarget = Globals.player;

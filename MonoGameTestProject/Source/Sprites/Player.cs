@@ -103,15 +103,9 @@ namespace Jusgabon
         /// </summary>
         /// <param name="animations"></param>
         /// <param name="spawnPosition"></param>
-        public Player(Dictionary<string, Animation> animations, Vector2 spawnPosition, Attributes baseAttributes) : base(animations)
+        /// <param name="baseAttributes"></param>
+        public Player(Dictionary<string, Animation> animations, Vector2 spawnPosition, Attributes baseAttributes) : base(animations, spawnPosition, baseAttributes)
         {
-            // set player position
-            Position = spawnPosition;
-
-            // set player attributes
-            BaseAttributes = baseAttributes;
-            _currentHealth = Health;
-
             // set player keybindings
             Input = new Input()
             {

@@ -56,9 +56,9 @@ namespace Jusgabon
         /// </summary>
         /// <param name="texture"></param>
         /// <param name="baseAttributes"></param>
-        public Weapon(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations)
+        public Weapon(Dictionary<string, Animation> animations, Attributes attributes) : base(animations, baseAttributes: attributes)
         {
-            BaseAttributes = baseAttributes;
+            //BaseAttributes = baseAttributes;
 
             Width = _animationManager.Animation.FrameWidth;
             Height = _animationManager.Animation.FrameHeight;

@@ -43,6 +43,8 @@ namespace Jusgabon
         // Game screen camera object
         private Camera _camera;
 
+        private List<(string, Vector2)> _spawnPositions;
+
         // List of sprites that have collision detection
         private List<Sprite> _spritesCollidable;
 
@@ -113,6 +115,7 @@ namespace Jusgabon
             int tileHeight = map.Tilesets[0].TileHeight;
             int tilesetTilesWide = tileset.Width / tileWidth;
             tileMapManager = new TileMapManager(map, tileset, tilesetTilesWide, tileWidth, tileHeight);
+            _spawnPositions = tileMapManager.LoadSpawnPositions();
 
             // Instantiate camera
             _camera = new Camera();
@@ -236,11 +239,11 @@ namespace Jusgabon
             // Instantiate list of sprites which will be updated/drawn
             _spritesCollidable = new List<Sprite>()
             {
-                new Npc(npcVillagerAnimations, baseNpcAttributes) { Position = new Vector2(200, 215) },
-                new Npc(npcCatAnimations, baseNpcAttributes) { Position = new Vector2(340, 200), IsStationary = true },
-                new Enemy(enemyOctopusAnimations, baseEnemyAttributes) { Position = new Vector2(700, 550) },
-                new Enemy(enemyOctopusAnimations, baseEnemyAttributes) { Position = new Vector2(200, 500) },
-                new Boss(bossDemonCyclopAnimations, baseBossAttributes) { Position = new Vector2(1180, 1100) },
+                new Npc(npcVillagerAnimations       , spawnPosition: new Vector2(200, 215)      , baseNpcAttributes     ),
+                new Npc(npcCatAnimations            , spawnPosition: new Vector2(340, 200)      , baseNpcAttributes     ) { IsStationary = true },
+                new Enemy(enemyOctopusAnimations    , spawnPosition: new Vector2(200, 450)      , baseEnemyAttributes   ),
+                new Enemy(enemyOctopusAnimations    , spawnPosition: new Vector2(700, 550)      , baseEnemyAttributes   ),
+                new Boss(bossDemonCyclopAnimations  , spawnPosition: new Vector2(1180, 1100)    , baseBossAttributes    ),
                 _player,
             };
 
@@ -310,7 +313,7 @@ namespace Jusgabon
             // Initialize player
             Globals.player = new Player(
                 animations: playerAnimations,
-                spawnPosition: new Vector2(300, 300),
+                spawnPosition: new Vector2(432, 640),
                 baseAttributes: playerAttributes
                 );
             _player = Globals.player;

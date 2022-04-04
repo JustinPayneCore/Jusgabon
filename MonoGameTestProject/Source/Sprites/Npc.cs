@@ -52,14 +52,14 @@ namespace Jusgabon
         #region Methods
 
         /// <summary>
-        /// Enemy Constructor.
-        /// Overrides base Sprite constructor with an Animation Dictionary.
+        /// NPC Constructor.
+        /// Overrides base Sprite constructor with an Animation Dictionary, optional SpawnPosition Vector2, and optional Attributes.
         /// </summary>
         /// <param name="animations"></param>
-        public Npc(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations)
+        /// <param name="spawnPosition"></param>
+        /// <param name="baseAttributes"></param>
+        public Npc(Dictionary<string, Animation> animations, Vector2 spawnPosition, Attributes baseAttributes) : base(animations, spawnPosition, baseAttributes)
         {
-            BaseAttributes = baseAttributes;
-            _currentHealth = Health;
             
             _random = new Random();
             _randomTimer = 0f;
