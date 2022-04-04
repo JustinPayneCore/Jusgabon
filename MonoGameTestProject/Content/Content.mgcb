@@ -7693,6 +7693,18 @@
 /processorParam:TextureFormat=Color
 /build:HUD/LifeBarMiniUnder.png
 
+#begin HUD/Mana.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HUD/Mana.png
+
 #begin HUD/NinePathRect/DialogueBubble.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -7728,6 +7740,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:HUD/Shuriken.png
+
+#begin HUD/Stamina.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HUD/Stamina.png
 
 #begin Items/AllPreview.png
 /importer:TextureImporter
