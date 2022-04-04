@@ -38,7 +38,7 @@ namespace Jusgabon
 
         #region Members - Take Hit
 
-        protected int _currentHealth;
+        public int currentHealth;
 
         protected float _hitTimer = 0;
 
@@ -326,7 +326,7 @@ namespace Jusgabon
             AttributeModifiers = new List<Attributes>();
 
             // set health
-            _currentHealth = Health;
+            currentHealth = Health;
 
             Children = new List<Sprite>();
 
@@ -367,7 +367,7 @@ namespace Jusgabon
             AttributeModifiers = new List<Attributes>();
 
             // set health
-            _currentHealth = Health;
+            currentHealth = Health;
 
             Children = new List<Sprite>();
 
@@ -429,7 +429,7 @@ namespace Jusgabon
             foreach (var tile in Globals.tilesCollidable)
             {
                 if (tile.IsTouching(this))
-                {
+                { 
                     // check and stop horizontal movement collision
                     if ((this.Velocity.X > 0 && tile.IsTouchingLeft(this)) ||
                     (this.Velocity.X < 0 && tile.IsTouchingRight(this)))
@@ -605,8 +605,8 @@ namespace Jusgabon
                 IsHit = true;
 
                 // decrease sprite health
-                _currentHealth -= hitDamage;
-                Console.WriteLine(this.GetType().Name + " Health: " + _currentHealth);
+                currentHealth -= hitDamage;
+                Console.WriteLine(this.GetType().Name + " Health: " + currentHealth);
             }
         }
 
@@ -634,7 +634,7 @@ namespace Jusgabon
                 IsHit = false;
 
                 // check if sprite is dead
-                if (_currentHealth <= 0)
+                if (currentHealth <= 0)
                     Remove();
             }
         }
@@ -729,7 +729,7 @@ namespace Jusgabon
 
             // Update Position
             Position += Velocity;
-            Velocity = Vector2.Zero;
+            //Velocity = Vector2.Zero;
 
         }
 

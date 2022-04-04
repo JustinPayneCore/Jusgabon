@@ -182,11 +182,7 @@ namespace Jusgabon
                 
             }
 
-            foreach (var item in spawnPositions)
-                Console.WriteLine(item);
-
             return spawnPositions;
-            
         }
 
         /// <summary>
@@ -198,8 +194,7 @@ namespace Jusgabon
         {
             // Loops through each layer in the Tiled map file
             // layers 0 & 1 are drawn because they are background tiles
-            // todo, change back to i<=1 after done testing
-            for (var i = 0; i <= 2; i++)
+            for (var i = 0; i <= 1; i++)
             {
                 // Loops through each tile in that layer of the Tiled map file
                 for (var j = 0; j < map.Layers[i].Tiles.Count; j++)

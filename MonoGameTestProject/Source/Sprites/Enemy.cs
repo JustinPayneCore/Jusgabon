@@ -52,12 +52,6 @@ namespace Jusgabon
         /// <param name="baseAttributes"></param>
         public Enemy(Dictionary<string, Animation> animations, Vector2 spawnPosition , Attributes baseAttributes) : base(animations, spawnPosition, baseAttributes)
         {
-            // set aggro target to player
-            FollowTarget = Globals.player;
-
-            // set follow distance to 10f -> close enough to collide with player hitbox
-            FollowDistance = 10f;
-
             // set gold given to 10
             GoldGiven = 10;
         }

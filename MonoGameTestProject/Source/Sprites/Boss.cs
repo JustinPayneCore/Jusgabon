@@ -76,7 +76,7 @@ namespace Jusgabon
                 IsHit = false;
 
                 // check if boss is dead
-                if (_currentHealth <= 0)
+                if (currentHealth <= 0)
                     Remove();
             }
         }

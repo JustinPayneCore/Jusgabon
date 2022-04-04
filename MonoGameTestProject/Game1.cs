@@ -43,14 +43,44 @@ namespace Jusgabon
         // Game screen camera object
         private Camera _camera;
 
-        private List<(string, Vector2)> _spawnPositions;
+        private List<(string key, Vector2 spawnPosition)> _spawnPositions;
+
+        public struct SpriteProperties
+        {
+            public Dictionary<string, Animation> animations;
+            public Attributes baseAttributes;
+            public override int GetHashCode()
+            {
+                var hashCode = 43270662;
+                hashCode = hashCode * -1521134295 + animations.GetHashCode();
+                hashCode = hashCode * -1521134295 + baseAttributes.GetHashCode();
+                return hashCode;
+            }
+            public override bool Equals(object obj) 
+            {
+                return obj is SpriteProperties other && (animations == other.animations && baseAttributes == other.baseAttributes);
+            }
+        }
+
+
+        // content libaries
+        private Dictionary<string, SpriteProperties> _dictNpcs;
+
+        private Dictionary<string, SpriteProperties> _dictAnimals;
+
+        private Dictionary<string, SpriteProperties> _dictEnemies;
+
+        private Dictionary<string, SpriteProperties> _dictWeapons;
+
+        private Dictionary<string, SpriteProperties> _dictBosses;
+
 
         // List of sprites that have collision detection
         private List<Sprite> _spritesCollidable;
 
         // Player object
         // note: _player is also instantiated to be Globals.player for global access
-        private Player _player;
+        private Player _player { get => Globals.player; set => Globals.player = value; }
 
         // Game window height
         public static int screenHeight;
@@ -115,30 +145,277 @@ namespace Jusgabon
             int tileHeight = map.Tilesets[0].TileHeight;
             int tilesetTilesWide = tileset.Width / tileWidth;
             tileMapManager = new TileMapManager(map, tileset, tilesetTilesWide, tileWidth, tileHeight);
-            _spawnPositions = tileMapManager.LoadSpawnPositions();
 
             // Instantiate camera
             _camera = new Camera();
 
-            // Instantiate Player
-            LoadPlayer();
+            // Load sprites
+            LoadContentSprites();
+        }
 
-            // Load NPC Villager animations
-            var npcVillagerAnimations = new Dictionary<string, Animation>()
+        protected virtual void LoadContentSprites()
+        {
+            // Load weapon library
+            LoadLibraryWeapons();
+            // Instantiate npc dictionary library
+            LoadLibraryNpcs();
+            // Load npc animals library
+            LoadLibraryAnimals();
+            // Load enemy library
+            LoadLibraryEnemies();
+            // Load boss libary
+            LoadLibraryBosses();
+
+
+            // Initialize list of sprites
+            _spritesCollidable = new List<Sprite>() { };
+
+            // Get spawn positions from tiled map
+            _spawnPositions = tileMapManager.LoadSpawnPositions();
+
+            foreach (var item in _spawnPositions)
             {
-                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 0)  },
-                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 16) },
-                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 32) },
-                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 48) },
-            };
+                switch (item.key)
+                {
+                    case "BlueX": // Instantiate and Load Player
+                        LoadContentPlayer(item.spawnPosition);
+                        _spritesCollidable.Add(_player);
+                        break;
 
-            // Load NPC Cat animations
-            var npcCatAnimations = new Dictionary<string, Animation>()
+                    case "GreenX": // Load Villager
+                        _spritesCollidable.Add(new Npc(_dictNpcs["Villager"].animations, item.spawnPosition, _dictNpcs["Villager"].baseAttributes));
+                        break;
+
+                    case "YellowX": // Load Dog
+                        _spritesCollidable.Add(new Npc(_dictAnimals["Dog"].animations, item.spawnPosition, _dictAnimals["Dog"].baseAttributes) { IsStationary = true });
+                        break;
+
+                    case "OrangeX": // Nothing
+                        break;
+
+                    case "RedX": // Load Enemy1
+                        _spritesCollidable.Add(new Enemy(_dictEnemies["Octopus"].animations, item.spawnPosition, _dictEnemies["Octopus"].baseAttributes));
+                        break;
+
+                    case "PurpleX": // Load Enemy2
+                        _spritesCollidable.Add(new Enemy(_dictEnemies["Cyclope"].animations, item.spawnPosition, _dictEnemies["Cyclope"].baseAttributes) { GoldGiven = 15 });
+                        break;
+
+                    case "BlackX": // Load Old Woman Npc
+                        _spritesCollidable.Add(new Npc(_dictNpcs["OldWoman"].animations, item.spawnPosition, _dictNpcs["OldWoman"].baseAttributes));
+                        break;
+
+                    case "WhiteX": // Load Boss
+                        _spritesCollidable.Add(new Boss(_dictBosses["DemonCyclop"].animations, item.spawnPosition, _dictBosses["DemonCyclop"].baseAttributes));
+                        break;
+
+                    default:
+                        break;
+
+                }
+            }
+
+            // set enemy FollowTarget to player
+            foreach (var sprite in _spritesCollidable)
+            {
+                if (sprite is Enemy)
+                    ((Enemy)sprite).SetFollowTarget(_player, 10f); // 10f to be close enough to collide with player hitbox
+            }
+
+        }
+
+        protected void LoadLibraryAnimals()
+        {
+            _dictAnimals = new Dictionary<string, SpriteProperties>();
+
+            var AnimalProperties = new SpriteProperties();
+
+            // Load & set basic animal Attributes
+            var baseAnimalAttributes = new Attributes()
+            {
+                Speed = 0.8f,
+                Health = 0,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 0,
+                Magic = 0,
+            };
+            AnimalProperties.baseAttributes = baseAnimalAttributes;
+
+            // Cat
+            AnimalProperties.animations = new Dictionary<string, Animation>()
             {
                 {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Animals/Cat/SpriteSheet"), 2) },
             };
+            _dictAnimals.Add("Cat", AnimalProperties);
 
-            // Load basic NPC Attributes
+            // Dog
+            AnimalProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Animals/Dog/SpriteSheet"), 2) },
+            };
+            _dictAnimals.Add("Dog", AnimalProperties);
+
+            // Dog2
+            AnimalProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Animals/Dog2/SpriteSheet"), 2) },
+            };
+            _dictAnimals.Add("Dog2", AnimalProperties);
+
+            // Frog
+            AnimalProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Animals/Frog/SpriteSheet"), 2) },
+            };
+            _dictAnimals.Add("Frog", AnimalProperties);
+
+            // Racoon
+            AnimalProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Animals/Racoon/SpriteSheet"), 2) },
+            };
+            _dictAnimals.Add("Racoon", AnimalProperties);
+
+
+        }
+
+        protected void LoadLibraryBosses()
+        {
+            _dictBosses = new Dictionary<string, SpriteProperties>();
+
+            var BossProperties = new SpriteProperties();
+            
+
+            // Load basic Boss Attributes
+            var baseAttributes = new Attributes()
+            {
+                Speed = 0.5f,
+                Health = 400,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 25,
+                Magic = 0,
+            };
+            BossProperties.baseAttributes = baseAttributes;
+
+            // Boss Demon Cyclop
+            BossProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6) },
+                {"Hit", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Hit"), 3) },
+            };
+            _dictBosses.Add("DemonCyclop", BossProperties);
+
+
+        }
+
+        protected void LoadLibraryEnemies()
+        {
+
+            _dictEnemies = new Dictionary<string, SpriteProperties>();
+
+            var EnemyProperties = new SpriteProperties();
+
+            // Base attributes
+            var baseAttributes = new Attributes()
+            {
+                Speed = 0.6f,
+                Health = 100,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 10,
+                Magic = 0,
+            };
+            EnemyProperties.baseAttributes = baseAttributes;
+
+            // Octopus (green)
+            EnemyProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 48) },
+            };
+            EnemyProperties.baseAttributes = new Attributes()
+            {
+                Speed = 0.6f,
+                Health = 100,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 10,
+                Magic = 0,
+            };
+            _dictEnemies.Add("Octopus", EnemyProperties);
+
+
+            // Octopus 2 (red)
+            EnemyProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus2/Octopus2"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus2/Octopus2"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus2/Octopus2"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus2/Octopus2"), 4, 4, 48) },
+            };
+            EnemyProperties.baseAttributes = new Attributes()
+            {
+                Speed = 0.4f,
+                Health = 120,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 15,
+                Magic = 0,
+            };
+            _dictEnemies.Add("Octopus2", EnemyProperties);
+
+            // Cyclope (red)
+            EnemyProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Cyclope/Cyclopes"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Cyclope/Cyclopes"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Cyclope/Cyclopes"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Cyclope/Cyclopes"), 4, 4, 48) },
+            };
+            EnemyProperties.baseAttributes = new Attributes()
+            {
+                Speed = 0.4f,
+                Health = 120,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 20,
+                Magic = 0,
+            };
+            _dictEnemies.Add("Cyclope", EnemyProperties);
+
+            // Cyclope2 (green)
+            EnemyProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Cyclope2/SpriteSheet"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Cyclope2/SpriteSheet"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Cyclope2/SpriteSheet"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Cyclope2/SpriteSheet"), 4, 4, 48) },
+            };
+            EnemyProperties.baseAttributes = new Attributes()
+            {
+                Speed = 0.6f,
+                Health = 100,
+                Mana = 0,
+                Stamina = 0,
+                Attack = 15,
+                Magic = 0,
+            };
+            _dictEnemies.Add("Cyclope2", EnemyProperties);
+
+
+        }
+
+        protected void LoadLibraryNpcs()
+        {
+            _dictNpcs = new Dictionary<string, SpriteProperties>();
+
+            var NpcProperties = new SpriteProperties();
+
+            // Load & set basic NPC Attributes
             var baseNpcAttributes = new Attributes()
             {
                 Speed = 0.6f,
@@ -148,52 +425,95 @@ namespace Jusgabon
                 Attack = 0,
                 Magic = 0,
             };
+            NpcProperties.baseAttributes = baseNpcAttributes;
 
-            // Load Enemy Monster animations
-            var enemyOctopusAnimations = new Dictionary<string, Animation>()
+            // Villager
+            NpcProperties.animations = new Dictionary<string, Animation>()
             {
-                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 0)  },
-                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 16) },
-                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 32) },
-                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Monsters/Octopus/Octopus"), 4, 4, 48) },
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager/SeparateAnim/Walk"), 4, 4, 48) },
             };
+            _dictNpcs.Add("Villager", NpcProperties);
 
-            // Load basic Enemy Attributes
-            var baseEnemyAttributes = new Attributes()
+            // Villager2
+            NpcProperties.animations = new Dictionary<string, Animation>()
             {
-                Speed = 0.6f,
-                Health = 100,
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager2/SeparateAnim/Walk"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager2/SeparateAnim/Walk"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager2/SeparateAnim/Walk"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager2/SeparateAnim/Walk"), 4, 4, 48) },
+            };
+            _dictNpcs.Add("Villager2", NpcProperties);
+
+            // Villager3
+            NpcProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager3/SeparateAnim/Walk"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager3/SeparateAnim/Walk"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager3/SeparateAnim/Walk"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager3/SeparateAnim/Walk"), 4, 4, 48) },
+            };
+            _dictNpcs.Add("Villager3", NpcProperties);
+
+            // Villager4
+            NpcProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager4/SeparateAnim/Walk"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager4/SeparateAnim/Walk"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager4/SeparateAnim/Walk"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Villager4/SeparateAnim/Walk"), 4, 4, 48) },
+            };
+            _dictNpcs.Add("Villager4", NpcProperties);
+
+            // Woman
+            NpcProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Woman/SeparateAnim/Walk"), 4, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Woman/SeparateAnim/Walk"), 4, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Woman/SeparateAnim/Walk"), 4, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Characters/Woman/SeparateAnim/Walk"), 4, 4, 48) },
+            };
+            _dictNpcs.Add("Woman", NpcProperties);
+
+            // Old Woman (0 speed - no walking movement)
+            NpcProperties.animations = new Dictionary<string, Animation>()
+            {
+                {"WalkDown",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/OldWoman/SpriteSheet"), 2, 4, 0)  },
+                {"WalkUp",      new Animation(Globals.content.Load<Texture2D>("Actor/Characters/OldWoman/SpriteSheet"), 2, 4, 16) },
+                {"WalkLeft",    new Animation(Globals.content.Load<Texture2D>("Actor/Characters/OldWoman/SpriteSheet"), 2, 4, 32) },
+                {"WalkRight",   new Animation(Globals.content.Load<Texture2D>("Actor/Characters/OldWoman/SpriteSheet"), 2, 4, 48) },
+            };
+            var OldWomanAttributes = new Attributes()
+            {
+                Speed = 0f,
+                Health = 0,
                 Mana = 0,
                 Stamina = 0,
-                Attack = 10,
+                Attack = 0,
                 Magic = 0,
             };
+            NpcProperties.baseAttributes = OldWomanAttributes;
+            _dictNpcs.Add("OldWoman", NpcProperties);
 
-            // Load Boss Demon Cyclops animations
-            var bossDemonCyclopAnimations = new Dictionary<string, Animation>()
-            {
-                {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6) },
-                {"Hit", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Hit"), 3) },
-            };
 
-            // Load basic Boss Attributes
-            var baseBossAttributes = new Attributes()
-            {
-                Speed = 0.5f,
-                Health = 400,
-                Mana = 0,
-                Stamina = 0,
-                Attack = 25,
-                Magic = 0,
-            };
 
-            // Load weapon Lance animations & attributes
-            var weaponLanceAnimations = new Dictionary<string, Animation>()
+        }
+
+        protected void LoadLibraryWeapons()
+        {
+            _dictWeapons = new Dictionary<string, SpriteProperties>();
+
+            SpriteProperties WeaponProperties = new SpriteProperties();
+
+            // Lance
+            WeaponProperties.animations = new Dictionary<string, Animation>()
             {
                 {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Lance/Sprite"), 1) },
                 {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Lance/SpriteInHand"), 1) }
             };
-            var weaponLanceAttributes = new Attributes()
+            WeaponProperties.baseAttributes = new Attributes()
             {
                 Speed = 0f,
                 Health = 0,
@@ -202,14 +522,15 @@ namespace Jusgabon
                 Attack = 10,
                 Magic = 0,
             };
+            _dictWeapons.Add("Lance", WeaponProperties);
 
-            // Load weapon Big Sword animations & attributes
-            var weaponBigSwordAnimations = new Dictionary<string, Animation>()
+            // Big Sword
+            WeaponProperties.animations = new Dictionary<string, Animation>()
             {
                 {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/BigSword/Sprite"), 1) },
                 {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/BigSword/SpriteInHand"), 1) }
             };
-            var weaponBigSwordAttributes = new Attributes()
+            WeaponProperties.baseAttributes = new Attributes()
             {
                 Speed = -0.5f,
                 Health = 0,
@@ -218,14 +539,15 @@ namespace Jusgabon
                 Attack = 20,
                 Magic = 0,
             };
+            _dictWeapons.Add("BigSword", WeaponProperties);
 
-            // Load weapon Sai animations & attributes
-            var weaponSaiAnimations = new Dictionary<string, Animation>()
+            // Sai
+            WeaponProperties.animations = new Dictionary<string, Animation>()
             {
                 {"Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Sai/Sprite"), 1) },
                 {"SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/Sai/SpriteInHand"), 1) }
             };
-            var weaponSaiAttributes = new Attributes()
+            WeaponProperties.baseAttributes = new Attributes()
             {
                 Speed = 0.25f,
                 Health = 0,
@@ -234,30 +556,15 @@ namespace Jusgabon
                 Attack = 10,
                 Magic = 0,
             };
+            _dictWeapons.Add("Sai", WeaponProperties);
 
-
-            // Instantiate list of sprites which will be updated/drawn
-            _spritesCollidable = new List<Sprite>()
-            {
-                new Npc(npcVillagerAnimations       , spawnPosition: new Vector2(200, 215)      , baseNpcAttributes     ),
-                new Npc(npcCatAnimations            , spawnPosition: new Vector2(340, 200)      , baseNpcAttributes     ) { IsStationary = true },
-                new Enemy(enemyOctopusAnimations    , spawnPosition: new Vector2(200, 450)      , baseEnemyAttributes   ),
-                new Enemy(enemyOctopusAnimations    , spawnPosition: new Vector2(700, 550)      , baseEnemyAttributes   ),
-                new Boss(bossDemonCyclopAnimations  , spawnPosition: new Vector2(1180, 1100)    , baseBossAttributes    ),
-                _player,
-            };
-
-            // Add weapons to player weapon inventory
-            _player.PickUp(new Weapon(weaponLanceAnimations, weaponLanceAttributes));
-            _player.PickUp(new Weapon(weaponBigSwordAnimations, weaponBigSwordAttributes));
-            _player.PickUp(new Weapon(weaponSaiAnimations, weaponSaiAttributes));
         }
 
         /// <summary>
         /// Load Player-specific Content.
         /// Includes player animations and ...
         /// </summary>
-        private void LoadPlayer()
+        protected void LoadContentPlayer(Vector2 spawnPosition)
         {
             // Content path for Player
             var path = "Actor/Characters/BlueNinja/SeparateAnim/";
@@ -313,10 +620,15 @@ namespace Jusgabon
             // Initialize player
             Globals.player = new Player(
                 animations: playerAnimations,
-                spawnPosition: new Vector2(432, 640),
+                spawnPosition: spawnPosition,
                 baseAttributes: playerAttributes
                 );
             _player = Globals.player;
+
+            // Add a couple starting weapons to player weapon inventory
+            _player.PickUp(new Weapon(_dictWeapons["Lance"].animations, _dictWeapons["Lance"].baseAttributes));
+            _player.PickUp(new Weapon(_dictWeapons["BigSword"].animations, _dictWeapons["BigSword"].baseAttributes));
+            _player.PickUp(new Weapon(_dictWeapons["Sai"].animations, _dictWeapons["Sai"].baseAttributes));
         }
 
         /// <summary>
@@ -398,7 +710,7 @@ namespace Jusgabon
 
             // Begin Spritebatch
             Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
-           
+
             // Draw tiled map
             tileMapManager.Draw(gameTime, Globals.spriteBatch);
 

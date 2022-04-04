@@ -72,5 +72,6 @@ namespace Jusgabon
             }
             Globals.spriteBatch.Draw(rect, coords, color);
         }
+
     }
 }

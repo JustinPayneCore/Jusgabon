@@ -142,7 +142,7 @@ namespace Jusgabon
 
             var currentDistance = Vector2.Distance(this.Position, Globals.player.Position);
 
-            if (currentDistance > 180f)
+            if (currentDistance > 125f)
             {
                 Velocity = Vector2.Zero;
                 return;
@@ -162,6 +162,7 @@ namespace Jusgabon
             {
                 Velocity.X = 0;
                 Velocity.Y = -Speed / 2;
+
             }
             if (random == 5) // Down
             {

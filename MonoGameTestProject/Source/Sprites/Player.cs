@@ -77,7 +77,7 @@ namespace Jusgabon
         // Check if Player is Dead
         public bool IsDead
         {
-            get { return _currentHealth <= 0; }
+            get { return currentHealth <= 0; }
         }
 
         // Weapon Inventory
@@ -104,7 +104,7 @@ namespace Jusgabon
         /// <param name="animations"></param>
         /// <param name="spawnPosition"></param>
         /// <param name="baseAttributes"></param>
-        public Player(Dictionary<string, Animation> animations, Vector2 spawnPosition, Attributes baseAttributes) : base(animations, spawnPosition, baseAttributes)
+        public Player(Dictionary<string, Animation> animations, Vector2 spawnPosition,  Attributes baseAttributes) : base(animations, spawnPosition, baseAttributes)
         {
             // set player keybindings
             Input = new Input()
