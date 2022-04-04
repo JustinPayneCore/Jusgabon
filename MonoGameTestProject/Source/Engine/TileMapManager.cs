@@ -73,9 +73,8 @@ namespace Jusgabon
             var tiles = new List<Tile>();
 
             // Loops through each layer in the Tiled map file
-            // layers 0,1,2 are non-collidable tiles because 0 is floor, 1 is floor details, 2 is spawn positions
-            // todo: change 'var i = 3' after level1.tmx map file has an additional layer (layer 2) for spawn positions
-            for (var i = 2; i < map.Layers.Count; i++)
+            // Ignore Layers 0,1,2 because they are not collidable tiles (0 = floor, 1 = floor details, 2 = spawn positions)
+            for (var i = 3; i < map.Layers.Count; i++)
             {
                 // Loops through each tile in that layer of the Tiled map file
                 for (var j = 0; j < map.Layers[i].Tiles.Count; j++)
@@ -126,6 +125,70 @@ namespace Jusgabon
             return tiles;
         }
 
+        public List<(string, Vector2)> LoadSpawnPositions()
+        {
+            var spawnPositions = new List<(string tile, Vector2 spawnPosition)> { };
+
+            // layer 2 is spawn positions
+            int spawnPositionsLayer = 2;
+
+            // Loops through each tile in that layer of the Tiled map file
+            for (var i = 0; i < map.Layers[spawnPositionsLayer].Tiles.Count; i++)
+            {
+                // Select that specific tile
+                int gid = map.Layers[spawnPositionsLayer].Tiles[i].Gid;
+
+                string key = "";
+
+                switch (gid)
+                {
+                    case 1355:
+                        key = "BlueX";
+                        break;
+                    case 1356:
+                        key = "GreenX";
+                        break;
+                    case 1357:
+                        key = "YellowX";
+                        break;
+                    case 1358:
+                        key = "OrangeX";
+                        break;
+                    case 1359:
+                        key = "RedX";
+                        break;
+                    case 1360:
+                        key = "PurpleX";
+                        break;
+                    case 1361:
+                        key = "BlackX";
+                        break;
+                    case 1362:
+                        key = "WhiteX";
+                            break;
+                    default:
+                        break;
+                };
+
+                if (key == "")
+                    continue;
+
+                float x = (i % map.Width) * map.TileWidth;
+                float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
+                Vector2 spawnPosition = new Vector2(x, y);
+
+                //spawnPositions.Add(key, spawnPosition);
+                spawnPositions.Add((key, spawnPosition));
+                
+            }
+
+            foreach (var item in spawnPositions)
+                Console.WriteLine(item);
+
+            return spawnPositions;
+            
+        }
+
         /// <summary>
         /// Draw method for TileMapManager - draws all the floor tiles then the collidable tiles.
         /// </summary>
@@ -135,7 +198,8 @@ namespace Jusgabon
         {
             // Loops through each layer in the Tiled map file
             // layers 0 & 1 are drawn because they are background tiles
-            for (var i = 0; i <= 1; i++)
+            // todo, change back to i<=1 after done testing
+            for (var i = 0; i <= 2; i++)
             {
                 // Loops through each tile in that layer of the Tiled map file
                 for (var j = 0; j < map.Layers[i].Tiles.Count; j++)
