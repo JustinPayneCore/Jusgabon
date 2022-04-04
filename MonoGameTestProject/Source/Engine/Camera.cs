@@ -31,6 +31,7 @@ namespace Jusgabon
         // Transform matrix to determine position of Camera
         public Matrix Transform { get; private set; }
 
+
         /// <summary>
         /// Follow method to make camera follow target sprite.
         /// Target sprite should be player.

@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using TiledSharp;
+using Jusgabon.Source.Models;
 #endregion
 
 /// <summary>
@@ -93,6 +94,9 @@ namespace Jusgabon
         private TmxMap map;
         private Texture2D tileset;
 
+        // Hud import
+        Hud hud;
+
         #endregion Members
 
 
@@ -145,6 +149,9 @@ namespace Jusgabon
             int tileHeight = map.Tilesets[0].TileHeight;
             int tilesetTilesWide = tileset.Width / tileWidth;
             tileMapManager = new TileMapManager(map, tileset, tilesetTilesWide, tileWidth, tileHeight);
+
+            // Instantiate Hud
+            hud = new Hud();
 
             // Instantiate camera
             _camera = new Camera();
@@ -657,6 +664,10 @@ namespace Jusgabon
             foreach (var sprite in _spritesCollidable)
                 sprite.Update(gameTime, _spritesCollidable);
 
+            // Update Hud
+            hud.Update(_player);
+            
+
             // update camera position to follow player
             _camera.Follow(_player);
 
@@ -717,6 +728,9 @@ namespace Jusgabon
             // Draw all the sprites
             foreach (var sprite in _spritesCollidable)
                 sprite.Draw(gameTime, Globals.spriteBatch);
+
+            // Draw Hud
+            hud.Draw(Globals.spriteBatch);
 
             // End Spritebatch
             Globals.spriteBatch.End();
