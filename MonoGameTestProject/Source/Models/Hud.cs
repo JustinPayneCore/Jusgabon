@@ -67,10 +67,10 @@ namespace Jusgabon.Source.Models
             healthRectangle = new Rectangle((playerXPos - 148), (playerYPos - 80), (int)(player.currentHealth / 1.5), 6);
 
             // Update the position of the mana bar
-            manaRectangle = new Rectangle((playerXPos - 148), (playerYPos - 73), (int)(player.Mana / 1.5), 6);
+            manaRectangle = new Rectangle((playerXPos - 148), (playerYPos - 73), (int)(player.currentMana / 1.5), 6);
 
             // Update the position of the stamina bar
-            staminaRectangle = new Rectangle((playerXPos - 148), (playerYPos - 66), (int)(player.Stamina / 1.5), 6);
+            staminaRectangle = new Rectangle((playerXPos - 148), (playerYPos - 66), (int)(player.currentStamina / 1.5), 6);
 
             //Update the background for the bars
             barsBackgroundRectangle = new Rectangle((playerXPos - 149), (playerYPos - 81), ((int)(player.Health / 1.5) + 2), 22);

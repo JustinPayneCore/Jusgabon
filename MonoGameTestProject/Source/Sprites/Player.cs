@@ -36,16 +36,22 @@ namespace Jusgabon
         private float _special2Timer = 0;
         private float _interactTimer = 0;
         private float _switchTimer = 0;
+        private float _manaTimer = 0;
+        private float _staminaTimer = 0;
 
         // cooldowns before action can be done again
         private float _attackCooldown = 0.5f;
         private float _itemCooldown = 1f;
-        private float _jumpCooldown = 1f;
+        private float _jumpCooldown = 0.75f;
         private float _special1Cooldown = 1f;
         private float _special2Cooldown = 1f;
         private float _interactCooldown = 1f;
         private float _switchCooldown = 1f;
-        
+
+        // Mana/Stamina regen at a rate of (1 / this value) per second
+        public float _manaRegenCooldown = 0.25f;
+        public float _staminaRegenCooldown = 0.10f;
+
         // animation length of actions
         public float AttackSpeed = 0.25f;
         public float JumpSpeed = 0.25f;
@@ -61,6 +67,11 @@ namespace Jusgabon
         public bool IsActionSpecial1 = false;
         public bool IsActionSpecial2 = false;
 
+        // action stamina/mana costs
+        public int _jumpStaminaCost = 30;
+        public int _special1ManaCost = 40;
+        public int _special2ManaCost = 60;
+
         // Check if any actions are being performed
         public bool IsAction
         {
@@ -73,6 +84,11 @@ namespace Jusgabon
 
         #endregion Members - Action
 
+        // current mana of player, will regenerate until it reaches value of Mana attribute
+        public int currentMana;
+        
+        // current stamina of player, will regenerate until it reaches value of Stamina attribute
+        public int currentStamina;
 
         // Check if Player is Dead
         public bool IsDead
@@ -138,6 +154,10 @@ namespace Jusgabon
 
             // default player direction is facing down
             Direction = Directions.Down;
+
+            // get current stamina and mana values
+            currentMana = Mana;
+            currentStamina = Stamina;
 
             // create weapon inventory
             WeaponInventory = new List<Weapon>();
@@ -248,11 +268,24 @@ namespace Jusgabon
             if (IsAction)
                 return;
 
+            if (_staminaTimer > _staminaRegenCooldown && currentStamina < Stamina)
+            {
+                _staminaTimer = 0f;
+                currentStamina++;
+            }
+            if (_manaTimer > _manaRegenCooldown && currentMana < Mana)
+            {
+                _manaTimer = 0f;
+                currentMana++;
+            }
+
+
             // Start the action if key is pressed and action cooldown is done
-            if (_currentKey.IsKeyDown(Input.Jump) && _jumpTimer > _jumpCooldown)
+            if (_currentKey.IsKeyDown(Input.Jump) && _jumpTimer > _jumpCooldown && currentStamina >= _jumpStaminaCost)
             {
                 _jumpTimer = 0f;
                 IsActionJump = true;
+                currentStamina -= _jumpStaminaCost;
             }
             else if (_currentKey.IsKeyDown(Input.Attack) && _attackTimer > _attackCooldown)
             {
@@ -260,15 +293,17 @@ namespace Jusgabon
                 IsActionAttack = true;
                 EquippedWeapon.Action();
             }
-            else if (_currentKey.IsKeyDown(Input.Special1) && _special1Timer > _special1Cooldown)
+            else if (_currentKey.IsKeyDown(Input.Special1) && _special1Timer > _special1Cooldown && currentMana >= _special1ManaCost)
             {
                 _special1Timer = 0f;
                 IsActionSpecial1 = true;
+                currentMana -= _special1ManaCost;
             }
-            else if (_currentKey.IsKeyDown(Input.Special2) && _special2Timer > _special2Cooldown)
+            else if (_currentKey.IsKeyDown(Input.Special2) && _special2Timer > _special2Cooldown && currentMana >= _special2ManaCost)
             {
                 _special2Timer = 0f;
                 IsActionSpecial2 = true;
+                currentMana -= _special1ManaCost;
             }
             else if (_currentKey.IsKeyDown(Input.Item) && _itemTimer > _itemCooldown)
             {
@@ -484,6 +519,9 @@ namespace Jusgabon
             _special1Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             _special2Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             _switchTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _staminaTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _manaTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
         }
 
         #endregion Methods - Update Action Events
