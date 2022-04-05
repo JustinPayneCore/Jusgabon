@@ -7501,6 +7501,13 @@
 /processorParam:TextureFormat=Color
 /build:FX/Smoke/SmokeCircular/SpriteSheet.png
 
+#begin Gold.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Gold.spritefont
+
 #begin HUD/Arrow.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -7512,6 +7519,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:HUD/Arrow.png
+
+#begin HUD/Black.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HUD/Black.png
 
 #begin HUD/Dialog/ChoiceBox.png
 /importer:TextureImporter
@@ -7632,6 +7651,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:HUD/Font/font8x8.png
+
+#begin HUD/GoldBackground.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HUD/GoldBackground.png
 
 #begin HUD/Health.png
 /importer:TextureImporter
