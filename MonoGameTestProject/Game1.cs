@@ -115,7 +115,7 @@ namespace Jusgabon
             Globals.content = this.Content;
             Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
             
-            map = new TmxMap("Content/Test map 1.tmx");
+            map = new TmxMap("Content/Level 3.tmx");
             tileset = Content.Load<Texture2D>(map.Tilesets[0].Name.ToString());
             tileWidth = map.Tilesets[0].TileWidth;
             tileHeight = map.Tilesets[0].TileHeight;
@@ -153,7 +153,7 @@ namespace Jusgabon
             _spritesNonCollidable = new List<Sprite>()
             {
                 //new Sprite(Globals.content.Load<Texture2D>("Test_Background")),
-                new Sprite(Globals.content.Load<Texture2D>("Test map 1")),
+                new Sprite(Globals.content.Load<Texture2D>("Level 3")),
             };
             
             _spritesCollidable = new List<Sprite>()

@@ -31,6 +31,9 @@
     <PackageReference Include="TiledSharp" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Content\Level 3.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Test map 1.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

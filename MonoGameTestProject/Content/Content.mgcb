@@ -7616,66 +7616,6 @@
 /processorParam:TextureFormat=Color
 /build:HUD/Dialog/NoButton.png
 
-#begin HUD/Dialog/NoButton.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:HUD/Dialog/NoButton.png
-
-#begin HUD/Dialog/NoButton.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:HUD/Dialog/NoButton.png
-
-#begin HUD/Dialog/NoButton.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:HUD/Dialog/NoButton.png
-
-#begin HUD/Dialog/NoButton.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:HUD/Dialog/NoButton.png
-
-#begin HUD/Dialog/YesButton.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:HUD/Dialog/YesButton.png
-
 #begin HUD/Dialog/YesButton.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -8732,6 +8672,21 @@
 /processorParam:TextureFormat=Color
 /build:Items/Weapons/Whip/SpriteInHand.png
 
+#begin Level 3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Level 3.png
+
+#begin Level 3.tmx
+/copy:Level 3.tmx
+
 #begin Musics/1 - Adventure Begin.ogg
 /importer:OggImporter
 /processor:SongProcessor
@@ -9299,8 +9254,17 @@
 /processorParam:TextureFormat=Color
 /build:TilesetFloor.png
 
-#begin TilesetFloor.tsx
-/copy:TilesetFloor.tsx
+#begin TilesetHouse.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TilesetHouse.png
 
 #begin TilesetNature.png
 /importer:TextureImporter
