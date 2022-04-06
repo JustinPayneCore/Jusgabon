@@ -21,7 +21,7 @@ namespace Jusgabon
     /// <summary>
     /// Sprite Class - The base Sprite/Entity objects in this game.
     /// </summary>
-    public class Sprite : Component
+    public class Sprite : Component, ICloneable
     {
         #region Members
 
@@ -132,7 +132,19 @@ namespace Jusgabon
         public float RotationVelocity = 3f;
 
         // Spawn position of sprite (initial game position)
-        public Vector2 SpawnPosition { get; set; }
+        protected Vector2 _spawnPosition;
+        public Vector2 SpawnPosition 
+        { 
+            get
+            {
+                return _spawnPosition;
+            }
+            set
+            {
+                _spawnPosition = value;
+                Position = _spawnPosition;
+            }
+        }
 
         // The Alive boolean for Sprite
         public bool IsRemoved = false;
@@ -302,12 +314,12 @@ namespace Jusgabon
         /// <param name="baseAttributes">optional</param>
         public Sprite(
             Dictionary<string, Animation> animations, 
-            Vector2 spawnPosition = default,
+            //Vector2 spawnPosition = default,
             Attributes baseAttributes = default)
         {
             // check if optional attributes were provided (spawnPosition & base Attributes)
-            if (spawnPosition == default)
-                spawnPosition = Vector2.Zero;
+            //if (spawnPosition == default)
+            //    spawnPosition = Vector2.Zero;
             if (baseAttributes == default)
                 baseAttributes = Attributes.Zero;
 
@@ -315,9 +327,9 @@ namespace Jusgabon
             _animations = animations;
             _animationManager = new AnimationManager(_animations.First().Value);
 
-            // set sprite spawn
-            SpawnPosition = spawnPosition;
-            Position = SpawnPosition;
+            //// set sprite spawn
+            //SpawnPosition = spawnPosition;
+            //Position = SpawnPosition;
 
             // set sprite attributes
             BaseAttributes = baseAttributes;
@@ -755,6 +767,23 @@ namespace Jusgabon
             else if (_animationManager != null)
                 _animationManager.Draw(gameTime, spriteBatch);
             else throw new Exception("Error: No texture/animations found for Sprite.");
+        }
+
+        /// <summary>
+        /// Clone method - Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            var sprite = this.MemberwiseClone() as Sprite;
+
+            if (_animations != null)
+            {
+                sprite._animations = this._animations.ToDictionary(c => c.Key, v => v.Value.Clone() as Animation);
+                sprite._animationManager = sprite._animationManager.Clone() as AnimationManager;
+            }
+
+            return sprite;
         }
 
         #endregion

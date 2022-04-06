@@ -23,7 +23,7 @@ namespace Jusgabon
     /// Each animation model depict what each frame's properties are.
     /// Source (tutorial): https://www.youtube.com/watch?v=OLsiWxgONeM
     /// </summary>
-    public class Animation
+    public class Animation : ICloneable
     {
         // the current frame to view
         public int CurrentFrame { get; set; }
@@ -103,6 +103,16 @@ namespace Jusgabon
                 FrameHeight = Texture.Height / FrameCount;
                 FrameWidth = Texture.Width / 4;
             }
+        }
+
+        /// <summary>
+        /// Clone method - Creates a new object that is a copy of the current instance.
+        /// Animation is cloneable so objects using the same animation dictionaries won't conflict with each other.
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }

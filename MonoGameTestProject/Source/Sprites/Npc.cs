@@ -58,7 +58,7 @@ namespace Jusgabon
         /// <param name="animations"></param>
         /// <param name="spawnPosition"></param>
         /// <param name="baseAttributes"></param>
-        public Npc(Dictionary<string, Animation> animations, Vector2 spawnPosition, Attributes baseAttributes) : base(animations, spawnPosition, baseAttributes)
+        public Npc(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations, baseAttributes)
         {
             
             _random = new Random();

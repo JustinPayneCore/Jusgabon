@@ -23,7 +23,7 @@ namespace Jusgabon
     /// The Animation Frame is a splice of a Texture from a SpriteSheet.
     /// Source (tutorial): https://www.youtube.com/watch?v=OLsiWxgONeM
     /// </summary>
-    public class AnimationManager
+    public class AnimationManager : ICloneable
     {
         #region Members
 
@@ -31,7 +31,13 @@ namespace Jusgabon
         private float _timer;
 
         // The Animation model & Frame to manage
-        public Animation Animation;
+        private Animation _animation;
+
+        // The Animation property
+        public Animation Animation
+        {
+            get { return _animation; }
+        }
 
         // Colour of Animation Frame
         public Color Colour { get; set; }
@@ -79,8 +85,9 @@ namespace Jusgabon
         /// <param name="animation"></param>
         public AnimationManager(Animation animation)
         {
-            Animation = animation;
+            _animation = animation;
         }
+
 
         /// <summary>
         /// Play animation method.
@@ -90,11 +97,11 @@ namespace Jusgabon
         public void Play(Animation animation)
         {
             // if we are already in the current animation, then just break out of the method to not reinstantiate the values
-            if (Animation == animation)
+            if (_animation == animation)
                 return;
 
-            Animation = animation;
-            Animation.CurrentFrame = 0;
+            _animation = animation;
+            _animation.CurrentFrame = 0;
             _timer = 0f;
         }
 
@@ -104,7 +111,7 @@ namespace Jusgabon
         public void Stop()
         {
             _timer = 0f;
-            Animation.CurrentFrame = 0;
+            _animation.CurrentFrame = 0;
         }
 
         /// <summary>
@@ -120,11 +127,11 @@ namespace Jusgabon
             if (_timer > Animation.FrameSpeed)
             {
                 _timer = 0f;
-                Animation.CurrentFrame++;
+                _animation.CurrentFrame++;
 
                 // restart animation if current frame is the last frame.
-                if (Animation.IsLooping && Animation.CurrentFrame >= Animation.FrameCount)
-                    Animation.CurrentFrame = 0;
+                if (_animation.IsLooping && _animation.CurrentFrame >= _animation.FrameCount)
+                    _animation.CurrentFrame = 0;
             }
         }
 
@@ -135,7 +142,7 @@ namespace Jusgabon
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
-                texture: Animation.Texture,
+                texture: _animation.Texture,
                 position: Position,
                 sourceRectangle: SourceRectangle,
                 color: Colour,
@@ -144,6 +151,20 @@ namespace Jusgabon
                 scale: 1,
                 effects: SpriteEffects.None,
                 layerDepth: Layer);
+        }
+
+        /// <summary>
+        /// Clone method - Creates a new object that is a copy of the current instance.
+        /// Returns a deep clone animationManager of the animation shallow member-wise clone.
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            var animationManager = this.MemberwiseClone() as AnimationManager;
+
+            animationManager._animation = animationManager._animation.Clone() as Animation;
+
+            return animationManager;
         }
 
         #endregion Methods

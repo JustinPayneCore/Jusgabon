@@ -173,6 +173,25 @@ namespace Jusgabon
             // Load boss libary
             LoadLibraryBosses();
 
+            // Load player
+            LoadContentPlayer();
+
+            // Load prefabricated sprites for world 1
+            var npcVillager = new Npc(_dictNpcs["Villager"].animations, _dictNpcs["Villager"].baseAttributes);
+            var npcVillager2 = new Npc(_dictNpcs["Villager2"].animations, _dictNpcs["Villager2"].baseAttributes);
+            var npcVillager3 = new Npc(_dictNpcs["Villager3"].animations, _dictNpcs["Villager3"].baseAttributes);
+            var npcVillager4 = new Npc(_dictNpcs["Villager4"].animations, _dictNpcs["Villager4"].baseAttributes);
+            var npcWoman = new Npc(_dictNpcs["Woman"].animations, _dictNpcs["Woman"].baseAttributes);
+            var npcDog = new Npc(_dictAnimals["Dog"].animations, _dictAnimals["Dog"].baseAttributes) { IsStationary = true };
+            var enemyOcotopus = new Enemy(_dictEnemies["Octopus"].animations, _dictEnemies["Octopus"].baseAttributes);
+            var enemyOcotopus2 = new Enemy(_dictEnemies["Octopus2"].animations, _dictEnemies["Octopus2"].baseAttributes);
+            var enemyCyclope = new Enemy(_dictEnemies["Cyclope"].animations, _dictEnemies["Cyclope"].baseAttributes) { GoldGiven = 15 };
+            var enemyCyclope2 = new Enemy(_dictEnemies["Cyclope2"].animations, _dictEnemies["Cyclope2"].baseAttributes) { GoldGiven = 15 };
+            var npcOldWoman = new Npc(_dictNpcs["OldWoman"].animations, _dictNpcs["OldWoman"].baseAttributes);
+            var bossDemonCyclop = new Boss(_dictBosses["DemonCyclop"].animations, _dictBosses["DemonCyclop"].baseAttributes);
+
+            // initialize random for randomly initializing different sprites of same type
+            var random = new Random();
 
             // Initialize list of sprites
             _spritesCollidable = new List<Sprite>() { };
@@ -180,40 +199,92 @@ namespace Jusgabon
             // Get spawn positions from tiled map
             _spawnPositions = tileMapManager.LoadSpawnPositions();
 
+            // Add each sprite after setting their spawn position
             foreach (var item in _spawnPositions)
             {
                 switch (item.key)
                 {
                     case "BlueX": // Instantiate and Load Player
-                        LoadContentPlayer(item.spawnPosition);
+                        _player.SpawnPosition = item.spawnPosition;
                         _spritesCollidable.Add(_player);
                         break;
 
                     case "GreenX": // Load Villager
-                        _spritesCollidable.Add(new Npc(_dictNpcs["Villager"].animations, item.spawnPosition, _dictNpcs["Villager"].baseAttributes));
+                        var randVillager = random.Next(0, 5);
+                        Npc villager;
+                        switch (randVillager)
+                        {
+                            case 0:
+                                villager = npcVillager.Clone() as Npc;
+                                break;
+                            case 1:
+                                villager = npcVillager2.Clone() as Npc;
+                                break;
+                            case 2:
+                                villager = npcVillager3.Clone() as Npc;
+                                break;
+                            case 3:
+                                villager = npcVillager4.Clone() as Npc;
+                                break;
+                            default:
+                                villager = npcWoman.Clone() as Npc;
+                                break;
+                        }
+                        villager.SpawnPosition = item.spawnPosition;
+                        _spritesCollidable.Add(villager);
                         break;
 
                     case "YellowX": // Load Dog
-                        _spritesCollidable.Add(new Npc(_dictAnimals["Dog"].animations, item.spawnPosition, _dictAnimals["Dog"].baseAttributes) { IsStationary = true });
+                        var dogClone = npcDog.Clone() as Npc;
+                        dogClone.SpawnPosition = item.spawnPosition;
+                        _spritesCollidable.Add(dogClone);
                         break;
 
                     case "OrangeX": // Nothing
                         break;
 
                     case "RedX": // Load Enemy1
-                        _spritesCollidable.Add(new Enemy(_dictEnemies["Octopus"].animations, item.spawnPosition, _dictEnemies["Octopus"].baseAttributes));
+                        var randOcotpus = random.Next(0, 2);
+                        Enemy octopus;
+                        switch (randOcotpus)
+                        {
+                            case 0:
+                                octopus = enemyOcotopus.Clone() as Enemy;
+                                break;
+                            default:
+                                octopus = enemyOcotopus2.Clone() as Enemy;
+                                break;
+                        }
+                        octopus.SpawnPosition = item.spawnPosition;
+                        _spritesCollidable.Add(octopus);
                         break;
 
                     case "PurpleX": // Load Enemy2
-                        _spritesCollidable.Add(new Enemy(_dictEnemies["Cyclope"].animations, item.spawnPosition, _dictEnemies["Cyclope"].baseAttributes) { GoldGiven = 15 });
+                        var randCyclope = random.Next(0, 2);
+                        Enemy cyclope;
+                        switch (randCyclope)
+                        {
+                            case 0:
+                                cyclope = enemyCyclope.Clone() as Enemy;
+                                break;
+                            default:
+                                cyclope = enemyCyclope2.Clone() as Enemy;
+                                break;
+                        }
+                        cyclope.SpawnPosition = item.spawnPosition;
+                        _spritesCollidable.Add(cyclope);
                         break;
 
                     case "BlackX": // Load Old Woman Npc
-                        _spritesCollidable.Add(new Npc(_dictNpcs["OldWoman"].animations, item.spawnPosition, _dictNpcs["OldWoman"].baseAttributes));
+                        var oldWomanClone = npcOldWoman.Clone() as Npc;
+                        oldWomanClone.SpawnPosition = item.spawnPosition;
+                        _spritesCollidable.Add(oldWomanClone);
                         break;
 
                     case "WhiteX": // Load Boss
-                        _spritesCollidable.Add(new Boss(_dictBosses["DemonCyclop"].animations, item.spawnPosition, _dictBosses["DemonCyclop"].baseAttributes));
+                        var demonCyclopClone = bossDemonCyclop.Clone() as Boss;
+                        demonCyclopClone.SpawnPosition = item.spawnPosition;
+                        _spritesCollidable.Add(demonCyclopClone);
                         break;
 
                     default:
@@ -571,7 +642,7 @@ namespace Jusgabon
         /// Load Player-specific Content.
         /// Includes player animations and ...
         /// </summary>
-        protected void LoadContentPlayer(Vector2 spawnPosition)
+        protected void LoadContentPlayer()
         {
             // Content path for Player
             var path = "Actor/Characters/BlueNinja/SeparateAnim/";
@@ -627,7 +698,6 @@ namespace Jusgabon
             // Initialize player
             Globals.player = new Player(
                 animations: playerAnimations,
-                spawnPosition: spawnPosition,
                 baseAttributes: playerAttributes
                 );
             _player = Globals.player;

@@ -50,7 +50,7 @@ namespace Jusgabon
         /// <param name="animations"></param>
         /// <param name="spawnPosition"></param>
         /// <param name="baseAttributes"></param>
-        public Enemy(Dictionary<string, Animation> animations, Vector2 spawnPosition , Attributes baseAttributes) : base(animations, spawnPosition, baseAttributes)
+        public Enemy(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations, baseAttributes)
         {
             // set gold given to 10
             GoldGiven = 10;

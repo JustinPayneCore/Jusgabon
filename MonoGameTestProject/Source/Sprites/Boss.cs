@@ -39,7 +39,7 @@ namespace Jusgabon
         /// <param name="animations"></param>
         /// <param name="spawnPosition"></param>
         /// <param name="baseAttributes"></param>
-        public Boss(Dictionary<string, Animation> animations, Vector2 spawnPosition, Attributes baseAttributes) : base(animations, spawnPosition, baseAttributes)
+        public Boss(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations, baseAttributes)
         {
             // default enemy modifier = 1.5f; increase if boss should be "stickier" to player
             AggroModifier = 2f;
