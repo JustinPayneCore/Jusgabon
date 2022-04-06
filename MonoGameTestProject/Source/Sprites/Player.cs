@@ -46,7 +46,7 @@ namespace Jusgabon
         private float _special1Cooldown = 0.75f;
         private float _special2Cooldown = 1f;
         private float _interactCooldown = 1f;
-        private float _switchCooldown = 1f;
+        private float _switchCooldown = 0.5f;
 
         // Mana/Stamina regen at a rate of (1 / this value) per second
         public float ManaRegenCooldown = 0.10f;
@@ -70,7 +70,7 @@ namespace Jusgabon
         // action stamina/mana costs
         private int _jumpStaminaCost = 30;
         private int _special1ManaCost = 30;
-        private int _special2ManaCost = 50;
+        private int _special2ManaCost = 45;
 
         // special 1 spell properties
         public int Special1Magic { get; set; }
@@ -219,8 +219,9 @@ namespace Jusgabon
             EquippedWeapon.Equip();
             Console.WriteLine("\nPlayer Stats");
             Console.WriteLine("Attack:  " + TotalAttributes.Attack);
-            Console.WriteLine("Speed:   " + TotalAttributes.Speed);
+            Console.WriteLine("Magic:   " + TotalAttributes.Magic);
             Console.WriteLine("Mana:    " + TotalAttributes.Mana);
+            Console.WriteLine("Speed:   " + TotalAttributes.Speed);
             Console.WriteLine("Stamina: " + TotalAttributes.Stamina + "\n");
             if (currentHealth >= Health)
                 currentHealth = Health;
