@@ -399,6 +399,9 @@ namespace Jusgabon
 
                 if (sprite.Parent == this)
                     continue;
+
+                if (sprite is Spell)
+                    continue;
                 
                 if (this.IsTouching(sprite))
                 {

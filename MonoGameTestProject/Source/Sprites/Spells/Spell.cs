@@ -17,7 +17,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
-    public class Spell : Sprite
+    public abstract class Spell : Sprite
     {
 
         private float _timer;

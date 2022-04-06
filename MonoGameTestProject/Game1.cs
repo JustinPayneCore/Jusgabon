@@ -584,21 +584,27 @@ namespace Jusgabon
             _dictSpells = new Dictionary<string, Dictionary<string, Animation>>();
 
             // IceSpike
-            _dictSpells.Add("IceSpike", new Dictionary<string, Animation>()
+            _dictSpells.Add("IceSpikeProjectile", new Dictionary<string, Animation>()
             {
                 {"Sprite", new Animation(Globals.content.Load<Texture2D>("FX/Projectile/IceSpike"), 8) }
             });
 
             // Shuriken
-            _dictSpells.Add("Shuriken", new Dictionary<string, Animation>()
+            _dictSpells.Add("ShurikenProjectile", new Dictionary<string, Animation>()
             {
                 {"Sprite", new Animation(Globals.content.Load<Texture2D>("FX/Projectile/Shuriken"), 2) }
             });
 
             // Fireball
-            _dictSpells.Add("Fireball", new Dictionary<string, Animation>()
+            _dictSpells.Add("FireballProjectile", new Dictionary<string, Animation>()
             {
                 {"Sprite", new Animation(Globals.content.Load<Texture2D>("FX/Projectile/Fireball"), 4) }
+            });
+
+            _dictSpells.Add("IceElemental", new Dictionary<string, Animation>()
+            {
+                {"Sprite", new Animation(Globals.content.Load<Texture2D>("FX/Elemental/Ice/SpriteSheetB"), 9) },
+                {"Cast", new Animation(Globals.content.Load<Texture2D>("FX/Elemental/Ice/SpriteSheetFlake"), 9) },
             });
 
         }
@@ -716,7 +722,7 @@ namespace Jusgabon
                 Mana = 100,
                 Stamina = 100,
                 Attack = 20,
-                Magic = 40,
+                Magic = 10,
             };
 
             // Initialize player
@@ -732,8 +738,8 @@ namespace Jusgabon
             _player.PickUp(new Weapon(_dictWeapons["Sai"].animations, _dictWeapons["Sai"].baseAttributes, "Sai"));
 
             // Set player specials
-            _player.SetSpecial1(new Spell(_dictSpells["IceSpike"]), 0, 2f, 1.5f);
-            _player.SetSpecial2(new Spell(_dictSpells["Shuriken"]), 0, 2f, 1.5f);
+            _player.SetSpecial1(new Projectile(_dictSpells["IceSpikeProjectile"]), 10, 2f, 0.5f);
+            _player.SetSpecial2(new AoeLine(_dictSpells["IceElemental"], 0.5f, 2, 3), 40, 0f, 2f);
         }
 
         /// <summary>

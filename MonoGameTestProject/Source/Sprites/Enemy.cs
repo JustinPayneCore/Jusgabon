@@ -133,7 +133,10 @@ namespace Jusgabon
             if (sprite is Spell && ((Spell)sprite).Parent is Player)
             {
                 TakeHit(((Spell)sprite).Magic);
-                ((Spell)sprite).IsRemoved = true;
+
+                if (sprite is Projectile)
+                    ((Projectile)sprite).IsRemoved = true;
+                //((Spell)sprite).IsRemoved = true;
             }
 
         }
