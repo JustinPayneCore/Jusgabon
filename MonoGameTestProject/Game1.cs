@@ -116,7 +116,8 @@ namespace Jusgabon
             Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
             
             map = new TmxMap("Content/Level 3.tmx");
-            tileset = Content.Load<Texture2D>(map.Tilesets[0].Name.ToString());
+            tileset = Globals.content.Load<Texture2D>("Backgrounds/Tilesets/" + map.Tilesets[0].Name.ToString());
+            /*tileset = Content.Load<Texture2D>(map.Tilesets[0].Name.ToString());*/
             tileWidth = map.Tilesets[0].TileWidth;
             tileHeight = map.Tilesets[0].TileHeight;
             tilesetTilesWide = tileset.Width / tileWidth;
