@@ -43,21 +43,21 @@ namespace Jusgabon
         private float _attackCooldown = 0.5f;
         private float _itemCooldown = 1f;
         private float _jumpCooldown = 0.75f;
-        private float _special1Cooldown = 1f;
+        private float _special1Cooldown = 0.75f;
         private float _special2Cooldown = 1f;
         private float _interactCooldown = 1f;
         private float _switchCooldown = 1f;
 
         // Mana/Stamina regen at a rate of (1 / this value) per second
-        public float _manaRegenCooldown = 0.25f;
+        public float _manaRegenCooldown = 0.10f;
         public float _staminaRegenCooldown = 0.10f;
 
         // animation length of actions
-        public float AttackSpeed = 0.25f;
-        public float JumpSpeed = 0.25f;
-        public float ItemSpeed = 0.75f;
-        public float Special1Speed = 0.75f;
-        public float Special2Speed = 0.75f;
+        public float AttackAnimationLength = 0.25f;
+        public float JumpAnimationLength = 0.25f;
+        public float ItemAnimationLength = 0.75f;
+        public float Special1AnimationLength = 0.375f;
+        public float Special2AnimationLength = 0.5f;
 
         // when true, perform action during Update
         public bool IsActionAttack = false;
@@ -68,9 +68,23 @@ namespace Jusgabon
         public bool IsActionSpecial2 = false;
 
         // action stamina/mana costs
-        public int _jumpStaminaCost = 30;
-        public int _special1ManaCost = 40;
-        public int _special2ManaCost = 60;
+        private int _jumpStaminaCost = 30;
+        private int _special1ManaCost = 30;
+        private int _special2ManaCost = 50;
+
+        // special 1 spell properties
+        public int Special1Magic { get; set; }
+        public float Special1Speed { get; set; }
+        public float Special1LifeSpan { get; set; }
+        public Spell Special1 { get; set; }
+
+        // special 2 spell properties
+        public int Special2Magic { get; set; }
+        public float Special2Speed { get; set; }
+        public float Special2LifeSpan { get; set; }
+        public Spell Special2 { get; set; }
+
+
 
         // Check if any actions are being performed
         public bool IsAction
@@ -140,17 +154,17 @@ namespace Jusgabon
             };
 
             // set animation length for all actions
-            _animations["AttackDown"].FrameSpeed = AttackSpeed;
-            _animations["AttackUp"].FrameSpeed = AttackSpeed;
-            _animations["AttackLeft"].FrameSpeed = AttackSpeed;
-            _animations["AttackRight"].FrameSpeed = AttackSpeed;
-            _animations["JumpDown"].FrameSpeed = JumpSpeed;
-            _animations["JumpUp"].FrameSpeed = JumpSpeed;
-            _animations["JumpLeft"].FrameSpeed = JumpSpeed;
-            _animations["JumpRight"].FrameSpeed = JumpSpeed;
-            _animations["Item"].FrameSpeed = ItemSpeed;
-            _animations["Special1"].FrameSpeed = Special1Speed;
-            _animations["Special2"].FrameSpeed = Special2Speed;
+            _animations["AttackDown"].FrameSpeed = AttackAnimationLength;
+            _animations["AttackUp"].FrameSpeed = AttackAnimationLength;
+            _animations["AttackLeft"].FrameSpeed = AttackAnimationLength;
+            _animations["AttackRight"].FrameSpeed = AttackAnimationLength;
+            _animations["JumpDown"].FrameSpeed = JumpAnimationLength;
+            _animations["JumpUp"].FrameSpeed = JumpAnimationLength;
+            _animations["JumpLeft"].FrameSpeed = JumpAnimationLength;
+            _animations["JumpRight"].FrameSpeed = JumpAnimationLength;
+            _animations["Item"].FrameSpeed = ItemAnimationLength;
+            _animations["Special1"].FrameSpeed = Special1AnimationLength;
+            _animations["Special2"].FrameSpeed = Special2AnimationLength;
 
             // default player direction is facing down
             Direction = Directions.Down;
@@ -241,6 +255,40 @@ namespace Jusgabon
 
         #endregion Methods - Weapon methods
 
+        #region Methods - Specials methods
+
+        public void SetSpecial1(Spell spell, int magic, float speed, float lifespan)
+        {
+            Special1 = spell;
+            Special1Magic = magic;
+            Special1Speed = speed;
+            Special1LifeSpan = lifespan;
+        }
+
+        public void SetSpecial2(Spell spell, int magic, float speed, float lifespan)
+        {
+            Special2 = spell;
+            Special2Magic = magic;
+            Special2Speed = speed;
+            Special2LifeSpan = lifespan;
+        }
+
+        #endregion Methods - Specials methods
+
+        protected void UpdateRegen(GameTime gametime)
+        {
+            if (_staminaTimer > _staminaRegenCooldown && currentStamina < Stamina)
+            {
+                _staminaTimer = 0f;
+                currentStamina++;
+            }
+            if (_manaTimer > _manaRegenCooldown && currentMana < Mana)
+            {
+                _manaTimer = 0f;
+                currentMana++;
+            }
+        }
+
         #region Methods - Check Input Methods
 
         /// <summary>
@@ -268,18 +316,6 @@ namespace Jusgabon
             if (IsAction)
                 return;
 
-            if (_staminaTimer > _staminaRegenCooldown && currentStamina < Stamina)
-            {
-                _staminaTimer = 0f;
-                currentStamina++;
-            }
-            if (_manaTimer > _manaRegenCooldown && currentMana < Mana)
-            {
-                _manaTimer = 0f;
-                currentMana++;
-            }
-
-
             // Start the action if key is pressed and action cooldown is done
             if (_currentKey.IsKeyDown(Input.Jump) && _jumpTimer > _jumpCooldown && currentStamina >= _jumpStaminaCost)
             {
@@ -298,12 +334,34 @@ namespace Jusgabon
                 _special1Timer = 0f;
                 IsActionSpecial1 = true;
                 currentMana -= _special1ManaCost;
+
+                // create special1 instance object
+                var special1 = Special1.Clone() as Spell;
+                special1.Parent = this;
+                special1.Magic = this.Magic + Special1Magic;
+                special1.Speed = Special1Speed;
+                special1.LifeSpan = Special1LifeSpan;
+                Children.Add(special1);
+                
+                // cast special1's action
+                special1.Action();
             }
             else if (_currentKey.IsKeyDown(Input.Special2) && _special2Timer > _special2Cooldown && currentMana >= _special2ManaCost)
             {
                 _special2Timer = 0f;
                 IsActionSpecial2 = true;
-                currentMana -= _special1ManaCost;
+                currentMana -= _special2ManaCost;
+
+                // create special2 instance object
+                var special2 = Special2.Clone() as Spell;
+                special2.Parent = this;
+                special2.Magic = this.Magic + Special2Magic;
+                special2.Speed = Special2Speed;
+                special2.LifeSpan = Special2LifeSpan;
+                Children.Add(special2);
+
+                // cast special2's action
+                special2.Action();
             }
             else if (_currentKey.IsKeyDown(Input.Item) && _itemTimer > _itemCooldown)
             {
@@ -413,9 +471,9 @@ namespace Jusgabon
             else if (IsActionAttack)
                 SetActionAttack();
             else if (IsActionSpecial1)
-                SetActionSpecial1();
+                SetActionAttack();
             else if (IsActionSpecial2)
-                SetActionSpecial2();
+                SetActionAttack();
             else if (IsActionItem)
                 SetActionItem();
             else if (IsActionInteract)
@@ -471,7 +529,6 @@ namespace Jusgabon
         protected void SetActionSpecial1()
         {
             _animationManager.Play(_animations["Special1"]);
-            Colour = Color.Blue;
         }
 
         /// <summary>
@@ -480,7 +537,6 @@ namespace Jusgabon
         protected void SetActionSpecial2()
         {
             _animationManager.Play(_animations["Special2"]);
-            Colour = Color.Green;
         }
 
         /// <summary>
@@ -578,6 +634,12 @@ namespace Jusgabon
             
             if (sprite is Enemy)
                 TakeHit(((Enemy)sprite).Attack);
+
+            if (sprite is Spell && ((Spell)sprite).Parent is Enemy)
+            {
+                TakeHit(((Spell)sprite).Magic);
+                ((Spell)sprite).IsRemoved = true;
+            }
         }
 
         /// <summary>
@@ -630,6 +692,8 @@ namespace Jusgabon
             // 8. Update Position
 
             UpdateTimers(gameTime);
+
+            UpdateRegen(gameTime);
 
             UpdateInput();
 

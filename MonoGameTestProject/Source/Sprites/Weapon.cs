@@ -37,17 +37,21 @@ namespace Jusgabon
         public bool IsEquipped = false;
 
         // Name of the weapon
-        public String Name;
+        public string Name { get; set; }
 
         // Speed of weapon action
         public new float Speed { get; set; }
 
+        // Width of weapon
         public new int Width { get; set; }
 
+        // Height of wepaon
         public new int Height { get; set; }
 
+        // Hitbox rectangle of weapon
         public new Rectangle Rectangle { get; set; }
 
+        // Furthest vector2 position of weapon during action event
         public Vector2 FinalPosition { get; set; }
 
         #endregion Members
@@ -61,11 +65,10 @@ namespace Jusgabon
         /// <param name="baseAttributes"></param>
         public Weapon(Dictionary<string, Animation> animations, Attributes attributes, String name) : base(animations, baseAttributes: attributes)
         {
-            //BaseAttributes = baseAttributes;
+            Name = name;
 
             Width = _animationManager.Animation.FrameWidth;
             Height = _animationManager.Animation.FrameHeight;
-            this.Name = name;
         }
 
         /// <summary>
@@ -78,7 +81,7 @@ namespace Jusgabon
                 return;
 
             Parent = parent;
-            ActionSpeed = parent.AttackSpeed;
+            ActionSpeed = parent.AttackAnimationLength;
         }
 
         /// <summary>

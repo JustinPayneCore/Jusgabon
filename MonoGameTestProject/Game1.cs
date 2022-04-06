@@ -75,6 +75,9 @@ namespace Jusgabon
 
         private Dictionary<string, SpriteProperties> _dictBosses;
 
+        // spell content libaries do not need attributes
+        private Dictionary<string, Dictionary<string, Animation>> _dictSpells;
+
 
         // List of sprites that have collision detection
         private List<Sprite> _spritesCollidable;
@@ -162,16 +165,15 @@ namespace Jusgabon
 
         protected virtual void LoadContentSprites()
         {
-            // Load weapon library
-            LoadLibraryWeapons();
-            // Instantiate npc dictionary library
-            LoadLibraryNpcs();
-            // Load npc animals library
+
+            // Load all content libraries (dictionaries with their animations/attributes)
             LoadLibraryAnimals();
-            // Load enemy library
-            LoadLibraryEnemies();
-            // Load boss libary
             LoadLibraryBosses();
+            LoadLibraryEnemies();
+            LoadLibraryNpcs();
+            LoadLibraryWeapons();
+            LoadLibrarySpells();
+
 
             // Load player
             LoadContentPlayer();
@@ -575,7 +577,29 @@ namespace Jusgabon
             NpcProperties.baseAttributes = OldWomanAttributes;
             _dictNpcs.Add("OldWoman", NpcProperties);
 
+        }
 
+        protected void LoadLibrarySpells()
+        {
+            _dictSpells = new Dictionary<string, Dictionary<string, Animation>>();
+
+            // IceSpike
+            _dictSpells.Add("IceSpike", new Dictionary<string, Animation>()
+            {
+                {"Sprite", new Animation(Globals.content.Load<Texture2D>("FX/Projectile/IceSpike"), 8) }
+            });
+
+            // Shuriken
+            _dictSpells.Add("Shuriken", new Dictionary<string, Animation>()
+            {
+                {"Sprite", new Animation(Globals.content.Load<Texture2D>("FX/Projectile/Shuriken"), 2) }
+            });
+
+            // Fireball
+            _dictSpells.Add("Fireball", new Dictionary<string, Animation>()
+            {
+                {"Sprite", new Animation(Globals.content.Load<Texture2D>("FX/Projectile/Fireball"), 4) }
+            });
 
         }
 
@@ -706,6 +730,10 @@ namespace Jusgabon
             _player.PickUp(new Weapon(_dictWeapons["Lance"].animations, _dictWeapons["Lance"].baseAttributes, "Lance"));
             _player.PickUp(new Weapon(_dictWeapons["BigSword"].animations, _dictWeapons["BigSword"].baseAttributes, "BigSword"));
             _player.PickUp(new Weapon(_dictWeapons["Sai"].animations, _dictWeapons["Sai"].baseAttributes, "Sai"));
+
+            // Set player specials
+            _player.SetSpecial1(new Spell(_dictSpells["IceSpike"]), 0, 2f, 1.5f);
+            _player.SetSpecial2(new Spell(_dictSpells["Shuriken"]), 0, 2f, 1.5f);
         }
 
         /// <summary>

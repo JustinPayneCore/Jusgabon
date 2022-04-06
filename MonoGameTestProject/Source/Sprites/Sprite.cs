@@ -149,10 +149,6 @@ namespace Jusgabon
         // The Alive boolean for Sprite
         public bool IsRemoved = false;
 
-        // The Lifespan of a Sprite
-        // (ex. A spell has a lifespan before the spell reaches max range and fizzles out)
-        public float LifeSpan = 0f;
-
         // Width of Sprite
         public int Width
         {
@@ -531,10 +527,7 @@ namespace Jusgabon
         /// Invoke this method when this Sprite collides with target sprite.
         /// </summary>
         /// <param name="sprite"></param>
-        public virtual void OnCollide(Sprite sprite)
-        {
-            Console.WriteLine("OnCollide method called");
-        }
+        public virtual void OnCollide(Sprite sprite) { }
 
         #region Per-pixel collision detection (OBSOLETE)
         /// <summary>
