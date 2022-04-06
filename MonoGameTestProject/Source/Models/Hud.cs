@@ -11,14 +11,17 @@ namespace Jusgabon.Source.Models
         // Health Textures
         Texture2D healthTexture;
         Rectangle healthRectangle;
+        Rectangle healthBackgroundRectangle;
 
         // Mana Textures
         Texture2D manaTexture;
         Rectangle manaRectangle;
+        Rectangle manaBackgroundRectangle;
 
         // Stamina Textures
         Texture2D staminaTexture;
         Rectangle staminaRectangle;
+        Rectangle staminaBackgroundRectangle;
 
         // Bars Background
         Texture2D barsBackgroundTexture;
@@ -64,16 +67,23 @@ namespace Jusgabon.Source.Models
             this.player = player;
 
             // Update the position of the health bar
-            healthRectangle = new Rectangle((playerXPos - 148), (playerYPos - 80), (int)(player.currentHealth / 1.5), 6);
+            healthRectangle = new Rectangle((playerXPos - 148), (playerYPos - 80), (int)(player.currentHealth / 1), 6);
 
             // Update the position of the mana bar
-            manaRectangle = new Rectangle((playerXPos - 148), (playerYPos - 73), (int)(player.currentMana / 1.5), 6);
+            manaRectangle = new Rectangle((playerXPos - 148), (playerYPos - 73), (int)(player.currentMana / 1.5), 3);
 
             // Update the position of the stamina bar
-            staminaRectangle = new Rectangle((playerXPos - 148), (playerYPos - 66), (int)(player.currentStamina / 1.5), 6);
+            staminaRectangle = new Rectangle((playerXPos - 148), (playerYPos - 69), (int)(player.currentStamina / 1.5), 3);
+
+            // Update the background for the bars
+            healthBackgroundRectangle = new Rectangle((playerXPos - 149), (playerYPos - 81), ((int)(player.Health / 1) + 2), 8);
+            manaBackgroundRectangle = new Rectangle((playerXPos - 149), (playerYPos - 74), ((int)(player.Mana / 1.5) + 2), 5);
+            staminaBackgroundRectangle = new Rectangle((playerXPos - 149), (playerYPos - 70), ((int)(player.Stamina / 1.5) + 2), 5);
 
             //Update the background for the bars
-            barsBackgroundRectangle = new Rectangle((playerXPos - 149), (playerYPos - 81), ((int)(player.Health / 1.5) + 2), 22);
+            barsBackgroundRectangle = new Rectangle((playerXPos - 149), (playerYPos - 81), ((int)(player.Health / 1.5) + 2), 16);
+
+
             
             // Update the weapon texture
             weaponTexture = Globals.content.Load<Texture2D>("Items/Weapons/" + player.EquippedWeapon.Name + "/Sprite");
@@ -88,7 +98,11 @@ namespace Jusgabon.Source.Models
         public void Draw(SpriteBatch spriteBatch)
         {
             // Draw the background for the bars
-            spriteBatch.Draw(barsBackgroundTexture, barsBackgroundRectangle, Color.White);
+            //spriteBatch.Draw(barsBackgroundTexture, barsBackgroundRectangle, Color.White);
+
+            spriteBatch.Draw(barsBackgroundTexture, healthBackgroundRectangle, Color.White);
+            spriteBatch.Draw(barsBackgroundTexture, manaBackgroundRectangle, Color.White);
+            spriteBatch.Draw(barsBackgroundTexture, staminaBackgroundRectangle, Color.White);
 
             // Draw the health bar
             spriteBatch.Draw(healthTexture, healthRectangle, Color.White);

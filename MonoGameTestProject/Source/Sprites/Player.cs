@@ -49,8 +49,8 @@ namespace Jusgabon
         private float _switchCooldown = 1f;
 
         // Mana/Stamina regen at a rate of (1 / this value) per second
-        public float _manaRegenCooldown = 0.10f;
-        public float _staminaRegenCooldown = 0.10f;
+        public float ManaRegenCooldown = 0.10f;
+        public float StaminaRegenCooldown = 0.10f;
 
         // animation length of actions
         public float AttackAnimationLength = 0.25f;
@@ -219,7 +219,15 @@ namespace Jusgabon
             EquippedWeapon.Equip();
             Console.WriteLine("\nPlayer Stats");
             Console.WriteLine("Attack:  " + TotalAttributes.Attack);
-            Console.WriteLine("Speed:   " + TotalAttributes.Speed + "\n");
+            Console.WriteLine("Speed:   " + TotalAttributes.Speed);
+            Console.WriteLine("Mana:    " + TotalAttributes.Mana);
+            Console.WriteLine("Stamina: " + TotalAttributes.Stamina + "\n");
+            if (currentHealth >= Health)
+                currentHealth = Health;
+            if (currentMana >= Mana)
+                currentMana = Mana;
+            if (currentStamina >= Stamina)
+                currentStamina = Stamina;
         }
 
         /// <summary>
@@ -277,12 +285,12 @@ namespace Jusgabon
 
         protected void UpdateRegen(GameTime gametime)
         {
-            if (_staminaTimer > _staminaRegenCooldown && currentStamina < Stamina)
+            if (_staminaTimer > StaminaRegenCooldown && currentStamina < Stamina)
             {
                 _staminaTimer = 0f;
                 currentStamina++;
             }
-            if (_manaTimer > _manaRegenCooldown && currentMana < Mana)
+            if (_manaTimer > ManaRegenCooldown && currentMana < Mana)
             {
                 _manaTimer = 0f;
                 currentMana++;

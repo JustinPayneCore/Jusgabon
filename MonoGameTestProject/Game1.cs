@@ -660,11 +660,29 @@ namespace Jusgabon
                 Speed = 0.25f,
                 Health = 0,
                 Mana = 0,
-                Stamina = 0,
+                Stamina = 50,
                 Attack = 10,
                 Magic = 0,
             };
             _dictWeapons.Add("Sai", WeaponProperties);
+
+            // MagicWand
+            WeaponProperties.animations = new Dictionary<string, Animation>()
+            {
+                { "Sprite", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/MagicWand/Sprite"), 1) },
+                { "SpriteInHand", new Animation(Globals.content.Load<Texture2D>("Items/Weapons/MagicWand/SpriteInHand"), 1) }
+            };
+            WeaponProperties.baseAttributes = new Attributes()
+            {
+                Speed = 0f,
+                Health = 0,
+                Mana = 50,
+                Stamina = 25,
+                Attack = 0,
+                Magic = 20,
+            };
+            _dictWeapons.Add("MagicWand", WeaponProperties);
+
 
         }
 
@@ -735,6 +753,7 @@ namespace Jusgabon
             // Add a couple starting weapons to player weapon inventory
             _player.PickUp(new Weapon(_dictWeapons["Lance"].animations, _dictWeapons["Lance"].baseAttributes, "Lance"));
             _player.PickUp(new Weapon(_dictWeapons["BigSword"].animations, _dictWeapons["BigSword"].baseAttributes, "BigSword"));
+            _player.PickUp(new Weapon(_dictWeapons["MagicWand"].animations, _dictWeapons["MagicWand"].baseAttributes, "MagicWand"));
             _player.PickUp(new Weapon(_dictWeapons["Sai"].animations, _dictWeapons["Sai"].baseAttributes, "Sai"));
 
             // Set player specials
