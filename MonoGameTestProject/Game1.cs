@@ -80,7 +80,7 @@ namespace Jusgabon
 
 
         // List of sprites that have collision detection
-        private List<Sprite> _spritesCollidable;
+        private List<Sprite> _spritesCollidable { get => Globals.spritesCollidable; set => Globals.spritesCollidable = value; }
 
         // Player object
         // note: _player is also instantiated to be Globals.player for global access
@@ -153,14 +153,14 @@ namespace Jusgabon
             int tilesetTilesWide = tileset.Width / tileWidth;
             tileMapManager = new TileMapManager(map, tileset, tilesetTilesWide, tileWidth, tileHeight);
 
-            // Instantiate Hud
-            hud = new Hud();
-
             // Instantiate camera
             _camera = new Camera();
 
             // Load sprites
             LoadContentSprites();
+
+            // Instantiate Hud
+            hud = new Hud();
         }
 
         protected virtual void LoadContentSprites()
@@ -788,8 +788,9 @@ namespace Jusgabon
                 sprite.Update(gameTime, _spritesCollidable);
 
             // Update Hud
-            hud.Update(_player);
-            
+            //hud.Update(_player);
+            hud.Update();
+
 
             // update camera position to follow player
             _camera.Follow(_player);

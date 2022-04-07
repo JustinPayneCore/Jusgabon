@@ -38,7 +38,15 @@ namespace Jusgabon.Source.Models
         Texture2D goldBackgroundTexture;
         Rectangle goldBackgroundRectangle;
 
-        Player player;
+        Player player
+        {
+            get
+            {
+                return Globals.player;
+            }
+        }
+
+        Boss boss { get; set; }
 
         // Player Positions
         int playerXPos;
@@ -57,14 +65,24 @@ namespace Jusgabon.Source.Models
             // Load font files
             font = Globals.content.Load<SpriteFont>("Gold");
 
+            // Load boss
+            foreach (var sprite in Globals.spritesCollidable)
+            {
+                if (sprite is Boss)
+                {
+                    boss = (Boss)sprite;
+                    break;
+                }
+            }
+
         }
 
-        public void Update(Player player)
+        public void Update()
         {
             // Update the player positions
             playerXPos = (int)player.Position.X;
             playerYPos = (int) player.Position.Y;
-            this.player = player;
+            //this.player = player;
 
             // Update the position of the health bar
             healthRectangle = new Rectangle((playerXPos - 148), (playerYPos - 80), (int)(player.currentHealth / 1), 6);
@@ -92,6 +110,8 @@ namespace Jusgabon.Source.Models
 
             // Update the gold
             goldBackgroundRectangle = new Rectangle((playerXPos + 133), (playerYPos + 80), 26, 12);
+
+            if (boss.IsAggro == true) { }
 
         }
 

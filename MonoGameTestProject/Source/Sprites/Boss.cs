@@ -77,7 +77,11 @@ namespace Jusgabon
 
                 // check if boss is dead
                 if (currentHealth <= 0)
+                {
+                    IsAggro = false;
                     Remove();
+                }
+                    
             }
         }
 
