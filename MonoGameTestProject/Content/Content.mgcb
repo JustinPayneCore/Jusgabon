@@ -6505,6 +6505,13 @@
 /processorParam:TextureFormat=Color
 /build:ball.png
 
+#begin BossHealth.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:BossHealth.spritefont
+
 #begin FX/AllPreview.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -8893,6 +8900,13 @@
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Musics/9 - Quiet.ogg
+
+#begin PlayerHealth.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:PlayerHealth.spritefont
 
 #begin Sounds/Game/Alert.wav
 /importer:WavImporter

@@ -80,7 +80,7 @@ namespace Jusgabon
 
 
         // List of sprites that have collision detection
-        private List<Sprite> _spritesCollidable;
+        private List<Sprite> _spritesCollidable { get => Globals.spritesCollidable; set => Globals.spritesCollidable = value; }
 
         // Player object
         // note: _player is also instantiated to be Globals.player for global access
@@ -153,14 +153,14 @@ namespace Jusgabon
             int tilesetTilesWide = tileset.Width / tileWidth;
             tileMapManager = new TileMapManager(map, tileset, tilesetTilesWide, tileWidth, tileHeight);
 
-            // Instantiate Hud
-            hud = new Hud();
-
             // Instantiate camera
             _camera = new Camera();
 
             // Load sprites
             LoadContentSprites();
+
+            // Instantiate Hud
+            hud = new Hud();
         }
 
         protected virtual void LoadContentSprites()
@@ -191,6 +191,7 @@ namespace Jusgabon
             var enemyCyclope2 = new Enemy(_dictEnemies["Cyclope2"].animations, _dictEnemies["Cyclope2"].baseAttributes) { GoldGiven = 15 };
             var npcOldWoman = new Npc(_dictNpcs["OldWoman"].animations, _dictNpcs["OldWoman"].baseAttributes);
             var bossDemonCyclop = new Boss(_dictBosses["DemonCyclop"].animations, _dictBosses["DemonCyclop"].baseAttributes);
+
 
             // initialize random for randomly initializing different sprites of same type
             var random = new Random();
@@ -788,7 +789,7 @@ namespace Jusgabon
                 sprite.Update(gameTime, _spritesCollidable);
 
             // Update Hud
-            hud.Update(_player);
+            hud.Update();
             
 
             // update camera position to follow player
