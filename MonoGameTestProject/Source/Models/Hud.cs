@@ -121,7 +121,7 @@ namespace Jusgabon.Source.Models
             // Draw the health bar
             spriteBatch.Draw(barsBackgroundTexture, healthBackgroundRectangle, Color.White);
             spriteBatch.Draw(healthTexture, healthRectangle, Color.White);
-            spriteBatch.DrawString(healthFont, player.currentHealth + "/" + player.Health, new Vector2((playerXPos - 111), (playerYPos - 81)), Color.White);
+            spriteBatch.DrawString(healthFont, player.currentHealth + "/" + player.Health, new Vector2((playerXPos - 111), (playerYPos - 83)), Color.White);
 
             // Draw the mana bar
             spriteBatch.Draw(barsBackgroundTexture, manaBackgroundRectangle, Color.White);
@@ -137,14 +137,14 @@ namespace Jusgabon.Source.Models
 
             // Draw the gold display
             spriteBatch.Draw(goldBackgroundTexture, goldBackgroundRectangle, Color.White);
-            spriteBatch.DrawString(goldFont, player.Gold.ToString(), new Vector2(playerXPos + 135, playerYPos + 82), Color.Yellow);
+            spriteBatch.DrawString(goldFont, player.Gold.ToString(), new Vector2(playerXPos + 135, playerYPos + 80), Color.Yellow);
 
             // Draw the boss health bar if boss is aggroed to player
             if (boss.IsAggro == true)
             {
                 spriteBatch.Draw(barsBackgroundTexture, bossHealthBackgroundRectangle, Color.White);
                 spriteBatch.Draw(bossHealthTexture, bossHealthRectangle, Color.White);
-                spriteBatch.DrawString(bossHealthFont, boss.currentHealth + "/" + boss.Health, new Vector2((playerXPos - 8), (playerYPos + 75)), Color.White);
+                spriteBatch.DrawString(bossHealthFont, boss.currentHealth + "/" + boss.Health, new Vector2((playerXPos - 8), (playerYPos + 73)), Color.White);
             }
 
         }
