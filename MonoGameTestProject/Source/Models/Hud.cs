@@ -72,25 +72,6 @@ namespace Jusgabon.Source.Models
             healthFont = Globals.content.Load<SpriteFont>("PlayerHealth");
             bossHealthFont = Globals.content.Load<SpriteFont>("BossHealth");
 
-            foreach (var sprite in Globals.spritesCollidable)
-            {
-                if (sprite is Boss)
-                {
-                    boss = (Boss)sprite;
-                    break;
-                }
-            }
-
-            // Load boss
-            foreach (var sprite in Globals.spritesCollidable)
-            {
-                if (sprite is Boss)
-                {
-                    boss = (Boss)sprite;
-                    break;
-                }
-            }
-
             // Load boss
             foreach (var sprite in Globals.spritesCollidable)
             {
@@ -108,7 +89,6 @@ namespace Jusgabon.Source.Models
             // Update the player positions
             playerXPos = (int)player.Position.X;
             playerYPos = (int) player.Position.Y;
-            this.player = player;
 
             // Update the position of the health bar
             healthRectangle = new Rectangle((playerXPos - 148), (playerYPos - 80), (int)(player.currentHealth / 1), 6);
