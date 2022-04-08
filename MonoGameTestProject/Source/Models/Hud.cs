@@ -81,6 +81,16 @@ namespace Jusgabon.Source.Models
                 }
             }
 
+            // Load boss
+            foreach (var sprite in Globals.spritesCollidable)
+            {
+                if (sprite is Boss)
+                {
+                    boss = (Boss)sprite;
+                    break;
+                }
+            }
+
         }
 
         public void Update()
