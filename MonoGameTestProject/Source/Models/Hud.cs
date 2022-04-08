@@ -111,7 +111,7 @@ namespace Jusgabon.Source.Models
             // Update the gold
             goldBackgroundRectangle = new Rectangle((playerXPos + 133), (playerYPos + 80), 26, 12);
 
-            if (boss.IsAggro == true) { }
+            /*if (boss.IsAggro == true) { }*/
 
         }
 
