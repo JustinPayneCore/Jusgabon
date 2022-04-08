@@ -50,6 +50,9 @@ namespace Jusgabon
 
             // change amount of gold to give on kill
             GoldGiven = 250;
+
+            // change respawn time to be longer
+            RespawnTime = 120f;
         }
 
         /// <summary>
@@ -78,8 +81,7 @@ namespace Jusgabon
                 // check if boss is dead
                 if (currentHealth <= 0)
                 {
-                    IsAggro = false;
-                    Remove();
+                    Kill();
                 }
                     
             }

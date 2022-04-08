@@ -402,6 +402,9 @@ namespace Jusgabon
 
                 if (sprite is Spell)
                     continue;
+
+                if (sprite is Enemy && ((Enemy)sprite).IsDead == true)
+                    continue;
                 
                 if (this.IsTouching(sprite))
                 {
@@ -643,14 +646,14 @@ namespace Jusgabon
 
                 // check if sprite is dead
                 if (currentHealth <= 0)
-                    Remove();
+                    Kill();
             }
         }
 
         /// <summary>
         /// Remove sprite method.
         /// </summary>
-        protected virtual void Remove()
+        protected virtual void Kill()
         {
             Console.WriteLine(this.GetType().Name + " killed.");
             Globals.player.GetGold(0);

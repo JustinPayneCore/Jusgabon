@@ -188,8 +188,7 @@ namespace Jusgabon
         #endregion Methods - Random Movement
 
         /// <summary>
-        /// Enemy Update method.
-        /// 
+        /// Npc Update method.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime, List<Sprite> sprites)
