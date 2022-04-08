@@ -110,6 +110,9 @@ namespace Jusgabon.Source.Models
             // Update the gold
             goldBackgroundRectangle = new Rectangle((playerXPos + 133), (playerYPos + 80), 26, 12);
 
+            // Update boss health bar
+            bossHealthRectangle = new Rectangle((playerXPos - 90), (playerYPos + 75), ((int)boss.currentHealth / 2), 10);
+            bossHealthBackgroundRectangle = new Rectangle((playerXPos - 91), (playerYPos + 74), ((int)(boss.Health / 2) + 2), 12);
         }
 
         public void Draw(SpriteBatch spriteBatch)
