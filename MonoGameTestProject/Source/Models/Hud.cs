@@ -91,6 +91,16 @@ namespace Jusgabon.Source.Models
                 }
             }
 
+            // Load boss
+            foreach (var sprite in Globals.spritesCollidable)
+            {
+                if (sprite is Boss)
+                {
+                    boss = (Boss)sprite;
+                    break;
+                }
+            }
+
         }
 
         public void Update()
@@ -98,6 +108,7 @@ namespace Jusgabon.Source.Models
             // Update the player positions
             playerXPos = (int)player.Position.X;
             playerYPos = (int) player.Position.Y;
+            this.player = player;
 
             // Update the position of the health bar
             healthRectangle = new Rectangle((playerXPos - 148), (playerYPos - 80), (int)(player.currentHealth / 1), 6);
@@ -118,10 +129,6 @@ namespace Jusgabon.Source.Models
 
             // Update the gold
             goldBackgroundRectangle = new Rectangle((playerXPos + 133), (playerYPos + 80), 26, 12);
-
-            // Update boss health bar
-            bossHealthRectangle = new Rectangle((playerXPos - 90 ), (playerYPos + 75), ((int)boss.currentHealth / 2), 10);
-            bossHealthBackgroundRectangle = new Rectangle((playerXPos - 91), (playerYPos + 74), ((int)(boss.Health / 2) + 2), 12);
 
         }
 

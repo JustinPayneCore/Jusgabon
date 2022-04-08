@@ -81,6 +81,7 @@ namespace Jusgabon
                     IsAggro = false;
                     Remove();
                 }
+                    
             }
         }
 
