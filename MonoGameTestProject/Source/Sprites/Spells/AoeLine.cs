@@ -15,39 +15,40 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 #endregion
 
+
 namespace Jusgabon
 {
+    /// <summary>
+    /// Area-of-Effect (Aoe) Line Spell.
+    /// Channel and Summon this spell in front of parent sprite.
+    /// Target sprites only gets hit once while this spell is summoned.
+    /// </summary>
     public class AoeLine : Spell
     {
+        #region Members
 
+        // timer to track spell update action
         private float _timer;
 
-        // A spell has a lifespan before the spell reaches max range and fizzles out)
-        //public float LifeSpan { get; set; }
-
-        //public bool IsAction = false;
-
-        //public new int Magic { get; set; }
-
-        public float ChannelDelay { get; set; }
-
-        public bool _isChanneling = false;
-
+        // sprites that have been hit by the summoned spell
         private List<Sprite> _hitSprites;
 
+        // checks if spell is casting and not yet summoned
+        public bool _isCasting = false;
+
+        // the individual positions of each section of the aoe spell
         private List<Vector2> _positions;
 
-        // Velocity Speed
-        //public new float Speed { get; set; }
-
-        public int SpellWidth { get; set; }
+        // the aoe width of the spell (different from texture width)
+        public int AoeWidth { get; set; }
         
-        public int SpellLength { get; set; }
+        // the aoe length of the spell (diff from texture height)
+        public int AoeLength { get; set; }
 
-        //public new int Width { get; set; }
+        // if set, the amount of time where the spell is "casting" and not yet summoned
+        public float CastDelay { get; set; }
 
-        //public new int Height { get; set; }
-
+        // rectangle hitbox of the summoned aoe spell
         public new Rectangle Rectangle
         {
             get
@@ -58,26 +59,26 @@ namespace Jusgabon
                     rectangle = new Rectangle(
                         (int)Position.X,
                         (int)Position.Y,
-                        Width * SpellWidth,
-                        Height * SpellLength
+                        Width * AoeWidth,
+                        Height * AoeLength
                         );
                 }
                 else if (Direction == Directions.Up)
                 {
                     rectangle = new Rectangle(
                         (int)Position.X,
-                        (int)Position.Y - (Height * (SpellLength - 1)),
-                        Width * SpellWidth,
-                        Height * SpellLength
+                        (int)Position.Y - (Height * (AoeLength - 1)),
+                        Width * AoeWidth,
+                        Height * AoeLength
                         );
                 }
                 else if (Direction == Directions.Left)
                 {
                     rectangle = new Rectangle(
-                        (int)Position.X - (Width * (SpellLength - 1)),
+                        (int)Position.X - (Width * (AoeLength - 1)),
                         (int)Position.Y,
-                        Width * SpellLength,
-                        Height * SpellWidth
+                        Width * AoeLength,
+                        Height * AoeWidth
                         );
                 }
                 else // Direction == Directions.Right
@@ -85,42 +86,66 @@ namespace Jusgabon
                     rectangle = new Rectangle(
                         (int)Position.X,
                         (int)Position.Y,
-                        Width * SpellLength,
-                        Height * SpellWidth
+                        Width * AoeLength,
+                        Height * AoeWidth
                         );
                 }
                 return rectangle;
             }
         }
 
+        // members already declared in abstract Spell class.
+
+        //public float LifeSpan { get; set; }
+        //public bool IsAction = false;
+        //public new int Magic { get; set; }
+        //public new float Speed { get; set; }
+        //public new int Width { get; set; }
+        //public new int Height { get; set; }
 
 
-        public AoeLine(Dictionary<string, Animation> animations, float castDelay, int spellWidth, int spellLength) : base(animations)
+        #endregion Members
+
+
+        #region Methods
+
+        /// <summary>
+        /// Area-of-Effect Line Spell constructor.
+        /// Provide spell casting properties including the delay before the spell is summoned, and aoe width and length of the spell.
+        /// </summary>
+        /// <param name="animations"></param>
+        /// <param name="castingDelay"></param>
+        /// <param name="spellWidth"></param>
+        /// <param name="spellLength"></param>
+        public AoeLine(Dictionary<string, Animation> animations, float castingDelay, int spellWidth, int spellLength) : base(animations)
         {
-            if (castDelay <= 0f)
+            // no channel time
+            if (castingDelay <= 0f)
             {
-                _isChanneling = false;
-                ChannelDelay = 0f;
+                CastDelay = 0f;
+                _isCasting = false;
             }
-            else
+            else // set channel time
             {
-                ChannelDelay = castDelay;
-                _isChanneling = true;
+                CastDelay = castingDelay;
+                _isCasting = true;
             }
 
-            SpellWidth = spellWidth;
-            SpellLength = spellLength;
+            // aoe size of the spell
+            AoeWidth = spellWidth;
+            AoeLength = spellLength;
 
+            // width and height of one individual spell texture
             Width = _animationManager.Animation.FrameWidth;
             Height = _animationManager.Animation.FrameHeight;
         }
 
         /// <summary>
-        /// Action method to set up the weapon attack action.
+        /// Action method - Start the spell action.
         /// </summary>
         public override void Action()
         {
-            // cannot make action is no player is holding this weapon
+            // cannot make action if spell does not have a parent caster
             if (Parent == null)
                 return;
 
@@ -133,25 +158,35 @@ namespace Jusgabon
             SetSpellProperties();
         }
 
+        /// <summary>
+        /// Set Spell Properties method (AoeLine spell).
+        /// - Set animation frame speeds based on cast time and lifespan of spell
+        /// - Set positions of each individual spell texture that makes up the whole aoe spell
+        /// </summary>
         protected override void SetSpellProperties()
         {
-            if (_isChanneling == true)
+            // set animation frame speeds based on cast time of spell
+            if (_isCasting == true)
             {
-                _animations["Cast"].FrameSpeed = ChannelDelay / _animations["Cast"].FrameCount;
+                _animations["Cast"].FrameSpeed = CastDelay / _animations["Cast"].FrameCount;
             }
 
+            // set animation frame speeds based on summoned lifespan of spell
             _animations["Sprite"].FrameSpeed = LifeSpan / _animations["Sprite"].FrameCount;
 
-
+            // initialize list of positions
             _positions = new List<Vector2>();
+
+            // get parent sprite direction
             Direction = Parent.Direction;
 
+            // set positions of each individual spell texture, which will make up the whole aoe spell
             if (Direction == Directions.Down)
             {
-                Position = new Vector2(Parent.Origin.X - Origin.X - ((SpellWidth - 1) * Height / 2), Parent.Origin.Y + (Origin.Y / 2));
-                for(int i = 0; i < SpellWidth; i++)
+                Position = new Vector2(Parent.Origin.X - Origin.X - ((AoeWidth - 1) * Height / 2), Parent.Origin.Y + (Origin.Y / 2));
+                for(int i = 0; i < AoeWidth; i++)
                 {
-                    for (int j = 0; j < SpellLength; j++)
+                    for (int j = 0; j < AoeLength; j++)
                     {
                         var position = new Vector2(Position.X + (i * Width), Position.Y + (j * Height));
                         _positions.Add(position);
@@ -160,10 +195,10 @@ namespace Jusgabon
             }
             else if (Direction == Directions.Up)
             {
-                Position = new Vector2(Parent.Origin.X - Origin.X - ((SpellWidth - 1) * Width / 2), Parent.Origin.Y - Height - (Origin.Y / 2));
-                for (int i = 0; i < SpellWidth; i++)
+                Position = new Vector2(Parent.Origin.X - Origin.X - ((AoeWidth - 1) * Width / 2), Parent.Origin.Y - Height - (Origin.Y / 2));
+                for (int i = 0; i < AoeWidth; i++)
                 {
-                    for (int j = 0; j < SpellLength; j++)
+                    for (int j = 0; j < AoeLength; j++)
                     {
                         var position = new Vector2(Position.X + (i * Width), Position.Y - (j * Height));
                         _positions.Add(position);
@@ -172,10 +207,10 @@ namespace Jusgabon
             }
             else if (Direction == Directions.Left)
             {
-                Position = new Vector2(Parent.Origin.X - Width - (Origin.Y / 2), Parent.Origin.Y - Origin.Y - ((SpellWidth - 1) * Height / 2));
-                for (int i = 0; i < SpellWidth; i++)
+                Position = new Vector2(Parent.Origin.X - Width - (Origin.Y / 2), Parent.Origin.Y - Origin.Y - ((AoeWidth - 1) * Height / 2));
+                for (int i = 0; i < AoeWidth; i++)
                 {
-                    for (int j = 0; j < SpellLength; j++)
+                    for (int j = 0; j < AoeLength; j++)
                     {
                         var position = new Vector2(Position.X - (j * Width), Position.Y + (i * Height));
                         _positions.Add(position);
@@ -184,10 +219,10 @@ namespace Jusgabon
             }
             else // Direction == Directions.Right
             {
-                Position = new Vector2(Parent.Origin.X + (Origin.Y / 2), Parent.Origin.Y - Origin.Y - ((SpellWidth - 1) * Height / 2));
-                for (int i = 0; i < SpellWidth; i++)
+                Position = new Vector2(Parent.Origin.X + (Origin.Y / 2), Parent.Origin.Y - Origin.Y - ((AoeWidth - 1) * Height / 2));
+                for (int i = 0; i < AoeWidth; i++)
                 {
-                    for (int j = 0; j < SpellLength; j++)
+                    for (int j = 0; j < AoeLength; j++)
                     {
                         var position = new Vector2(Position.X + (j * Width), Position.Y + (i * Height));
                         _positions.Add(position);
@@ -197,34 +232,39 @@ namespace Jusgabon
 
         }
 
+        /// <summary>
+        /// Update action method (AoeLine Spell) - update specific action traits of this spell.
+        /// Check if the spell is done casting.
+        /// </summary>
         protected override void UpdateAction() 
         {
-            if (_isChanneling == true && _timer >= ChannelDelay)
+            if (_isCasting == true && _timer >= CastDelay)
             {
                 // done casting
-                _isChanneling = false;
+                _isCasting = false;
             }
         }
-
-        protected override void SetAnimations()
-        {
-            if (_isChanneling == true)
-                _animationManager.Play(_animations["Cast"]);
-            else
-            {
-                _animationManager.Play(_animations["Sprite"]);
-            }
-        }
-
-        #region Methods - Collision detection
 
         /// <summary>
-        /// CheckCollision method (Spell).
+        /// Set animations method for AoeLine Spell.
+        /// </summary>
+        protected override void SetAnimations()
+        {
+            if (_isCasting == true)
+                _animationManager.Play(_animations["Cast"]);
+            else
+                _animationManager.Play(_animations["Sprite"]);
+
+        }
+
+        /// <summary>
+        /// CheckCollision method (AoeLine Spell).
         /// </summary>
         /// <param name="sprites"></param>
         protected override void CheckCollision(List<Sprite> sprites)
         {
-            if (_isChanneling)
+            // no collision if spell is still casting
+            if (_isCasting)
                 return;
 
             foreach (var sprite in sprites)
@@ -235,79 +275,36 @@ namespace Jusgabon
                 if (sprite == Parent)
                     continue;
 
-                // hit sprite if not hit before
                 if (this.IsTouching(sprite))
+                    // check if sprite has been hit before
                     if (_hitSprites.Contains(sprite) == false)
                     {
-                        sprite.OnCollide(this);
+                        // add sprite to list of hit sprites
                         _hitSprites.Add(sprite);
+
+                        // hit sprite
+                        sprite.OnCollide(this);
+
+                        // Note: this spell is still not removed upon collision with sprite.
                     }
             }
         }
 
         /// <summary>
-        /// Collision method to detect if this sprite is touching the left side of target sprite.
-        /// Sources (tutorial): https://www.youtube.com/watch?v=CV8P9aq2gQo
+        /// Update method for Aoe Line spell.
         /// </summary>
-        /// <param name="sprite"></param>
-        /// <returns></returns>
-        protected override bool IsTouchingLeft(Sprite sprite)
-        {
-            return this.Rectangle.Right > sprite.Rectangle.Left &&
-                this.Rectangle.Left < sprite.Rectangle.Left &&
-                this.Rectangle.Bottom > sprite.Rectangle.Top &&
-                this.Rectangle.Top < sprite.Rectangle.Bottom;
-        }
-
-        /// <summary>
-        /// Collision method to detect if this sprite is touching the right side of target sprite.
-        /// </summary>
-        /// <param name="sprite"></param>
-        /// <returns></returns>
-        protected override bool IsTouchingRight(Sprite sprite)
-        {
-            return this.Rectangle.Left < sprite.Rectangle.Right &&
-                this.Rectangle.Right > sprite.Rectangle.Right &&
-                this.Rectangle.Bottom > sprite.Rectangle.Top &&
-                this.Rectangle.Top < sprite.Rectangle.Bottom;
-        }
-
-        /// <summary>
-        /// Collision method to detect if this sprite is touching the top side of target sprite.
-        /// </summary>
-        /// <param name="sprite"></param>
-        /// <returns></returns>
-        protected override bool IsTouchingTop(Sprite sprite)
-        {
-            return this.Rectangle.Bottom > sprite.Rectangle.Top &&
-                this.Rectangle.Top < sprite.Rectangle.Top &&
-                this.Rectangle.Right > sprite.Rectangle.Left &&
-                this.Rectangle.Left < sprite.Rectangle.Right;
-        }
-
-        /// <summary>
-        /// Collision method to detect if this sprite is touching the bottom side of target sprite.
-        /// </summary>
-        /// <param name="sprite"></param>
-        /// <returns></returns>
-        protected override bool IsTouchingBottom(Sprite sprite)
-        {
-            return this.Rectangle.Top < sprite.Rectangle.Bottom &&
-                this.Rectangle.Bottom > sprite.Rectangle.Bottom &&
-                this.Rectangle.Right > sprite.Rectangle.Left &&
-                this.Rectangle.Left < sprite.Rectangle.Right;
-        }
-
-        #endregion Methods - Collision detection
-
+        /// <param name="gameTime"></param>
+        /// <param name="sprites"></param>
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             // update timer
             _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (_timer >= LifeSpan + ChannelDelay)
+            // spell action is over
+            if (_timer >= LifeSpan + CastDelay)
                 IsRemoved = true;
-
+            
+            // set & update animations
             SetAnimations();
             _animationManager.Update(gameTime, sprites);
 
@@ -316,14 +313,22 @@ namespace Jusgabon
 
             // check collision
             CheckCollision(sprites);
+
+            // Note: this summoned spell stays still, so position does not add velocity
         }
 
 
+        /// <summary>
+        /// Draw method for Aoe Line spell.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (IsAction == false)
                 return;
 
+            // Draw spell animation for each individual position
             foreach(var position in _positions)
             {
                 spriteBatch.Draw(
@@ -340,5 +345,7 @@ namespace Jusgabon
 
         }
 
+
+        #endregion Methods
     }
 }

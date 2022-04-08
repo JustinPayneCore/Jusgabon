@@ -651,7 +651,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// Remove sprite method.
+        /// Kill method - removes sprite from sprite list.
         /// </summary>
         protected virtual void Kill()
         {

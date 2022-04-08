@@ -36,8 +36,7 @@ namespace Jusgabon
         private float _nextRandomTime;
 
         // If npc is a non-moving npc (stops random movement)
-        private bool _isStationary;
-        public bool IsStationary { get => _isStationary; set => _isStationary = value; }
+        public bool IsStationary { get; set; }
 
         // The target Sprite that this Sprite wants to follow
         public Sprite FollowTarget { get; set; }
@@ -137,7 +136,7 @@ namespace Jusgabon
         /// <param name="gameTime"></param>
         protected virtual void RandomMovement(GameTime gameTime)
         {
-            if (_isStationary)
+            if (IsStationary)
                 return;
 
             var currentDistance = Vector2.Distance(this.Position, Globals.player.Position);

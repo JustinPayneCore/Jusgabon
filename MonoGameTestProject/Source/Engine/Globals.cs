@@ -36,25 +36,16 @@ namespace Jusgabon
         public static List<Tile> tilesCollidable;
 
         // collidable sprite objects
-        public static List<Sprite> spritesCollidable;
+        public static List<Sprite> sprites;
 
-        //// weapons library
-        //public static Dictionary<string, Game1.SpriteProperties> libraryWeapons;
-
-        //// npc library
-        //public static Dictionary<string, Game1.SpriteProperties> libraryNpcs;
-
-        //// animals library
-        //public static Dictionary<string, Game1.SpriteProperties> libraryAnimals;
-
-        //// enemies library
-        //public static Dictionary<string, Game1.SpriteProperties> libraryEnemies;
-
-        //// boss library
-        //public static Dictionary<string, Game1.SpriteProperties> libraryBosses;
-
-        //// spell library
-        //public static Dictionary<string, Dictionary<string, Animation>> librarySpells;
+        // content libraries
+        public static Dictionary<string, Game1.SpriteProperties> libraryWeapons;
+        public static Dictionary<string, Game1.SpriteProperties> libraryNpcs;
+        public static Dictionary<string, Game1.SpriteProperties> libraryAnimals;
+        public static Dictionary<string, Game1.SpriteProperties> libraryEnemies;
+        public static Dictionary<string, Game1.SpriteProperties> libraryBosses;
+        // spell content libaries does not need attributes
+        public static Dictionary<string, Dictionary<string, Animation>> librarySpells;
 
     }
 }

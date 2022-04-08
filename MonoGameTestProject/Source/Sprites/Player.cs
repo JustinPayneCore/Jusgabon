@@ -119,7 +119,7 @@ namespace Jusgabon
         // Index to track which weapon from the inventory is equipped
         public int WeaponIndex = 0;
 
-        // Shop currency
+        // Gold in-game currency
         public int Gold = 0;
 
         #endregion Members
@@ -129,7 +129,9 @@ namespace Jusgabon
 
         /// <summary>
         /// Player constructor.
-        /// Initializes Input Keys and Properties like Player speed.
+        /// - set input keybindings
+        /// - set action animation lengths
+        /// - get/set player properties
         /// </summary>
         /// <param name="animations"></param>
         /// <param name="spawnPosition"></param>
@@ -266,6 +268,13 @@ namespace Jusgabon
 
         #region Methods - Specials methods
 
+        /// <summary>
+        /// Set Special 1 method - sets spell and action properties for special1 action.
+        /// </summary>
+        /// <param name="spell"></param>
+        /// <param name="magic"></param>
+        /// <param name="speed"></param>
+        /// <param name="lifespan"></param>
         public void SetSpecial1(Spell spell, int magic, float speed, float lifespan)
         {
             Special1 = spell;
@@ -274,6 +283,13 @@ namespace Jusgabon
             Special1LifeSpan = lifespan;
         }
 
+        /// <summary>
+        /// Set Special 2 method - sets spell and action properties for special2 action.
+        /// </summary>
+        /// <param name="spell"></param>
+        /// <param name="magic"></param>
+        /// <param name="speed"></param>
+        /// <param name="lifespan"></param>
         public void SetSpecial2(Spell spell, int magic, float speed, float lifespan)
         {
             Special2 = spell;
@@ -284,6 +300,10 @@ namespace Jusgabon
 
         #endregion Methods - Specials methods
 
+        /// <summary>
+        /// UpdateRegen method - recovers missing mana and stamina of player.
+        /// </summary>
+        /// <param name="gametime"></param>
         protected void UpdateRegen(GameTime gametime)
         {
             if (_staminaTimer > StaminaRegenCooldown && currentStamina < Stamina)

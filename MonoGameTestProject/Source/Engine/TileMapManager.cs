@@ -125,8 +125,14 @@ namespace Jusgabon
             return tiles;
         }
 
+        /// <summary>
+        /// LoadSpawnPositions method - Creates a list of spawn positions from 3rd layer (id=2) of map file.
+        /// Spawn Position tiles are composed of logic blocks, primarily different colored x's.
+        /// </summary>
+        /// <returns></returns>
         public List<(string, Vector2)> LoadSpawnPositions()
         {
+            // intialize list (return value)
             var spawnPositions = new List<(string tile, Vector2 spawnPosition)> { };
 
             // layer 2 is spawn positions
@@ -135,10 +141,10 @@ namespace Jusgabon
             // Loops through each tile in that layer of the Tiled map file
             for (var i = 0; i < map.Layers[spawnPositionsLayer].Tiles.Count; i++)
             {
+                string key = "";
+
                 // Select that specific tile
                 int gid = map.Layers[spawnPositionsLayer].Tiles[i].Gid;
-
-                string key = "";
 
                 switch (gid)
                 {
@@ -173,11 +179,12 @@ namespace Jusgabon
                 if (key == "")
                     continue;
 
+                // get tile position
                 float x = (i % map.Width) * map.TileWidth;
                 float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
                 Vector2 spawnPosition = new Vector2(x, y);
 
-                //spawnPositions.Add(key, spawnPosition);
+                // add spawn position to list
                 spawnPositions.Add((key, spawnPosition));
                 
             }

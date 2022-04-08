@@ -17,12 +17,17 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// Projectile Spell - uses the default implementation of Spell.
+    /// </summary>
     public class Projectile : Spell
     {
 
-        public Projectile(Dictionary<string, Animation> animations) : base(animations)
-        {
+        /// <summary>
+        /// Projectile class constructor.
+        /// </summary>
+        /// <param name="animations"></param>
+        public Projectile(Dictionary<string, Animation> animations) : base(animations) { }
 
-        }
     }
 }

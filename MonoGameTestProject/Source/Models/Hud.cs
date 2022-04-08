@@ -1,13 +1,30 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿#region Includes
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using System.Xml.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 
-namespace Jusgabon.Source.Models
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using TiledSharp;
+#endregion
+
+namespace Jusgabon
 {
-    class Hud
+    /// <summary>
+    /// Heads-up display (Hud) class for the game player interface.
+    /// </summary>
+    public class Hud
     {
+        #region Members
+
         // Health Textures
         Texture2D healthTexture;
         Rectangle healthRectangle;
@@ -44,18 +61,22 @@ namespace Jusgabon.Source.Models
         Rectangle bossHealthBackgroundRectangle;
         SpriteFont bossHealthFont;
 
-        // Player Attributes
-        Player player
-        {
-            get
-            {
-                return Globals.player;
-            }
-        }
+        // Player instance and attributes
+        Player player { get => Globals.player; }
         int playerXPos;
         int playerYPos;
+
+        // The aggro'd Boss instance for the boss health bar
         Boss boss { get; set; }
 
+
+        #endregion Members
+
+        #region Methods
+
+        /// <summary>
+        /// Heads-up display constructor - intialize content files and get boss instance.
+        /// </summary>
         public Hud()
         {
             // Load image files
@@ -72,8 +93,8 @@ namespace Jusgabon.Source.Models
             healthFont = Globals.content.Load<SpriteFont>("PlayerHealth");
             bossHealthFont = Globals.content.Load<SpriteFont>("BossHealth");
 
-            // Load boss
-            foreach (var sprite in Globals.spritesCollidable)
+            // Locate and load boss instance
+            foreach (var sprite in Globals.sprites)
             {
                 if (sprite is Boss)
                 {
@@ -84,11 +105,14 @@ namespace Jusgabon.Source.Models
 
         }
 
+        /// <summary>
+        /// Update method for Hud.
+        /// </summary>
         public void Update()
         {
             // Update the player positions
             playerXPos = (int)player.Position.X;
-            playerYPos = (int) player.Position.Y;
+            playerYPos = (int)player.Position.Y;
 
             // Update the position of the health bar
             healthRectangle = new Rectangle((playerXPos - 148), (playerYPos - 80), (int)(player.currentHealth / 1), 6);
@@ -115,6 +139,10 @@ namespace Jusgabon.Source.Models
             bossHealthBackgroundRectangle = new Rectangle((playerXPos - 91), (playerYPos + 74), ((int)(boss.Health / 2) + 2), 12);
         }
 
+        /// <summary>
+        /// Draw method for Hud.
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         public void Draw(SpriteBatch spriteBatch)
         {
 
@@ -148,5 +176,8 @@ namespace Jusgabon.Source.Models
             }
 
         }
+
+
+        #endregion Methods
     }
 }

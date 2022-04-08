@@ -14,7 +14,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using TiledSharp;
-using Jusgabon.Source.Models;
 #endregion
 
 /// <summary>
@@ -44,12 +43,37 @@ namespace Jusgabon
         // Game screen camera object
         private Camera _camera;
 
+        // content libaries
+        private Dictionary<string, SpriteProperties> _dictAnimals { get => Globals.libraryAnimals; set => Globals.libraryAnimals = value; }
+        private Dictionary<string, SpriteProperties> _dictBosses { get => Globals.libraryBosses; set => Globals.libraryBosses = value; }
+        private Dictionary<string, SpriteProperties> _dictEnemies { get => Globals.libraryEnemies; set => Globals.libraryEnemies = value; }
+        private Dictionary<string, SpriteProperties> _dictNpcs { get => Globals.libraryNpcs; set => Globals.libraryNpcs = value; }
+        private Dictionary<string, SpriteProperties> _dictWeapons { get => Globals.libraryWeapons; set => Globals.libraryWeapons = value; }
+
+        // spell content libary does not need attributes
+        private Dictionary<string, Dictionary<string, Animation>> _dictSpells { get => Globals.librarySpells; set => Globals.librarySpells = value; }
+
+        // Player
+        private Player _player { get => Globals.player; set => Globals.player = value; }
+
+        // list of sprite spawn positions pulled from the map
         private List<(string key, Vector2 spawnPosition)> _spawnPositions;
 
+        // List of sprites that have collision detection
+        private List<Sprite> _sprites { get => Globals.sprites; set => Globals.sprites = value; }
+
+        /// <summary>
+        /// Structure for initializing default SpriteProperties for sprites in content library.
+        /// </summary>
         public struct SpriteProperties
         {
+            // animation dictionary
             public Dictionary<string, Animation> animations;
+
+            // sprite attributes
             public Attributes baseAttributes;
+
+            // override methods to improve performance of structure
             public override int GetHashCode()
             {
                 var hashCode = 43270662;
@@ -62,29 +86,6 @@ namespace Jusgabon
                 return obj is SpriteProperties other && (animations == other.animations && baseAttributes == other.baseAttributes);
             }
         }
-
-
-        // content libaries
-        private Dictionary<string, SpriteProperties> _dictNpcs;
-
-        private Dictionary<string, SpriteProperties> _dictAnimals;
-
-        private Dictionary<string, SpriteProperties> _dictEnemies;
-
-        private Dictionary<string, SpriteProperties> _dictWeapons;
-
-        private Dictionary<string, SpriteProperties> _dictBosses;
-
-        // spell content libaries do not need attributes
-        private Dictionary<string, Dictionary<string, Animation>> _dictSpells;
-
-
-        // List of sprites that have collision detection
-        private List<Sprite> _spritesCollidable { get => Globals.spritesCollidable; set => Globals.spritesCollidable = value; }
-
-        // Player object
-        // note: _player is also instantiated to be Globals.player for global access
-        private Player _player { get => Globals.player; set => Globals.player = value; }
 
         // Game window height
         public static int screenHeight;
@@ -160,9 +161,13 @@ namespace Jusgabon
             LoadContentSprites();
 
             // Instantiate Hud
+            // hud must be instantiated after load sprites so hud has existing sprite properties to be read
             hud = new Hud();
         }
 
+        /// <summary>
+        /// LoadContentSprites method to load content libraries and intialize sprites into game content.
+        /// </summary>
         protected virtual void LoadContentSprites()
         {
 
@@ -192,12 +197,11 @@ namespace Jusgabon
             var npcOldWoman = new Npc(_dictNpcs["OldWoman"].animations, _dictNpcs["OldWoman"].baseAttributes);
             var bossDemonCyclop = new Boss(_dictBosses["DemonCyclop"].animations, _dictBosses["DemonCyclop"].baseAttributes);
 
-
-            // initialize random for randomly initializing different sprites of same type
-            var random = new Random();
-
             // Initialize list of sprites
-            _spritesCollidable = new List<Sprite>() { };
+            _sprites = new List<Sprite>() { };
+
+            // Initialize random for randomly initializing different sprites of same type
+            var random = new Random();
 
             // Get spawn positions from tiled map
             _spawnPositions = tileMapManager.LoadSpawnPositions();
@@ -209,13 +213,13 @@ namespace Jusgabon
                 {
                     case "BlueX": // Instantiate and Load Player
                         _player.SpawnPosition = item.spawnPosition;
-                        _spritesCollidable.Add(_player);
+                        _sprites.Add(_player);
                         break;
 
                     case "GreenX": // Load Villager
                         var randVillager = random.Next(0, 5);
                         Npc villager;
-                        switch (randVillager)
+                        switch (randVillager)   // random villager
                         {
                             case 0:
                                 villager = npcVillager.Clone() as Npc;
@@ -234,13 +238,13 @@ namespace Jusgabon
                                 break;
                         }
                         villager.SpawnPosition = item.spawnPosition;
-                        _spritesCollidable.Add(villager);
+                        _sprites.Add(villager);
                         break;
 
                     case "YellowX": // Load Dog
                         var dogClone = npcDog.Clone() as Npc;
                         dogClone.SpawnPosition = item.spawnPosition;
-                        _spritesCollidable.Add(dogClone);
+                        _sprites.Add(dogClone);
                         break;
 
                     case "OrangeX": // Nothing
@@ -249,7 +253,7 @@ namespace Jusgabon
                     case "RedX": // Load Enemy1
                         var randOcotpus = random.Next(0, 2);
                         Enemy octopus;
-                        switch (randOcotpus)
+                        switch (randOcotpus) // random enemy1
                         {
                             case 0:
                                 octopus = enemyOcotopus.Clone() as Enemy;
@@ -259,13 +263,13 @@ namespace Jusgabon
                                 break;
                         }
                         octopus.SpawnPosition = item.spawnPosition;
-                        _spritesCollidable.Add(octopus);
+                        _sprites.Add(octopus);
                         break;
 
                     case "PurpleX": // Load Enemy2
                         var randCyclope = random.Next(0, 2);
                         Enemy cyclope;
-                        switch (randCyclope)
+                        switch (randCyclope) // random enemy2
                         {
                             case 0:
                                 cyclope = enemyCyclope.Clone() as Enemy;
@@ -275,19 +279,19 @@ namespace Jusgabon
                                 break;
                         }
                         cyclope.SpawnPosition = item.spawnPosition;
-                        _spritesCollidable.Add(cyclope);
+                        _sprites.Add(cyclope);
                         break;
 
                     case "BlackX": // Load Old Woman Npc
                         var oldWomanClone = npcOldWoman.Clone() as Npc;
                         oldWomanClone.SpawnPosition = item.spawnPosition;
-                        _spritesCollidable.Add(oldWomanClone);
+                        _sprites.Add(oldWomanClone);
                         break;
 
                     case "WhiteX": // Load Boss
                         var demonCyclopClone = bossDemonCyclop.Clone() as Boss;
                         demonCyclopClone.SpawnPosition = item.spawnPosition;
-                        _spritesCollidable.Add(demonCyclopClone);
+                        _sprites.Add(demonCyclopClone);
                         break;
 
                     default:
@@ -297,7 +301,7 @@ namespace Jusgabon
             }
 
             // set enemy FollowTarget to player
-            foreach (var sprite in _spritesCollidable)
+            foreach (var sprite in _sprites)
             {
                 if (sprite is Enemy)
                     ((Enemy)sprite).SetFollowTarget(_player, 10f); // 10f to be close enough to collide with player hitbox
@@ -305,13 +309,16 @@ namespace Jusgabon
 
         }
 
+        /// <summary>
+        /// LoadLibraryAnimals method to load and populate content libary of future animal sprites.
+        /// </summary>
         protected void LoadLibraryAnimals()
         {
+            // initialize
             _dictAnimals = new Dictionary<string, SpriteProperties>();
-
             var AnimalProperties = new SpriteProperties();
 
-            // Load & set basic animal Attributes
+            // initialize & set basic animal Attributes
             var baseAnimalAttributes = new Attributes()
             {
                 Speed = 0.8f,
@@ -361,14 +368,17 @@ namespace Jusgabon
 
         }
 
+        /// <summary>
+        /// LoadLibraryBosses method to load and populate content libary of future boss sprites.
+        /// </summary>
         protected void LoadLibraryBosses()
         {
+            // initialize
             _dictBosses = new Dictionary<string, SpriteProperties>();
-
             var BossProperties = new SpriteProperties();
             
 
-            // Load basic Boss Attributes
+            // intialize & set basic Boss Attributes
             var baseAttributes = new Attributes()
             {
                 Speed = 0.5f,
@@ -391,14 +401,16 @@ namespace Jusgabon
 
         }
 
+        /// <summary>
+        /// LoadLibraryEnemies method to load and populate content libary of future enemy sprites.
+        /// </summary>
         protected void LoadLibraryEnemies()
         {
-
+            // initialize
             _dictEnemies = new Dictionary<string, SpriteProperties>();
-
             var EnemyProperties = new SpriteProperties();
 
-            // Base attributes
+            // intialize & set basic Enemy attributes
             var baseAttributes = new Attributes()
             {
                 Speed = 0.6f,
@@ -490,13 +502,16 @@ namespace Jusgabon
 
         }
 
+        /// <summary>
+        /// LoadLibraryNpcs method to load and populate content libary of future npc sprites.
+        /// </summary>
         protected void LoadLibraryNpcs()
         {
+            // initialize
             _dictNpcs = new Dictionary<string, SpriteProperties>();
-
             var NpcProperties = new SpriteProperties();
 
-            // Load & set basic NPC Attributes
+            // initialize & set basic NPC Attributes
             var baseNpcAttributes = new Attributes()
             {
                 Speed = 0.6f,
@@ -580,9 +595,16 @@ namespace Jusgabon
 
         }
 
+        /// <summary>
+        /// LoadLibrarySpells method to load and populate content libary of future spell sprites.
+        /// Spells are special sprites in that they do not need attributes.
+        /// The player/enemy object using creating the spell will set its attributes like magic & speed.
+        /// </summary>
         protected void LoadLibrarySpells()
         {
+            // intialize
             _dictSpells = new Dictionary<string, Dictionary<string, Animation>>();
+
 
             // IceSpike
             _dictSpells.Add("IceSpikeProjectile", new Dictionary<string, Animation>()
@@ -610,10 +632,13 @@ namespace Jusgabon
 
         }
 
+        /// <summary>
+        /// LoadLibraryWeapons method to load and populate content libary of future weapon sprites.
+        /// </summary>
         protected void LoadLibraryWeapons()
         {
+            // intialize
             _dictWeapons = new Dictionary<string, SpriteProperties>();
-
             SpriteProperties WeaponProperties = new SpriteProperties();
 
             // Lance
@@ -689,7 +714,13 @@ namespace Jusgabon
 
         /// <summary>
         /// Load Player-specific Content.
-        /// Includes player animations and ...
+        /// This loads player content and initializes player properties:
+        /// - content path
+        /// - set player animations
+        /// - set base attributes
+        /// - initialize player
+        /// - give player some starting weapons
+        /// - set the special actions/skills for player
         /// </summary>
         protected void LoadContentPlayer()
         {
@@ -745,11 +776,10 @@ namespace Jusgabon
             };
 
             // Initialize player
-            Globals.player = new Player(
+            _player = new Player(
                 animations: playerAnimations,
                 baseAttributes: playerAttributes
                 );
-            _player = Globals.player;
 
             // Add a couple starting weapons to player weapon inventory
             _player.PickUp(new Weapon(_dictWeapons["Lance"].animations, _dictWeapons["Lance"].baseAttributes, "Lance"));
@@ -785,15 +815,14 @@ namespace Jusgabon
                 Exit();
 
             // Update all sprites
-            foreach (var sprite in _spritesCollidable)
-                sprite.Update(gameTime, _spritesCollidable);
-
-            // Update Hud
-            hud.Update();
-            
+            foreach (var sprite in _sprites)
+                sprite.Update(gameTime, _sprites);
 
             // update camera position to follow player
             _camera.Follow(_player);
+
+            // Update Hud
+            hud.Update();
 
 
             PostUpdate(gameTime);
@@ -810,33 +839,34 @@ namespace Jusgabon
         {
 
             // Add Children to the list of "_sprites" and clear
-            int count = _spritesCollidable.Count;
+            int count = _sprites.Count;
             for (int i = 0; i < count; i++)
             {
-                foreach (var child in _spritesCollidable[i].Children)
-                    _spritesCollidable.Add(child);
+                foreach (var child in _sprites[i].Children)
+                    _sprites.Add(child);
 
-                _spritesCollidable[i].Children.Clear();
+                _sprites[i].Children.Clear();
             }
 
             // Remove all "IsRemoved" sprites
-            for (int i = 0; i < _spritesCollidable.Count; i++)
+            for (int i = 0; i < _sprites.Count; i++)
             {
-                if (_spritesCollidable[i].IsRemoved)
+                if (_sprites[i].IsRemoved)
                 {
-                    _spritesCollidable.RemoveAt(i);
+                    _sprites.RemoveAt(i);
                     i--;
                 }
             }
 
             // Sort sprites by its current Y Position to create a 2.5D illusion effect
-            _spritesCollidable.Sort((spriteA, spriteB) => spriteA.Position.Y.CompareTo(spriteB.Position.Y));
+            _sprites.Sort((spriteA, spriteB) => spriteA.Position.Y.CompareTo(spriteB.Position.Y));
         }
 
         /// <summary>
         /// Draw Method - Called on a regular interval to draw the game entities to the screen.
         /// This method is called multiple times per second.
-        /// (!) Warning (!): Do not include update logic in Draw method; Use the Update method instead.
+        /// IMPORTANT: The order of which draw methods are called is important in determining draw order.
+        /// WARNING: Do not include update logic in Draw method; Use the Update method instead.
         /// </summary>
         /// <param name="gameTime"></param>
         protected override void Draw(GameTime gameTime)
@@ -850,7 +880,7 @@ namespace Jusgabon
             tileMapManager.Draw(gameTime, Globals.spriteBatch);
 
             // Draw all the sprites
-            foreach (var sprite in _spritesCollidable)
+            foreach (var sprite in _sprites)
                 sprite.Draw(gameTime, Globals.spriteBatch);
 
             // Draw Hud

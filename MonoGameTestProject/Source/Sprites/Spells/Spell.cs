@@ -17,25 +17,36 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// Spell class (abstract) - any spells should inherit then override any methods from this abstract class.
+    /// The default implementation is a straight projectile missile based on sprite direction.
+    /// </summary>
     public abstract class Spell : Sprite
     {
+        #region Members
 
+        // timer to track spell update action
         private float _timer;
 
-        // A spell has a lifespan before the spell reaches max range and fizzles out)
+        // spell has a lifespan before the spell reaches max range and disappears
         public float LifeSpan { get; set; }
 
+        // check if spell started
         public bool IsAction = false;
 
+        // damage property of this spell
         public new int Magic { get; set; }
         
-        // Velocity Speed
+        // velocity speed
         public new float Speed { get; set; }
 
+        // width of texture
         public new int Width { get; set; }
 
+        // height of texture
         public new int Height { get; set; }
 
+        // hitbox rectangle of texture
         public new Rectangle Rectangle 
         { 
             get 
@@ -79,7 +90,15 @@ namespace Jusgabon
         }
 
 
+        #endregion Members
 
+
+        #region Methods
+
+        /// <summary>
+        /// Constructor for Spell class.
+        /// </summary>
+        /// <param name="animations"></param>
         public Spell(Dictionary<string, Animation> animations) : base(animations)
         {
             Width = _animationManager.Animation.FrameWidth;
@@ -87,11 +106,11 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// Action method to set up the weapon attack action.
+        /// Action method - Start the spell action.
         /// </summary>
         public virtual void Action()
         {
-            // cannot make action is no player is holding this weapon
+            // cannot make action is spell does not have a parent caster
             if (Parent == null)
                 return;
 
@@ -101,6 +120,9 @@ namespace Jusgabon
             SetSpellProperties();
         }
 
+        /// <summary>
+        /// Set Spell Properties method - Determines the starting properties of the spell.
+        /// </summary>
         protected virtual void SetSpellProperties()
         {
             Direction = Parent.Direction;
@@ -141,8 +163,14 @@ namespace Jusgabon
 
         }
 
+        /// <summary>
+        /// Update action method - update spell traits, like the way it moves and activates.
+        /// </summary>
         protected virtual void UpdateAction() { }
 
+        /// <summary>
+        /// Set animations method for Spell.
+        /// </summary>
         protected override void SetAnimations()
         {
             _animationManager.Play(_animations["Sprite"]);
@@ -166,7 +194,11 @@ namespace Jusgabon
 
                 // hit sprite
                 if (this.IsTouching(sprite))
+                {
+                    IsRemoved = true;
                     sprite.OnCollide(this);
+                }
+
             }
         }
 
@@ -225,14 +257,21 @@ namespace Jusgabon
 
         #endregion Methods - Collision detection
 
+        /// <summary>
+        /// Update method for Spell.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="sprites"></param>
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             // update timer
             _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            // spell action is over
             if (_timer >= LifeSpan)
                 IsRemoved = true;
 
+            // set & update animations
             SetAnimations();
             _animationManager.Update(gameTime, sprites);
 
@@ -246,16 +285,21 @@ namespace Jusgabon
         }
 
 
+        /// <summary>
+        /// Draw method for Spell.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            // if spell is not in action
             if (IsAction == false)
                 return;
 
-            //Helpers.DrawRectangle(Rectangle, Color.White);
-
             base.Draw(gameTime, spriteBatch);
-
         }
+
+        #endregion Methods
 
     }
 }
