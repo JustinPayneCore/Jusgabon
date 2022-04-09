@@ -90,7 +90,7 @@ namespace Jusgabon
                     map = new TmxMap("Content/Level1.tmx");
                     break;
                 case 2:
-                    map = new TmxMap("Content/Level 2.tmx");
+                    map = new TmxMap("Content/Level2.tmx");
                     break;
                 default:
                     map = new TmxMap("Content/Level1.tmx");

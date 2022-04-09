@@ -8765,11 +8765,11 @@
 /processorParam:TextureFormat=Color
 /build:Items/Weapons/Whip/SpriteInHand.png
 
-#begin Level 2.tmx
-/copy:Level 2.tmx
-
 #begin Level1.tmx
 /copy:Level1.tmx
+
+#begin Level2.tmx
+/copy:Level2.tmx
 
 #begin Musics/1 - Adventure Begin.ogg
 /importer:OggImporter
