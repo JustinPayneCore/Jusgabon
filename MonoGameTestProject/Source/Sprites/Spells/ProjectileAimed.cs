@@ -21,73 +21,40 @@ namespace Jusgabon
     /// Spell class (abstract) - any spells should inherit then override any methods from this abstract class.
     /// The default implementation is a straight projectile missile based on sprite direction.
     /// </summary>
-    public abstract class Spell : Sprite
+    public class ProjectileAimed : Spell
     {
         #region Members
 
         // timer to track spell update action
         private float _timer;
 
-        // spell has a lifespan before the spell reaches max range and disappears
-        public float LifeSpan { get; set; }
 
-        // check if spell started
-        public bool IsAction = false;
+        // The target sprite that the spell should be aimed at
+        public Sprite FollowTarget { get; set; }
 
-        // damage property of this spell
-        public new int Magic { get; set; }
-        
-        // velocity speed
-        public new float Speed { get; set; }
-
-        // width of texture
-        public new int Width { get; set; }
-
-        // height of texture
-        public new int Height { get; set; }
 
         // hitbox rectangle of texture
-        public new Rectangle Rectangle 
-        { 
-            get 
+        public new Rectangle Rectangle
+        {
+            get
             {
-                Rectangle rectangle;
-                if (Direction == Directions.Down)
-                {
-                    rectangle = new Rectangle(
-                        (int)Position.X - Width,
-                        (int)Position.Y,
-                        Width,
-                        Height
-                        );
-                } else if (Direction == Directions.Up)
-                {
-                    rectangle = new Rectangle(
-                        (int)Position.X,
-                        (int)Position.Y - Height,
-                        Width,
-                        Height
-                        );
-                } else if (Direction == Directions.Left)
-                {
-                    rectangle = new Rectangle(
-                        (int)Position.X - Width,
-                        (int)Position.Y - Height,
-                        Width,
-                        Height
-                        );
-                } else // Direction == Directions.Right
-                {
-                    rectangle = new Rectangle(
-                        (int)Position.X,
-                        (int)Position.Y,
-                        Width,
-                        Height
-                        );
-                }
-                return rectangle;
-            } 
+                return new Rectangle(
+                    (int)Position.X + (Width / 5),
+                    (int)Position.Y + (Height / 5),
+                    Width - (Width / 5),
+                    Height - (Height / 5)
+                    );
+            }
         }
+
+        // members already declared in abstract Spell class.
+
+        //public float LifeSpan { get; set; }
+        //public bool IsAction = false;
+        //public new int Magic { get; set; }
+        //public new float Speed { get; set; }
+        //public new int Width { get; set; }
+        //public new int Height { get; set; }
 
 
         #endregion Members
@@ -99,7 +66,7 @@ namespace Jusgabon
         /// Constructor for Spell class.
         /// </summary>
         /// <param name="animations"></param>
-        public Spell(Dictionary<string, Animation> animations) : base(animations)
+        public ProjectileAimed(Dictionary<string, Animation> animations) : base(animations)
         {
             Width = _animationManager.Animation.FrameWidth;
             Height = _animationManager.Animation.FrameHeight;
@@ -108,7 +75,7 @@ namespace Jusgabon
         /// <summary>
         /// Action method - Start the spell action.
         /// </summary>
-        public virtual void Action()
+        public override void Action()
         {
             // cannot make action is spell does not have a parent caster
             if (Parent == null)
@@ -117,56 +84,33 @@ namespace Jusgabon
             // start action for update method
             IsAction = true;
 
+            FollowTarget = Globals.player;
+
             SetSpellProperties();
         }
 
         /// <summary>
         /// Set Spell Properties method - Determines the starting properties of the spell.
         /// </summary>
-        protected virtual void SetSpellProperties()
+        protected override void SetSpellProperties()
         {
-            Direction = Parent.Direction;
+            var distance = FollowTarget.Position - Parent.Position;
+            var _rotation = (float)Math.Atan2(distance.Y, distance.X);
 
-            if (Direction == Directions.Down)
-            {
-                Rotation = MathHelper.ToRadians(90);
-                Velocity.Y = Speed;
+            var DirectionVector = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
 
-                // switch width and heights because of its rotation
-                var temp = Width;
-                Width = Height;
-                Height = temp;
-            }
-            else if (Direction == Directions.Up)
-            {
-                Rotation = MathHelper.ToRadians(-90);
-                Velocity.Y = -Speed;
+            Velocity = DirectionVector * Speed;
 
-                // switch width and heights because of its rotation
-                var temp = Width;
-                Width = Height;
-                Height = temp;
-            }
-            else if (Direction == Directions.Left)
-            {
-                Rotation = MathHelper.ToRadians(180);
-                Velocity.X = -Speed;
-            }
-            else // Direction == Directions.Right
-            {
-                Rotation = 0;
-                Velocity.X = Speed;
-            }
-
-            var position = new Vector2(Parent.Origin.X, Parent.Origin.Y - Origin.Y);
-            Position = Helpers.RotateAboutOrigin(position, Parent.Origin, Rotation);
+            Position = new Vector2(Parent.Origin.X - Origin.X, Parent.Origin.Y - Origin.Y);
 
         }
 
         /// <summary>
         /// Update action method - update spell traits, like the way it moves and activates.
         /// </summary>
-        protected virtual void UpdateAction() { }
+        protected override void UpdateAction() 
+        {
+        }
 
         /// <summary>
         /// Set animations method for Spell.
@@ -298,9 +242,6 @@ namespace Jusgabon
             // if spell is not in action
             if (IsAction == false)
                 return;
-
-            // todo: remove after testing
-            //Helpers.DrawRectangle(Rectangle, Color.White);
 
             base.Draw(gameTime, spriteBatch);
         }

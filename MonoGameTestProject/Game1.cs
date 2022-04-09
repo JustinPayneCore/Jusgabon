@@ -291,6 +291,19 @@ namespace Jusgabon
                     case "WhiteX": // Load Boss
                         var demonCyclopClone = bossDemonCyclop.Clone() as Boss;
                         demonCyclopClone.SpawnPosition = item.spawnPosition;
+                        demonCyclopClone.SetPhase1Threshold(350);
+                        demonCyclopClone.SetPhase2Threshold(200);
+                        demonCyclopClone.SetSpecial1(
+                            spell: new ProjectileAimed(_dictSpells["FireballProjectile"]), 
+                            magic: 0, 
+                            speed: 1f, 
+                            lifespan: 3f);
+                        demonCyclopClone.SetSpecial2(
+                            spell: new AoeSurroundSelf(_dictSpells["FlameElemental"], 1.25f, 5), 
+                            magic: 10, 
+                            speed: 0f, 
+                            lifespan: 0.5f);
+                        
                         _sprites.Add(demonCyclopClone);
                         break;
 
@@ -381,12 +394,12 @@ namespace Jusgabon
             // intialize & set basic Boss Attributes
             var baseAttributes = new Attributes()
             {
-                Speed = 0.5f,
+                Speed = 0.3f,
                 Health = 400,
                 Mana = 0,
                 Stamina = 0,
                 Attack = 25,
-                Magic = 0,
+                Magic = 25,
             };
             BossProperties.baseAttributes = baseAttributes;
 
@@ -395,6 +408,7 @@ namespace Jusgabon
             {
                 {"Walk", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Walk"), 6) },
                 {"Hit", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Hit"), 3) },
+                {"Idle", new Animation(Globals.content.Load<Texture2D>("Actor/Boss/DemonCyclop/Idle"), 5) },
             };
             _dictBosses.Add("DemonCyclop", BossProperties);
 
@@ -624,10 +638,18 @@ namespace Jusgabon
                 {"Sprite", new Animation(Globals.content.Load<Texture2D>("FX/Projectile/Fireball"), 4) }
             });
 
+            // Ice Elemental            
             _dictSpells.Add("IceElemental", new Dictionary<string, Animation>()
             {
                 {"Sprite", new Animation(Globals.content.Load<Texture2D>("FX/Elemental/Ice/SpriteSheetB"), 9) },
                 {"Cast", new Animation(Globals.content.Load<Texture2D>("FX/Elemental/Ice/SpriteSheetFlake"), 9) },
+            });
+
+            // Fire Elemental
+            _dictSpells.Add("FlameElemental", new Dictionary<string, Animation>()
+            {
+                {"Sprite", new Animation(Globals.content.Load<Texture2D>("FX/Elemental/Flam/SpriteSheet"), 5) },
+                {"Cast", new Animation(Globals.content.Load<Texture2D>("FX/Smoke/Smoke/SpriteSheet"), 6) },
             });
 
         }
@@ -637,7 +659,7 @@ namespace Jusgabon
         /// </summary>
         protected void LoadLibraryWeapons()
         {
-            // intialize
+            // initialize
             _dictWeapons = new Dictionary<string, SpriteProperties>();
             SpriteProperties WeaponProperties = new SpriteProperties();
 
@@ -788,8 +810,10 @@ namespace Jusgabon
             _player.PickUp(new Weapon(_dictWeapons["Sai"].animations, _dictWeapons["Sai"].baseAttributes, "Sai"));
 
             // Set player specials
-            _player.SetSpecial1(new Projectile(_dictSpells["IceSpikeProjectile"]), 10, 2f, 0.5f);
-            _player.SetSpecial2(new AoeLine(_dictSpells["IceElemental"], 0.5f, 2, 3), 40, 0f, 2f);
+            var special1 = new Projectile(_dictSpells["IceSpikeProjectile"]);
+            var special2 = new AoeLine(_dictSpells["IceElemental"], 0.5f, 2, 3);
+            _player.SetSpecial1(special1.Clone() as Spell, 10, 2f, 0.5f);
+            _player.SetSpecial2(special2.Clone() as Spell, 40, 0f, 2f);
         }
 
         /// <summary>

@@ -667,7 +667,6 @@ namespace Jusgabon
             if (sprite is Spell && ((Spell)sprite).Parent is Enemy)
             {
                 TakeHit(((Spell)sprite).Magic);
-                ((Spell)sprite).IsRemoved = true;
             }
         }
 
@@ -706,7 +705,6 @@ namespace Jusgabon
             if (IsDead)
             {
                 _animationManager.Play(_animations["Dead"]);
-                Console.WriteLine("Player died.");
                 return;
             }
 

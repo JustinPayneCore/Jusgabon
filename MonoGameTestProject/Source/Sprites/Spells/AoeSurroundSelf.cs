@@ -15,15 +15,9 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 #endregion
 
-
 namespace Jusgabon
 {
-    /// <summary>
-    /// Area-of-Effect (Aoe) Line Spell.
-    /// Channel and Summon this spell in front of parent sprite.
-    /// Target sprites only gets hit once while this spell is summoned.
-    /// </summary>
-    public class AoeLine : Spell
+    public class AoeSurroundSelf : Spell
     {
         #region Members
 
@@ -36,9 +30,6 @@ namespace Jusgabon
         // the individual positions of each section of the aoe spell
         private List<Vector2> _positions;
 
-        // the aoe width of the spell (different from texture width)
-        public int AoeWidth { get; set; }
-        
         // the aoe length of the spell (diff from texture height)
         public int AoeLength { get; set; }
 
@@ -53,44 +44,12 @@ namespace Jusgabon
         {
             get
             {
-                Rectangle rectangle;
-                if (Direction == Directions.Down)
-                {
-                    rectangle = new Rectangle(
-                        (int)Position.X,
-                        (int)Position.Y,
-                        Width * AoeWidth,
-                        Height * AoeLength
-                        );
-                }
-                else if (Direction == Directions.Up)
-                {
-                    rectangle = new Rectangle(
-                        (int)Position.X,
-                        (int)Position.Y - (Height * (AoeLength - 1)),
-                        Width * AoeWidth,
-                        Height * AoeLength
-                        );
-                }
-                else if (Direction == Directions.Left)
-                {
-                    rectangle = new Rectangle(
-                        (int)Position.X - (Width * (AoeLength - 1)),
-                        (int)Position.Y,
-                        Width * AoeLength,
-                        Height * AoeWidth
-                        );
-                }
-                else // Direction == Directions.Right
-                {
-                    rectangle = new Rectangle(
+                return new Rectangle(
                         (int)Position.X,
                         (int)Position.Y,
                         Width * AoeLength,
-                        Height * AoeWidth
+                        Height * AoeLength
                         );
-                }
-                return rectangle;
             }
         }
 
@@ -117,7 +76,7 @@ namespace Jusgabon
         /// <param name="castingDelay"></param>
         /// <param name="spellWidth"></param>
         /// <param name="spellLength"></param>
-        public AoeLine(Dictionary<string, Animation> animations, float castingDelay, int spellWidth, int spellLength) : base(animations)
+        public AoeSurroundSelf(Dictionary<string, Animation> animations, float castingDelay, int spellLength) : base(animations)
         {
             // no channel time
             if (castingDelay <= 0f)
@@ -132,7 +91,6 @@ namespace Jusgabon
             }
 
             // aoe size of the spell
-            AoeWidth = spellWidth;
             AoeLength = spellLength;
 
             // width and height of one individual spell texture
@@ -176,57 +134,20 @@ namespace Jusgabon
 
             // initialize list of positions
             _positions = new List<Vector2>();
+            
 
-            // get parent sprite direction
-            Direction = Parent.Direction;
 
             // set positions of each individual spell texture, which will make up the whole aoe spell
-            if (Direction == Directions.Down)
+            Position = new Vector2(
+                (int) (Parent.Origin.X - ((double)AoeLength / 2) * Width), 
+                (int) (Parent.Origin.Y - ((double)AoeLength / 2) * Height)
+                );
+            for (int i = 0; i < AoeLength; i++)
             {
-                Position = new Vector2(Parent.Origin.X - Origin.X - ((AoeWidth - 1) * Height / 2), Parent.Origin.Y + (Origin.Y / 2));
-                for(int i = 0; i < AoeWidth; i++)
+                for (int j = 0; j < AoeLength; j++)
                 {
-                    for (int j = 0; j < AoeLength; j++)
-                    {
-                        var position = new Vector2(Position.X + (i * Width), Position.Y + (j * Height));
-                        _positions.Add(position);
-                    }
-                }
-            }
-            else if (Direction == Directions.Up)
-            {
-                Position = new Vector2(Parent.Origin.X - Origin.X - ((AoeWidth - 1) * Width / 2), Parent.Origin.Y - Height - (Origin.Y / 2));
-                for (int i = 0; i < AoeWidth; i++)
-                {
-                    for (int j = 0; j < AoeLength; j++)
-                    {
-                        var position = new Vector2(Position.X + (i * Width), Position.Y - (j * Height));
-                        _positions.Add(position);
-                    }
-                }
-            }
-            else if (Direction == Directions.Left)
-            {
-                Position = new Vector2(Parent.Origin.X - Width - (Origin.Y / 2), Parent.Origin.Y - Origin.Y - ((AoeWidth - 1) * Height / 2));
-                for (int i = 0; i < AoeWidth; i++)
-                {
-                    for (int j = 0; j < AoeLength; j++)
-                    {
-                        var position = new Vector2(Position.X - (j * Width), Position.Y + (i * Height));
-                        _positions.Add(position);
-                    }
-                }
-            }
-            else // Direction == Directions.Right
-            {
-                Position = new Vector2(Parent.Origin.X + (Origin.Y / 2), Parent.Origin.Y - Origin.Y - ((AoeWidth - 1) * Height / 2));
-                for (int i = 0; i < AoeWidth; i++)
-                {
-                    for (int j = 0; j < AoeLength; j++)
-                    {
-                        var position = new Vector2(Position.X + (j * Width), Position.Y + (i * Height));
-                        _positions.Add(position);
-                    }
+                    var position = new Vector2(Position.X + (i * Width), Position.Y + (j * Height));
+                    _positions.Add(position);
                 }
             }
 
@@ -236,7 +157,7 @@ namespace Jusgabon
         /// Update action method (AoeLine Spell) - update specific action traits of this spell.
         /// Check if the spell is done casting.
         /// </summary>
-        protected override void UpdateAction() 
+        protected override void UpdateAction()
         {
             if (_isCasting == true && _timer >= CastDelay)
             {
@@ -251,9 +172,15 @@ namespace Jusgabon
         protected override void SetAnimations()
         {
             if (_isCasting == true)
+            {
                 _animationManager.Play(_animations["Cast"]);
+                Colour = Color.Red;
+            }    
             else
+            {
                 _animationManager.Play(_animations["Sprite"]);
+                Colour = Color.White;
+            }
 
         }
 
@@ -295,7 +222,6 @@ namespace Jusgabon
                         // Note: this spell is still not removed upon collision with sprite.
                     }
                 }
-                
             }
         }
 
@@ -369,7 +295,7 @@ namespace Jusgabon
             // spell action is over
             if (_timer >= LifeSpan + CastDelay)
                 IsRemoved = true;
-            
+
             // set & update animations
             SetAnimations();
             _animationManager.Update(gameTime, sprites);
