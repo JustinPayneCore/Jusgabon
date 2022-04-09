@@ -33,6 +33,9 @@
     <None Update="Content\Jugsabon.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Level 3.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Content\level1.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
