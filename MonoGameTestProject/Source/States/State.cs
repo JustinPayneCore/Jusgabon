@@ -21,6 +21,7 @@ namespace Jusgabon
     /// <summary>
     /// State Class (Abstract).
     /// Inherited classes must create a State instance that Game1 can update and draw on.
+    /// Source (tutorial): https://www.youtube.com/watch?v=76Mz7ClJLoE
     /// </summary>
     public abstract class State
     {
