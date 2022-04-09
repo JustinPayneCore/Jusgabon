@@ -8765,6 +8765,9 @@
 /processorParam:TextureFormat=Color
 /build:Items/Weapons/Whip/SpriteInHand.png
 
+#begin Level 2.tmx
+/copy:Level 2.tmx
+
 #begin Level1.tmx
 /copy:Level1.tmx
 
