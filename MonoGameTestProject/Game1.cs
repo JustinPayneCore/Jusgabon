@@ -810,10 +810,8 @@ namespace Jusgabon
             _player.PickUp(new Weapon(_dictWeapons["Sai"].animations, _dictWeapons["Sai"].baseAttributes, "Sai"));
 
             // Set player specials
-            var special1 = new Projectile(_dictSpells["IceSpikeProjectile"]);
-            var special2 = new AoeLine(_dictSpells["IceElemental"], 0.5f, 2, 3);
-            _player.SetSpecial1(special1.Clone() as Spell, 10, 2f, 0.5f);
-            _player.SetSpecial2(special2.Clone() as Spell, 40, 0f, 2f);
+            _player.SetSpecial1(new Projectile(_dictSpells["IceSpikeProjectile"]), 10, 2f, 0.5f);
+            _player.SetSpecial2(new AoeLine(_dictSpells["IceElemental"], 0.5f, 2, 3), 40, 0f, 2f);
         }
 
         /// <summary>

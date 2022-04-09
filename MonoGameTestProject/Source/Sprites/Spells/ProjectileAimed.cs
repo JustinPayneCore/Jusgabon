@@ -18,8 +18,7 @@ using Microsoft.Xna.Framework.Media;
 namespace Jusgabon
 {
     /// <summary>
-    /// Spell class (abstract) - any spells should inherit then override any methods from this abstract class.
-    /// The default implementation is a straight projectile missile based on sprite direction.
+    /// Projectile Aimed Spell - A straight projectile missile aimed towards the player.
     /// </summary>
     public class ProjectileAimed : Spell
     {
@@ -63,7 +62,7 @@ namespace Jusgabon
         #region Methods
 
         /// <summary>
-        /// Constructor for Spell class.
+        /// Projectile Aimed Spell Constructor.
         /// </summary>
         /// <param name="animations"></param>
         public ProjectileAimed(Dictionary<string, Animation> animations) : base(animations)
@@ -84,23 +83,27 @@ namespace Jusgabon
             // start action for update method
             IsAction = true;
 
+            // make enemy spell follow player
             FollowTarget = Globals.player;
 
             SetSpellProperties();
         }
 
         /// <summary>
-        /// Set Spell Properties method - Determines the starting properties of the spell.
+        /// Set Spell Properties method (ProjectileAimed spell).
+        /// - set direction that the projectile should be moving towards
+        /// - set starting position of spell (center of parent)
         /// </summary>
         protected override void SetSpellProperties()
         {
+            // set direction that the projectile should be moving towards
             var distance = FollowTarget.Position - Parent.Position;
             var _rotation = (float)Math.Atan2(distance.Y, distance.X);
-
             var DirectionVector = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
 
             Velocity = DirectionVector * Speed;
 
+            // set starting position of spell (center of parent)
             Position = new Vector2(Parent.Origin.X - Origin.X, Parent.Origin.Y - Origin.Y);
 
         }
@@ -108,12 +111,10 @@ namespace Jusgabon
         /// <summary>
         /// Update action method - update spell traits, like the way it moves and activates.
         /// </summary>
-        protected override void UpdateAction() 
-        {
-        }
+        protected override void UpdateAction() {}
 
         /// <summary>
-        /// Set animations method for Spell.
+        /// Set animations method for ProjectileAimed Spell.
         /// </summary>
         protected override void SetAnimations()
         {
@@ -205,7 +206,7 @@ namespace Jusgabon
         #endregion Methods - Collision detection
 
         /// <summary>
-        /// Update method for Spell.
+        /// Update method for Projectile Aimed Spell.
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="sprites"></param>
@@ -233,7 +234,7 @@ namespace Jusgabon
 
 
         /// <summary>
-        /// Draw method for Spell.
+        /// Draw method for Projectile Aimed Spell.
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="spriteBatch"></param>

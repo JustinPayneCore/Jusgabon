@@ -410,7 +410,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// EndAction method - Checks to stop a current action.
+        /// StopAction method - Checks to stop a current action.
         /// </summary>
         private void StopAction()
         {

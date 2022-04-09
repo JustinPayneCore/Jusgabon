@@ -101,6 +101,12 @@ namespace Jusgabon
 
         }
 
+        /// <summary>
+        /// Follow the sprite target.
+        /// Do not follow is Boss is in the middle of an action.
+        /// There must be a Sprite set to follow, otherwise this method returns.
+        /// Sources (tutorial): https://www.youtube.com/watch?v=NxAz_RzM6JM
+        /// </summary>
         protected override void Follow()
         {
             // don't move while is in action
@@ -110,6 +116,11 @@ namespace Jusgabon
             base.Follow();
         }
 
+
+        /// <summary>
+        /// TakeHit method (Boss) - calls base.TakeHit() and checks if boss phase should change.
+        /// </summary>
+        /// <param name="hitDamage"></param>
         public override void TakeHit(int hitDamage)
         {
             base.TakeHit(hitDamage);
@@ -149,6 +160,9 @@ namespace Jusgabon
             }
         }
 
+        /// <summary>
+        /// CheckPhase method - checks if the boss should change phase.
+        /// </summary>
         protected virtual void CheckPhase()
         {
             if (Phase < 1 && currentHealth <= HealthToPhase1)
@@ -161,11 +175,19 @@ namespace Jusgabon
             }
         }
 
+        /// <summary>
+        /// Set Phase 1 Threshold - sets health threshold to switch boss to phase 1
+        /// </summary>
+        /// <param name="health"></param>
         public virtual void SetPhase1Threshold(int health)
         {
             HealthToPhase1 = health;
         }
 
+        /// <summary>
+        /// Set Phase 2 Threshold - sets health threshold to switch boss to phase 2
+        /// </summary>
+        /// <param name="health"></param>
         public virtual void SetPhase2Threshold(int health)
         {
             HealthToPhase2 = health;
@@ -202,6 +224,9 @@ namespace Jusgabon
             Special2LifeSpan = lifespan;
         }
 
+        /// <summary>
+        /// Start Action method - Checks if boss should start an action.
+        /// </summary>
         protected virtual void StartAction()
         {
             // Don't look for another action to start
@@ -307,6 +332,9 @@ namespace Jusgabon
         }
 
 
+        /// <summary>
+        /// StopAction method - Checks to stop a current action.
+        /// </summary>
         protected virtual void StopAction()
         {
             // Don't need to check if no actions are in progress
@@ -327,6 +355,9 @@ namespace Jusgabon
             }
         }
 
+        /// <summary>
+        /// SetAction method - update any current actions.
+        /// </summary>
         protected virtual void SetAction()
         {
             if (!IsAction)
@@ -336,28 +367,45 @@ namespace Jusgabon
             {
                 Velocity = Vector2.Zero;
                 _animationManager.Play(_animations["Idle"]);
-            }
-            if (IsActionSpecial2)
+            } else if (IsActionSpecial2)
             {
                 Velocity = Vector2.Zero;
                 _animationManager.Play(_animations["Idle"]);
             }
         }
 
+        /// <summary>
+        /// Reset enemy properties for next enemy respawn.
+        /// (Boss) - reset phase
+        /// </summary>
+        protected override void Reset()
+        {
+            Phase = 0;
+
+            base.Reset();
+        }
+
+        /// <summary>
+        /// Boss Update method.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="sprites"></param>
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
+            // update timers
             _special1Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             _special2Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            // set actions
             StartAction();
             StopAction();
+
+            // update actions
             SetAction();
 
 
             base.Update(gameTime, sprites);
         }
-
-
 
 
         #endregion

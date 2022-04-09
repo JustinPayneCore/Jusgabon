@@ -17,6 +17,12 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Jusgabon
 {
+    /// <summary>
+    /// Area-of-Effect (Aoe) Surround Self Spell.
+    /// Channel and Summon this spell on top of parent sprite.
+    /// Aoe length determines the aoe size being summoned on top of sprite.
+    /// Target sprites only gets hit once while this spell is summoned.
+    /// </summary>
     public class AoeSurroundSelf : Spell
     {
         #region Members
@@ -69,12 +75,11 @@ namespace Jusgabon
         #region Methods
 
         /// <summary>
-        /// Area-of-Effect Line Spell constructor.
-        /// Provide spell casting properties including the delay before the spell is summoned, and aoe width and length of the spell.
+        /// Area-of-Effect Surround Self Spell constructor.
+        /// Provide spell casting properties including the delay before the spell is summoned, and aoe lenght of the spell.
         /// </summary>
         /// <param name="animations"></param>
         /// <param name="castingDelay"></param>
-        /// <param name="spellWidth"></param>
         /// <param name="spellLength"></param>
         public AoeSurroundSelf(Dictionary<string, Animation> animations, float castingDelay, int spellLength) : base(animations)
         {
@@ -91,6 +96,7 @@ namespace Jusgabon
             }
 
             // aoe size of the spell
+            // aoe length is full left-to-right or top-to-down length
             AoeLength = spellLength;
 
             // width and height of one individual spell texture
@@ -117,7 +123,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// Set Spell Properties method (AoeLine spell).
+        /// Set Spell Properties method (AoeSurroundSelf spell).
         /// - Set animation frame speeds based on cast time and lifespan of spell
         /// - Set positions of each individual spell texture that makes up the whole aoe spell
         /// </summary>
@@ -135,8 +141,6 @@ namespace Jusgabon
             // initialize list of positions
             _positions = new List<Vector2>();
             
-
-
             // set positions of each individual spell texture, which will make up the whole aoe spell
             Position = new Vector2(
                 (int) (Parent.Origin.X - ((double)AoeLength / 2) * Width), 
@@ -154,7 +158,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// Update action method (AoeLine Spell) - update specific action traits of this spell.
+        /// Update action method (AoeSurroundSelf Spell) - update specific action traits of this spell.
         /// Check if the spell is done casting.
         /// </summary>
         protected override void UpdateAction()
@@ -167,7 +171,7 @@ namespace Jusgabon
         }
 
         /// <summary>
-        /// Set animations method for AoeLine Spell.
+        /// Set animations method for AoeSurroundSelf Spell.
         /// </summary>
         protected override void SetAnimations()
         {
@@ -188,7 +192,7 @@ namespace Jusgabon
         #region Methods - Collision detection
 
         /// <summary>
-        /// CheckCollision method (AoeLine Spell).
+        /// CheckCollision method (AoeSurroundSelf Spell).
         /// </summary>
         /// <param name="sprites"></param>
         protected override void CheckCollision(List<Sprite> sprites)
@@ -283,7 +287,7 @@ namespace Jusgabon
         #endregion Methods - Collision detection
 
         /// <summary>
-        /// Update method for Aoe Line spell.
+        /// Update method for Aoe Surround Self spell.
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="sprites"></param>
@@ -311,7 +315,7 @@ namespace Jusgabon
 
 
         /// <summary>
-        /// Draw method for Aoe Line spell.
+        /// Draw method for Aoe Surround Self spell.
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="spriteBatch"></param>
