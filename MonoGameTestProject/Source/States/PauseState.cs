@@ -103,7 +103,6 @@ namespace Jusgabon
         /// <param name="e"></param>
         private void RestartGameButton_Click(object sender, EventArgs e)
         {
-            Console.Clear();
             Console.WriteLine("\nRestarting Game...\n");
             _game.ChangeState(new GameState(_game, _graphics, _gameState.Level));
         }
@@ -115,7 +114,6 @@ namespace Jusgabon
         /// <param name="e"></param>
         private void MainMenuButton_Click(object sender, EventArgs e)
         {
-            Console.Clear();
             Console.WriteLine("\nReturning to Main Menu...\n");
             _game.ChangeState(new MenuState(_game, _graphics));
         }
