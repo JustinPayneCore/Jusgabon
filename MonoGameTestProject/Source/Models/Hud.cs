@@ -89,9 +89,9 @@ namespace Jusgabon
             bossHealthTexture = Globals.content.Load<Texture2D>("HUD/Health");
 
             // Load font files
-            goldFont = Globals.content.Load<SpriteFont>("Gold");
-            healthFont = Globals.content.Load<SpriteFont>("PlayerHealth");
-            bossHealthFont = Globals.content.Load<SpriteFont>("BossHealth");
+            goldFont = Globals.content.Load<SpriteFont>("HUD/Font/Gold");
+            healthFont = Globals.content.Load<SpriteFont>("HUD/Font/PlayerHealth");
+            bossHealthFont = Globals.content.Load<SpriteFont>("HUD/Font/BossHealth");
 
             // Locate and load boss instance
             foreach (var sprite in Globals.sprites)

@@ -40,8 +40,11 @@ namespace Jusgabon
         // Graphics manager (required in all MonoGame projects)
         GraphicsDeviceManager graphics;
 
-        // Game screen camera object
-        private Camera _camera;
+        // the current game state
+        private State _currentState;
+
+        // the next game state to use
+        private State _nextState;
 
         // content libaries
         private Dictionary<string, SpriteProperties> _dictAnimals { get => Globals.libraryAnimals; set => Globals.libraryAnimals = value; }
@@ -52,15 +55,6 @@ namespace Jusgabon
 
         // spell content libary does not need attributes
         private Dictionary<string, Dictionary<string, Animation>> _dictSpells { get => Globals.librarySpells; set => Globals.librarySpells = value; }
-
-        // Player
-        private Player _player { get => Globals.player; set => Globals.player = value; }
-
-        // list of sprite spawn positions pulled from the map
-        private List<(string key, Vector2 spawnPosition)> _spawnPositions;
-
-        // List of sprites that have collision detection
-        private List<Sprite> _sprites { get => Globals.sprites; set => Globals.sprites = value; }
 
         /// <summary>
         /// Structure for initializing default SpriteProperties for sprites in content library.
@@ -93,14 +87,6 @@ namespace Jusgabon
         // Game window width
         public static int screenWidth;
 
-        // Tiled map import variables
-        private TileMapManager tileMapManager;
-        private TmxMap map;
-        private Texture2D tileset;
-
-        // Hud import
-        Hud hud;
-
         #endregion Members
 
 
@@ -113,7 +99,16 @@ namespace Jusgabon
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+        }
+
+        /// <summary>
+        /// ChangeState method - prepare the next state.
+        /// Update method will go to the next state accordingly.
+        /// </summary>
+        /// <param name="state"></param>
+        public void ChangeState(State state)
+        {
+            _nextState = state;
         }
 
         /// <summary>
@@ -124,13 +119,14 @@ namespace Jusgabon
         protected override void Initialize()
         {
             // Set Game Window size
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            screenWidth = 1280;
+            screenHeight = 720;
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = screenHeight;
             graphics.ApplyChanges();
 
-            // TODO: Add your initialization logic
-            screenHeight = graphics.PreferredBackBufferHeight;
-            screenWidth = graphics.PreferredBackBufferWidth;
+            // make mouse visible
+            IsMouseVisible = true;
 
             base.Initialize();
         }
@@ -145,32 +141,6 @@ namespace Jusgabon
             Globals.content = this.Content;
             Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Creates the tiled map using the TiledMapMananger class
-            // Tiled map file path
-            map = new TmxMap("Content/Level1.tmx");
-            tileset = Globals.content.Load<Texture2D>("Backgrounds/Tilesets/" + map.Tilesets[0].Name.ToString());
-            int tileWidth = map.Tilesets[0].TileWidth;
-            int tileHeight = map.Tilesets[0].TileHeight;
-            int tilesetTilesWide = tileset.Width / tileWidth;
-            tileMapManager = new TileMapManager(map, tileset, tilesetTilesWide, tileWidth, tileHeight);
-
-            // Instantiate camera
-            _camera = new Camera();
-
-            // Load sprites
-            LoadContentSprites();
-
-            // Instantiate Hud
-            // hud must be instantiated after load sprites so hud has existing sprite properties to be read
-            hud = new Hud();
-        }
-
-        /// <summary>
-        /// LoadContentSprites method to load content libraries and intialize sprites into game content.
-        /// </summary>
-        protected virtual void LoadContentSprites()
-        {
-
             // Load all content libraries (dictionaries with their animations/attributes)
             LoadLibraryAnimals();
             LoadLibraryBosses();
@@ -180,146 +150,9 @@ namespace Jusgabon
             LoadLibrarySpells();
 
 
-            // Load player
-            LoadContentPlayer();
+            _currentState = new MenuState(this, graphics.GraphicsDevice);
 
-            // Load prefabricated sprites for world 1
-            var npcVillager = new Npc(_dictNpcs["Villager"].animations, _dictNpcs["Villager"].baseAttributes);
-            var npcVillager2 = new Npc(_dictNpcs["Villager2"].animations, _dictNpcs["Villager2"].baseAttributes);
-            var npcVillager3 = new Npc(_dictNpcs["Villager3"].animations, _dictNpcs["Villager3"].baseAttributes);
-            var npcVillager4 = new Npc(_dictNpcs["Villager4"].animations, _dictNpcs["Villager4"].baseAttributes);
-            var npcWoman = new Npc(_dictNpcs["Woman"].animations, _dictNpcs["Woman"].baseAttributes);
-            var npcDog = new Npc(_dictAnimals["Dog"].animations, _dictAnimals["Dog"].baseAttributes) { IsStationary = true };
-            var enemyOcotopus = new Enemy(_dictEnemies["Octopus"].animations, _dictEnemies["Octopus"].baseAttributes);
-            var enemyOcotopus2 = new Enemy(_dictEnemies["Octopus2"].animations, _dictEnemies["Octopus2"].baseAttributes);
-            var enemyCyclope = new Enemy(_dictEnemies["Cyclope"].animations, _dictEnemies["Cyclope"].baseAttributes) { GoldGiven = 15 };
-            var enemyCyclope2 = new Enemy(_dictEnemies["Cyclope2"].animations, _dictEnemies["Cyclope2"].baseAttributes) { GoldGiven = 15 };
-            var npcOldWoman = new Npc(_dictNpcs["OldWoman"].animations, _dictNpcs["OldWoman"].baseAttributes);
-            var bossDemonCyclop = new Boss(_dictBosses["DemonCyclop"].animations, _dictBosses["DemonCyclop"].baseAttributes);
-
-            // Initialize list of sprites
-            _sprites = new List<Sprite>() { };
-
-            // Initialize random for randomly initializing different sprites of same type
-            var random = new Random();
-
-            // Get spawn positions from tiled map
-            _spawnPositions = tileMapManager.LoadSpawnPositions();
-
-            // Add each sprite after setting their spawn position
-            foreach (var item in _spawnPositions)
-            {
-                switch (item.key)
-                {
-                    case "BlueX": // Instantiate and Load Player
-                        _player.SpawnPosition = item.spawnPosition;
-                        _sprites.Add(_player);
-                        break;
-
-                    case "GreenX": // Load Villager
-                        var randVillager = random.Next(0, 5);
-                        Npc villager;
-                        switch (randVillager)   // random villager
-                        {
-                            case 0:
-                                villager = npcVillager.Clone() as Npc;
-                                break;
-                            case 1:
-                                villager = npcVillager2.Clone() as Npc;
-                                break;
-                            case 2:
-                                villager = npcVillager3.Clone() as Npc;
-                                break;
-                            case 3:
-                                villager = npcVillager4.Clone() as Npc;
-                                break;
-                            default:
-                                villager = npcWoman.Clone() as Npc;
-                                break;
-                        }
-                        villager.SpawnPosition = item.spawnPosition;
-                        _sprites.Add(villager);
-                        break;
-
-                    case "YellowX": // Load Dog
-                        var dogClone = npcDog.Clone() as Npc;
-                        dogClone.SpawnPosition = item.spawnPosition;
-                        _sprites.Add(dogClone);
-                        break;
-
-                    case "OrangeX": // Nothing
-                        break;
-
-                    case "RedX": // Load Enemy1
-                        var randOcotpus = random.Next(0, 2);
-                        Enemy octopus;
-                        switch (randOcotpus) // random enemy1
-                        {
-                            case 0:
-                                octopus = enemyOcotopus.Clone() as Enemy;
-                                break;
-                            default:
-                                octopus = enemyOcotopus2.Clone() as Enemy;
-                                break;
-                        }
-                        octopus.SpawnPosition = item.spawnPosition;
-                        _sprites.Add(octopus);
-                        break;
-
-                    case "PurpleX": // Load Enemy2
-                        var randCyclope = random.Next(0, 2);
-                        Enemy cyclope;
-                        switch (randCyclope) // random enemy2
-                        {
-                            case 0:
-                                cyclope = enemyCyclope.Clone() as Enemy;
-                                break;
-                            default:
-                                cyclope = enemyCyclope2.Clone() as Enemy;
-                                break;
-                        }
-                        cyclope.SpawnPosition = item.spawnPosition;
-                        _sprites.Add(cyclope);
-                        break;
-
-                    case "BlackX": // Load Old Woman Npc
-                        var oldWomanClone = npcOldWoman.Clone() as Npc;
-                        oldWomanClone.SpawnPosition = item.spawnPosition;
-                        _sprites.Add(oldWomanClone);
-                        break;
-
-                    case "WhiteX": // Load Boss
-                        var demonCyclopClone = bossDemonCyclop.Clone() as Boss;
-                        demonCyclopClone.SpawnPosition = item.spawnPosition;
-                        demonCyclopClone.SetPhase1Threshold(350);
-                        demonCyclopClone.SetPhase2Threshold(200);
-                        demonCyclopClone.SetSpecial1(
-                            spell: new ProjectileAimed(_dictSpells["FireballProjectile"]), 
-                            magic: 0, 
-                            speed: 1f, 
-                            lifespan: 3f);
-                        demonCyclopClone.SetSpecial2(
-                            spell: new AoeSurroundSelf(_dictSpells["FlameElemental"], 1.25f, 5), 
-                            magic: 10, 
-                            speed: 0f, 
-                            lifespan: 0.5f);
-                        
-                        _sprites.Add(demonCyclopClone);
-                        break;
-
-                    default:
-                        break;
-
-                }
-            }
-
-            // set enemy FollowTarget to player
-            foreach (var sprite in _sprites)
-            {
-                if (sprite is Enemy)
-                    ((Enemy)sprite).SetFollowTarget(_player, 10f); // 10f to be close enough to collide with player hitbox
-            }
-
+            base.LoadContent();
         }
 
         /// <summary>
@@ -734,85 +567,6 @@ namespace Jusgabon
 
         }
 
-        /// <summary>
-        /// Load Player-specific Content.
-        /// This loads player content and initializes player properties:
-        /// - content path
-        /// - set player animations
-        /// - set base attributes
-        /// - initialize player
-        /// - give player some starting weapons
-        /// - set the special actions/skills for player
-        /// </summary>
-        protected void LoadContentPlayer()
-        {
-            // Content path for Player
-            var path = "Actor/Characters/BlueNinja/SeparateAnim/";
-
-            // Player animations
-            var playerAnimations = new Dictionary<string, Animation>()
-            {
-                // walk
-                {"WalkDown"   , new Animation(texture: Globals.content.Load<Texture2D>(path + "Walk"),
-                                              frameCount: 4,
-                                              spritesheetColumns: 4,
-                                              frameLocation: 0)                                         },
-                {"WalkUp"     , new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 16) },
-                {"WalkLeft"   , new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 32) },
-                {"WalkRight"  , new Animation(Globals.content.Load<Texture2D>(path + "Walk"), 4, 4, 48) },
-                
-                // idle
-                {"IdleDown"   , new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 0)  },
-                {"IdleUp"     , new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 16) },
-                {"IdleLeft"   , new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 32) },
-                {"IdleRight"  , new Animation(Globals.content.Load<Texture2D>(path + "Idle"), 1, 4, 48) },
-
-                // attack
-                {"AttackDown" , new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 0)  },
-                {"AttackUp"   , new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 16) },
-                {"AttackLeft" , new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 32) },
-                {"AttackRight", new Animation(Globals.content.Load<Texture2D>(path + "Attack"), 1, 4, 48) },
-
-                // jump
-                {"JumpDown"   , new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 0)  },
-                {"JumpUp"     , new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 16) },
-                {"JumpLeft"   , new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 32) },
-                {"JumpRight"  , new Animation(Globals.content.Load<Texture2D>(path + "Jump"), 1, 4, 48) },
-
-                // other actions
-                {"Item"       , new Animation(Globals.content.Load<Texture2D>(path + "Item"), 1)     },
-                {"Special1"   , new Animation(Globals.content.Load<Texture2D>(path + "Special1"), 1) },
-                {"Special2"   , new Animation(Globals.content.Load<Texture2D>(path + "Special2"), 1) },
-                {"Dead"       , new Animation(Globals.content.Load<Texture2D>(path + "Dead"), 1)     },
-            };
-            
-            // Base Attributes
-            var playerAttributes = new Attributes()
-            {
-                Speed = 1.5f,
-                Health = 100,
-                Mana = 100,
-                Stamina = 100,
-                Attack = 20,
-                Magic = 10,
-            };
-
-            // Initialize player
-            _player = new Player(
-                animations: playerAnimations,
-                baseAttributes: playerAttributes
-                );
-
-            // Add a couple starting weapons to player weapon inventory
-            _player.PickUp(new Weapon(_dictWeapons["Lance"].animations, _dictWeapons["Lance"].baseAttributes, "Lance"));
-            _player.PickUp(new Weapon(_dictWeapons["BigSword"].animations, _dictWeapons["BigSword"].baseAttributes, "BigSword"));
-            _player.PickUp(new Weapon(_dictWeapons["MagicWand"].animations, _dictWeapons["MagicWand"].baseAttributes, "MagicWand"));
-            _player.PickUp(new Weapon(_dictWeapons["Sai"].animations, _dictWeapons["Sai"].baseAttributes, "Sai"));
-
-            // Set player specials
-            _player.SetSpecial1(new Projectile(_dictSpells["IceSpikeProjectile"]), 10, 2f, 0.5f);
-            _player.SetSpecial2(new AoeLine(_dictSpells["IceElemental"], 0.5f, 2, 3), 40, 0f, 2f);
-        }
 
         /// <summary>
         /// UnloadContent method - Unload game-specific content from the Content project.
@@ -833,55 +587,16 @@ namespace Jusgabon
         /// <param name="gameTime"></param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // Update all sprites
-            foreach (var sprite in _sprites)
-                sprite.Update(gameTime, _sprites);
-
-            // update camera position to follow player
-            _camera.Follow(_player);
-
-            // Update Hud
-            hud.Update();
-
-
-            PostUpdate(gameTime);
-        }
-
-        /// <summary>
-        /// Post-Update method - Called at the end of Update as a post-check to:
-        /// - Add new children sprites to the list of _sprites and clear
-        /// - Remove all "IsRemoved" sprites
-        /// - Sort sprites by its current Y position to create a 2.5D illusion effect
-        /// </summary>
-        /// <param name="gameTime"></param>
-        protected void PostUpdate(GameTime gameTime)
-        {
-
-            // Add Children to the list of "_sprites" and clear
-            int count = _sprites.Count;
-            for (int i = 0; i < count; i++)
+            if(_nextState != null)
             {
-                foreach (var child in _sprites[i].Children)
-                    _sprites.Add(child);
-
-                _sprites[i].Children.Clear();
+                _currentState = _nextState;
+                _nextState = null;
             }
 
-            // Remove all "IsRemoved" sprites
-            for (int i = 0; i < _sprites.Count; i++)
-            {
-                if (_sprites[i].IsRemoved)
-                {
-                    _sprites.RemoveAt(i);
-                    i--;
-                }
-            }
+            _currentState.Update(gameTime);
+            _currentState.PostUpdate(gameTime);
 
-            // Sort sprites by its current Y Position to create a 2.5D illusion effect
-            _sprites.Sort((spriteA, spriteB) => spriteA.Position.Y.CompareTo(spriteB.Position.Y));
+            base.Update(gameTime);
         }
 
         /// <summary>
@@ -895,21 +610,9 @@ namespace Jusgabon
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // Begin Spritebatch
-            Globals.spriteBatch.Begin(transformMatrix: _camera.Transform);
+            _currentState.Draw(gameTime);
 
-            // Draw tiled map
-            tileMapManager.Draw(gameTime, Globals.spriteBatch);
-
-            // Draw all the sprites
-            foreach (var sprite in _sprites)
-                sprite.Draw(gameTime, Globals.spriteBatch);
-
-            // Draw Hud
-            hud.Draw(Globals.spriteBatch);
-
-            // End Spritebatch
-            Globals.spriteBatch.End();
+            base.Draw(gameTime);
         }
 
 

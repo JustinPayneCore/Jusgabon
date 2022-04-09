@@ -20,7 +20,7 @@ namespace Jusgabon
 {
     /// <summary>
     /// Component Class (Abstract).
-    /// Inherited Classes must implemenet Draw and Update methods.
+    /// Inherited Classes must implement Draw and Update methods.
     /// </summary>
     public abstract class Component
     {
