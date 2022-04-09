@@ -6145,6 +6145,18 @@
 /processorParam:TextureFormat=Color
 /build:Actor/Monsters/Spirit2/Spirit2.png
 
+#begin background.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:background.png
+
 #begin Backgrounds/Animated/Flag/Preview.gif
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -6492,25 +6504,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Backgrounds/Tilesets/TilesetWater.png
-
-#begin ball.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:ball.png
-
-#begin BossHealth.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:BossHealth.spritefont
 
 #begin FX/AllPreview.png
 /importer:TextureImporter
@@ -7508,13 +7501,6 @@
 /processorParam:TextureFormat=Color
 /build:FX/Smoke/SmokeCircular/SpriteSheet.png
 
-#begin Gold.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Gold.spritefont
-
 #begin HUD/Arrow.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -7635,6 +7621,13 @@
 /processorParam:TextureFormat=Color
 /build:HUD/Dialog/YesButton.png
 
+#begin HUD/Font/BossHealth.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:HUD/Font/BossHealth.spritefont
+
 #begin HUD/Font/font24x30.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -7658,6 +7651,27 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:HUD/Font/font8x8.png
+
+#begin HUD/Font/Gold.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:HUD/Font/Gold.spritefont
+
+#begin HUD/Font/Menu.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:HUD/Font/Menu.spritefont
+
+#begin HUD/Font/PlayerHealth.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:HUD/Font/PlayerHealth.spritefont
 
 #begin HUD/GoldBackground.png
 /importer:TextureImporter
@@ -8742,9 +8756,6 @@
 #begin Level1.tmx
 /copy:Level1.tmx
 
-#begin level2.tmx
-/copy:level2.tmx
-
 #begin Musics/1 - Adventure Begin.ogg
 /importer:OggImporter
 /processor:SongProcessor
@@ -8900,13 +8911,6 @@
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Musics/9 - Quiet.ogg
-
-#begin PlayerHealth.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:PlayerHealth.spritefont
 
 #begin Sounds/Game/Alert.wav
 /importer:WavImporter
@@ -9280,7 +9284,7 @@
 /processorParam:Quality=Best
 /build:Sounds/Menu/Menu9.wav
 
-#begin Test_Background.png
+#begin title.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -9290,5 +9294,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Test_Background.png
+/build:title.png
 
