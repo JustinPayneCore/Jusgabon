@@ -27,10 +27,10 @@ namespace Jusgabon
     /// <summary>
     /// Game Class - main program of the MonoGame project.
     /// Needs to include these methods necessary for the game to run:
-    ///  - Constructor & Class members
+    ///  - Class members & Constructor
     ///  - Initialize method
     ///  - LoadContent & UnloadContent method
-    ///  - Update method
+    ///  - Update & PostUpdate method
     ///  - Draw method
     /// </summary>
     public class Game1 : Game

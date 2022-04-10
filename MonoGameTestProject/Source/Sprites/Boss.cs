@@ -82,8 +82,8 @@ namespace Jusgabon
         /// <param name="baseAttributes"></param>
         public Boss(Dictionary<string, Animation> animations, Attributes baseAttributes) : base(animations, baseAttributes)
         {
-            // default enemy modifier = 1.5f; increase if boss should be "stickier" to player
-            AggroModifier = 2f;
+            // default enemy modifier = 1.5f; increase to make boss "stickier" to player
+            AggroModifier = 5f;
 
             // change default TakeHit animation length & cooldowns
             _hitCooldown = 1f;

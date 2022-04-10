@@ -306,26 +306,16 @@ namespace Jusgabon
         /// Sprite Constructor for a sprite with a dictionary(ex. spritesheet) of animations
         /// </summary>
         /// <param name="animations"></param>
-        /// <param name="spawnPosition">optional</param>
         /// <param name="baseAttributes">optional</param>
-        public Sprite(
-            Dictionary<string, Animation> animations, 
-            //Vector2 spawnPosition = default,
-            Attributes baseAttributes = default)
+        public Sprite(Dictionary<string, Animation> animations,Attributes baseAttributes = default)
         {
-            // check if optional attributes were provided (spawnPosition & base Attributes)
-            //if (spawnPosition == default)
-            //    spawnPosition = Vector2.Zero;
+            // check if optional attributes were provided (base Attributes)
             if (baseAttributes == default)
                 baseAttributes = Attributes.Zero;
 
             // set dictionary of animation textures
             _animations = animations;
             _animationManager = new AnimationManager(_animations.First().Value);
-
-            //// set sprite spawn
-            //SpawnPosition = spawnPosition;
-            //Position = SpawnPosition;
 
             // set sprite attributes
             BaseAttributes = baseAttributes;
@@ -348,25 +338,15 @@ namespace Jusgabon
         /// Sprite Constructor for a sprite with a static texture i.e. an idle texture.
         /// </summary>
         /// <param name="texture"></param>
-        /// <param name="spawnPosition">optional</param>
         /// <param name="baseAttributes">optional</param>
-        public Sprite(
-            Texture2D texture, 
-            Vector2 spawnPosition = default,
-            Attributes baseAttributes = default)
+        public Sprite(Texture2D texture, Attributes baseAttributes = default)
         {
             // check if optional attributes were provided (spawnPosition & base Attributes)
-            if (spawnPosition == default)
-                spawnPosition = Vector2.Zero;
             if (baseAttributes == default)
                 baseAttributes = Attributes.Zero;
             
             // set texture
             _texture = texture;
-
-            // set sprite spawn
-            SpawnPosition = spawnPosition;
-            Position = SpawnPosition;
             
             // set sprite attributes
             BaseAttributes = baseAttributes;

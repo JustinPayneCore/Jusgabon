@@ -127,13 +127,13 @@ namespace Jusgabon
 
         /// <summary>
         /// Update method for Tile.
+        /// Tile does not need to implement an Update method,
+        /// including collision detection, since the collision methods in Tile will be invoked by the Game Sprites.
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="sprite"></param>
         public override void Update(GameTime gameTime, List<Sprite> sprite)
         {
-            // No update method needed for this static tile object.
-            // Note: Sprite objects will use Collision detection methods on the Tiles, so no need to CheckCollision here either.
         }
 
         /// <summary>

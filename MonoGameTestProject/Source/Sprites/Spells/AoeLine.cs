@@ -394,9 +394,6 @@ namespace Jusgabon
             if (IsAction == false)
                 return;
 
-            // todo: remove after testing
-            //Helpers.DrawRectangle(Rectangle, Color.White);
-
             // Draw spell animation for each individual position
             foreach (var position in _positions)
             {

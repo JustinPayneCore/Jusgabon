@@ -299,9 +299,6 @@ namespace Jusgabon
             if (IsAction == false)
                 return;
 
-            // todo: remove after testing
-            //Helpers.DrawRectangle(Rectangle, Color.White);
-
             base.Draw(gameTime, spriteBatch);
         }
 
