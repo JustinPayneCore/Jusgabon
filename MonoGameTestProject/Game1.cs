@@ -21,6 +21,7 @@ using TiledSharp;
 /// Authors: Team 4 - Jason Cheung, Gabriel Baluyut, Justin Payne
 /// Date: Mar 14, 2022
 /// Source: https://docs.monogame.net/articles/getting_started/0_getting_started.html
+/// https://github.com/marshallward/TiledSharp
 /// </summary>
 namespace Jusgabon
 {

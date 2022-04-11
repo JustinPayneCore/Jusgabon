@@ -5,9 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+/// <summary>
+/// Button class.
+/// Author: Gabriel Baluyut
+/// Version: 1.0
+/// Date: April 5, 2022
+/// Source: https://github.com/Oyyou/MonoGame_Tutorials/blob/master/MonoGame_Tutorials/Tutorial012/Controls/Button.cs
+/// </summary>
 namespace Jusgabon.Content.Controls
 {
-
+    /// <summary>
+    /// Button class that inherits from ComponentMonogame, for using abstract Draw and Update methods.
+    /// </summary>
     public class Button: ComponentMonogame
     {
 
@@ -35,6 +44,9 @@ namespace Jusgabon.Content.Controls
 
         public Vector2 Position { get; set; }
 
+        /// <summary>
+        /// Rectangle property that creates a new Rectangle from current position.
+        /// </summary>
         public Rectangle Rectangle
         {
             get
@@ -49,6 +61,11 @@ namespace Jusgabon.Content.Controls
 
         #region Methods
 
+        /// <summary>
+        /// Button constructor that uses texture chosen.
+        /// </summary>
+        /// <param name="texture"></param>
+        /// <param name="font"></param>
         public Button(Texture2D texture, SpriteFont font)
         {
             _texture = texture;
@@ -58,6 +75,11 @@ namespace Jusgabon.Content.Controls
             PenColour = Color.Black;
         }
 
+        /// <summary>
+        /// Overridden method to draw button.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             var colour = Color.White;
@@ -76,6 +98,10 @@ namespace Jusgabon.Content.Controls
             }
         }
 
+        /// <summary>
+        /// Overridden method to update the button when mouse is hovering over it.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             _previousMouse = _currentMouse;
